@@ -4,7 +4,9 @@
   "description": "A general purpose discord bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "watch": "nodemon index"
   },
   "repository": {
     "type": "git",
@@ -19,5 +21,8 @@
   "homepage": "https://github.com/SumWunSpeshal/discobot#readme",
   "dependencies": {
     "discord.js": "^12.5.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
