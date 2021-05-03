@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/SumWunSpeshal/discobot/issues"
   },
-  "homepage": "https://github.com/SumWunSpeshal/discobot#readme"
+  "homepage": "https://github.com/SumWunSpeshal/discobot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
 }
