@@ -9,4 +9,6 @@ A general purpose discord bot
 A project by YourTeaGuy, SumWunSpeshal and Monsieur-Monet
 
 
-Based on https://github.com/OwenCalvin/discord.ts
+Based on:
+https://github.com/OwenCalvin/discord.ts
+https://discord.js.org/#/
