@@ -1,1 +1,1 @@
-worker: ts-node src/Main.ts
+worker: npm install && ts-node src/Main.ts
