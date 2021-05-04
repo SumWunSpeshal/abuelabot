@@ -7,3 +7,6 @@ A general purpose discord bot
 - .env file
 
 A project by YourTeaGuy, SumWunSpeshal and Monsieur-Monet
+
+
+Based on https://github.com/OwenCalvin/discord.ts
