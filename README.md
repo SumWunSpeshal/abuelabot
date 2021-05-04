@@ -1,5 +1,5 @@
 # abuelabot
-A general purpose discord bot
+A general purpose discord bot.
 
 
 ### Setup
@@ -7,3 +7,8 @@ A general purpose discord bot
 - .env file
 
 A project by YourTeaGuy, SumWunSpeshal and Monsieur-Monet
+
+
+Based on:
+https://github.com/OwenCalvin/discord.ts
+https://discord.js.org/#/
