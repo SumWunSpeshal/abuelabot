@@ -1,28 +1,40 @@
 {
-  "name": "discobot",
+  "name": "abuelabot",
   "version": "1.0.0",
   "description": "A general purpose discord bot",
-  "main": "index.js",
+  "main": "src/Main.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index",
-    "watch": "nodemon index"
+    "start": "ts-node src/Main.ts",
+    "watch": "ts-node-dev src/Main.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SumWunSpeshal/discobot.git"
+    "url": "git+https://github.com/SumWunSpeshal/abuelabot.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Sacha Rodier",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SumWunSpeshal/discobot/issues"
+    "url": "https://github.com/SumWunSpeshal/abuelabot/issues"
   },
-  "homepage": "https://github.com/SumWunSpeshal/discobot#readme",
+  "homepage": "https://github.com/SumWunSpeshal/abuelabot#readme",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "@typeit/discord": "^4.0.9",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "tslib": "^2.2.0",
+    "uuid": "^8.3.2",
+    "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "@types/node": "^15.0.1",
+    "@types/uuid": "^8.3.0",
+    "@types/whatwg-fetch": "^0.0.33",
+    "@types/ws": "^7.4.2",
+    "prettier": "2.2.1",
+    "ts-node": "^9.1.1",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.2.4"
   }
 }

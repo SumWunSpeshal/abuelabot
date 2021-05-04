@@ -105,6 +105,3 @@ dist
 
 # IDE settings
 .idea/
-
-# confidential
-config.json
