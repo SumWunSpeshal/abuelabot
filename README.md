@@ -1,5 +1,5 @@
 # abuelabot
-A general purpose discord bot
+A general purpose discord bot.
 
 
 ### Setup
