@@ -6,7 +6,7 @@ A general purpose discord bot.
 - npm install
 - .env file
 
-A project by YourTeaGuy, SumWunSpeshal and Monsieur-Monet
+A project by YourTeaGuy, SumWunSpeshal and Monsieur-Monet.
 
 
 Based on:
