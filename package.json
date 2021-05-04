@@ -2,11 +2,11 @@
   "name": "abuelabot",
   "version": "1.0.0",
   "description": "A general purpose discord bot",
-  "main": "src/Main.ts",
+  "main": "src/main.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node src/Main.ts",
-    "watch": "ts-node-dev src/Main.ts"
+    "start": "ts-node src/main.ts",
+    "watch": "ts-node-dev src/main.ts"
   },
   "repository": {
     "type": "git",

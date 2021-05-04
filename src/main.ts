@@ -13,7 +13,7 @@ export class Main {
 
   static async start(): Promise<void> {
     try {
-      await this._client.login(token, Path.join(__dirname, 'Abuela.ts'));
+      await this._client.login(token, Path.join(__dirname, 'abuela.ts'));
     } catch (error) {
       console.error(error);
       process.exit(0);
