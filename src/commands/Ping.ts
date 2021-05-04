@@ -1,6 +1,6 @@
 import { Command, CommandMessage, Guard } from '@typeit/discord';
 import { NotBot } from '../guards/Not-bot';
-import { AbuelaCommand } from '../Types';
+import { AbuelaCommand } from '../types';
 
 export abstract class Ping implements AbuelaCommand {
 

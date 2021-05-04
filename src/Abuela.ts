@@ -6,7 +6,7 @@ import {
   ArgsOf,
   Once
 } from '@typeit/discord';
-import SETUP_CONFIG from './Config';
+import SETUP_CONFIG from './config';
 import * as Path from 'path';
 import { Client } from 'discord.js';
 
