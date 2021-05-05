@@ -6,7 +6,7 @@ export interface AbuelaCommand {
 }
 
 export interface AbuelaEvent {
-  on: ([message]: ArgsOf<any>, client: Client) => Promise<void>; // todo fix this stupid ass generic
+  on: (messageEvent: ArgsOf<any>, client: Client) => Promise<void>; // todo fix this stupid ass generic
 }
 
 export interface AbuelaReady {
