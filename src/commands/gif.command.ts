@@ -20,7 +20,6 @@ export abstract class GifCommand implements AbuelaCommand {
 
   private getUrl(searchTerm: string): string {
     const encoded = encodeURIComponent(searchTerm);
-    console.log(encoded);
     return `https://api.giphy.com/v1/gifs/random?api_key=${config.giphyKey}&tag=${encoded}&rating=${this.rating}`;
   }
 }
