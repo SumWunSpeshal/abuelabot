@@ -4,10 +4,5 @@ import { Client } from 'discord.js';
 
 export abstract class MessageEvent implements AbuelaEvent {
   @On('message')
-  async on(
-    message: ArgsOf<'message'>,
-    client: Client
-  ): Promise<void> {
-    console.log(message);
-  }
+  async on(message: ArgsOf<'message'>, client: Client): Promise<void> {}
 }
