@@ -7,6 +7,6 @@ export abstract class CommandHelper {
   }
 
   static safeObjectKeyAccess(obj: any): any | string {
-    return obj ?? 'Internal error. There is probably a problem with the API';
+    return obj ?? 'Internal error. There is probably a problem with one of the APIs in use.';
   }
 }
