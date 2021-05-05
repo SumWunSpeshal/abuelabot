@@ -1,11 +1,11 @@
 import { Command, CommandMessage, Guard } from '@typeit/discord';
-import { NotBot } from '../guards/not-bot';
+import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand } from '../types';
 
-export abstract class Ping implements AbuelaCommand {
+export abstract class PingCommand implements AbuelaCommand {
 
   @Command('ping')
-  @Guard(NotBot)
+  @Guard(NotBotGuard)
   async execute(command: CommandMessage) {
     await command.channel.send('pong');
   }
