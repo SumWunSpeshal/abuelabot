@@ -6,7 +6,7 @@
  * @param stringPartials
  * @param snippets
  */
-const url = (stringPartials: TemplateStringsArray, ...snippets: string[]): string => {
+export const url = (stringPartials: TemplateStringsArray, ...snippets: string[]): string => {
   const encoded = snippets.map(snippet => encodeURIComponent(snippet));
   return stringPartials.map((stringPartial, inx) => stringPartial + (encoded[inx] || '')).join('');
 }

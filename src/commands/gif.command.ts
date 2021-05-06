@@ -7,8 +7,10 @@ import { Http } from '../utils/http';
 import { GiphyInterface } from '../api/giphy.interface';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { Client } from '@typeit/discord';
+import { url } from '../utils/tagged-templates';
 
 export abstract class GifCommand implements AbuelaCommand {
+
   private readonly rating = 'r';
 
   @Command('gif')
@@ -18,6 +20,7 @@ export abstract class GifCommand implements AbuelaCommand {
     const response = await Http.get<GiphyInterface.RootObject>(
       url`https://api.giphy.com/v1/gifs/random?api_key=${config.giphyKey}&tag=${allUserArgs}&rating=${this.rating}`
     );
+
     await command.channel.send(CommandHelper.safeObjectKeyAccess(response?.data?.image_original_url));
   }
 }
