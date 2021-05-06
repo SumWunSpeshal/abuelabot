@@ -1,14 +1,25 @@
 # abuelabot
-A general purpose discord bot.
+A general purpose Discord bot.
 
+---
 
-### Setup
+Setup
+-
 - npm install
 - .env file
 
-A project by YourTeaGuy, SumWunSpeshal and Monsieur-Monet.
+---
 
+Gotchas 
+-
+- The property `commandName` in the `CommandMessage` response does not reliably return the current commandName. 
+  There seems to be an issue with the library.
+  
+---
 
 Based on:
 https://github.com/OwenCalvin/discord.ts
 https://discord.js.org/#/
+
+
+A project by YourTeaGuy, SumWunSpeshal and Monsieur-Monet.

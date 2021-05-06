@@ -2,7 +2,7 @@ import { ArgsOf, CommandMessage } from '@typeit/discord';
 import { Client } from 'discord.js';
 
 export interface AbuelaCommand {
-  execute: (command: CommandMessage) => Promise<void>;
+  execute: (command: CommandMessage, client: Client) => Promise<void>;
 }
 
 export interface AbuelaEvent {
