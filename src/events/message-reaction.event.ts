@@ -1,6 +1,6 @@
 import { ArgsOf, On } from '@typeit/discord';
 import { AbuelaEvent } from '../types';
-import { Client } from 'discord.js';
+import { Client } from '@typeit/discord';
 
 export abstract class MessageReactionEvent implements AbuelaEvent {
   @On('messageReactionAdd')

@@ -2,8 +2,8 @@ import { CommandMessage } from '@typeit/discord';
 
 export abstract class CommandHelper {
   static stripCommandKeyWord({ commandContent }: CommandMessage): string {
-    const [_, ...rest] = commandContent.split(' ');
-    return rest.join(' ');
+    const [_, ...rest] = commandContent ? commandContent.split(' ') : [];
+    return rest ? rest.join(' ') : '';
   }
 
   static safeObjectKeyAccess(obj: any): any | string {

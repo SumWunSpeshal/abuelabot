@@ -6,7 +6,7 @@ import { GuardFunction } from '@typeit/discord';
  * parameter, meaning that we monkeypatch the Discord.ts API.
  *
  * This Guard should only be used when you intend to use ${commandName}. Using this Guard anywhere does NOT affect
- * any other components, meaning that Classes without GuardFunction() continue to have the same wrong ${commandName}
+ * any other Classes, meaning that Classes without GuardFunction() continue to have the same wrong ${commandName}
  * coming from Discord.ts
  *
  * @param commandNames
