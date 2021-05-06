@@ -9,7 +9,6 @@ export abstract class HelloCommand implements AbuelaCommand {
   @Command('hello')
   @Guard(NotBotGuard)
   async execute(command: CommandMessage) {
-    console.log(command);
     await command.react(Random.getRandomFrom(this.emojis));
   }
 }

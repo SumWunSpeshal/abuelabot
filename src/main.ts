@@ -7,7 +7,7 @@ const { token } = SETUP_CONFIG;
 export class Main {
   private static _client: Client = new Client();
 
-  static get Client(): Client {
+  static getClient(): Client {
     return this._client;
   }
 
