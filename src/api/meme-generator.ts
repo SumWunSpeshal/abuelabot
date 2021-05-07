@@ -1,17 +1,27 @@
 import { BestMatch, findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
 
+interface Aliases {
+  [key: string]: string;
+}
+
 export abstract class MemeGenerator {
-  static findClosestMemeName(input: string): BestMatch {
+  static findClosestMemeName(input: string): string {
     const capitalized = CommandHelper.ucFirstLetterOfWords(input);
-    return findBestMatch(capitalized, this.memeNames);
+    const { bestMatch }: BestMatch = findBestMatch(capitalized, [
+      ...Object.keys(this.aliases),
+      ...this.memeNames
+    ]);
+    return this.aliases[bestMatch?.target] || bestMatch?.target || '';
   }
 
-  private static findByAlias() {
-
-  }
-
-  private static readonly aliases = {
+  /**
+   * @description
+   * TODO Implement the usage of these.
+   *
+   * @private
+   */
+  private static readonly aliases: Aliases = {
     Always: 'Always-Has-Been',
     Bill: 'Be-Like-Bill',
     Bernie: 'Bernie-I-Am-Once-Again-Asking-For-Your-Support',

@@ -27,10 +27,10 @@ export abstract class MemeCommand implements AbuelaCommand {
     allUserArgs: string[]
   ) {
     const [memeName, topText, bottomText] = allUserArgs;
-    const { bestMatch } = MemeGenerator.findClosestMemeName(memeName);
+    const bestMatch = MemeGenerator.findClosestMemeName(memeName);
 
     const response = await Http.get<Buffer>(
-      this.buildUrl(bestMatch.target, topText, bottomText),
+      this.buildUrl(bestMatch, topText, bottomText),
       'buffer',
       this.requestBody
     );
