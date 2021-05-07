@@ -8,7 +8,6 @@ import { url } from '../utils/tagged-templates';
 import { RequestInit } from 'node-fetch';
 import { MessageAttachment } from 'discord.js';
 import { MemeGenerator } from '../api/meme-generator';
-import { findBestMatch } from 'string-similarity';
 
 export abstract class MemeCommand implements AbuelaCommand {
   private readonly requestBody: RequestInit = {
@@ -28,7 +27,7 @@ export abstract class MemeCommand implements AbuelaCommand {
     allUserArgs: string[]
   ) {
     const [memeName, topText, bottomText] = allUserArgs;
-    const { bestMatch } = findBestMatch(memeName, MemeGenerator.memeNames);
+    const { bestMatch } = MemeGenerator.findClosestMemeName(memeName);
 
     const response = await Http.get<Buffer>(
       this.buildUrl(bestMatch.target, topText, bottomText),

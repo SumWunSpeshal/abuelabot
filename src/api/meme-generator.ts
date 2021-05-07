@@ -1,5 +1,27 @@
+import { BestMatch, findBestMatch } from 'string-similarity';
+import { CommandHelper } from '../utils/command-helper';
+
 export abstract class MemeGenerator {
-  static readonly memeNames = [
+  static findClosestMemeName(input: string): BestMatch {
+    const capitalized = CommandHelper.ucFirstLetterOfWords(input);
+    return findBestMatch(capitalized, this.memeNames);
+  }
+
+  private static findByAlias() {
+
+  }
+
+  private static readonly aliases = {
+    Always: 'Always-Has-Been',
+    Bill: 'Be-Like-Bill',
+    Bernie: 'Bernie-I-Am-Once-Again-Asking-For-Your-Support',
+    Wilson: 'Castaway-Fire',
+    Castaway: 'Castaway-Fire',
+    Cmm: 'Change-My-Mind',
+    Changemind: 'Change-My-Mind'
+  }
+
+  private static readonly memeNames = [
     '10-Guy',
     '1950s-Middle-Finger',
     '1990s-First-World-Problems',
