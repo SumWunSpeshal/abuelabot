@@ -6,9 +6,16 @@ interface Aliases {
 }
 
 export abstract class MemeGenerator {
+  /**
+   * @description
+   * TODO Possibly enable returning a BestMatch instead of only the string?
+   *
+   * @param input
+   */
   static findClosestMemeName(input: string): string {
     const capitalized = CommandHelper.ucFirstLetterOfWords(input);
-    const { bestMatch }: BestMatch = findBestMatch(capitalized, [
+    const kebabCased = capitalized.split(' ').join('-');
+    const { bestMatch }: BestMatch = findBestMatch(kebabCased, [
       ...Object.keys(this.aliases),
       ...this.memeNames
     ]);
@@ -17,7 +24,7 @@ export abstract class MemeGenerator {
 
   /**
    * @description
-   * TODO Implement the usage of these.
+   * Bunch of aliases to facilitate the string search
    *
    * @private
    */
@@ -29,8 +36,14 @@ export abstract class MemeGenerator {
     Castaway: 'Castaway-Fire',
     Cmm: 'Change-My-Mind',
     Changemind: 'Change-My-Mind'
-  }
+  };
 
+  /**
+   * @description
+   * meme names ... wysiwyg
+   *
+   * @private
+   */
   private static readonly memeNames = [
     '10-Guy',
     '1950s-Middle-Finger',
