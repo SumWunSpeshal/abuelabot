@@ -13,7 +13,7 @@ export abstract class MemeCommand implements AbuelaCommand {
   private readonly requestBody: RequestInit = {
     method: 'GET',
     headers: {
-      'x-rapidapi-key': `${config.xRapidKey}`,
+      'x-rapidapi-key': config.xRapidKey,
       'x-rapidapi-host': 'ronreiter-meme-generator.p.rapidapi.com'
     }
   };
@@ -27,15 +27,22 @@ export abstract class MemeCommand implements AbuelaCommand {
     allUserArgs: string[]
   ) {
     const [memeName, topText, bottomText] = allUserArgs;
-    const bestMatch = MemeGenerator.findClosestMemeName(memeName);
-
-    const response = await Http.get<Buffer>(
-      this.buildUrl(bestMatch, topText, bottomText),
+    const memeNamesResponse = await Http.get<any>(
+      'https://ronreiter-meme-generator.p.rapidapi.com/images',
+      'json',
+      this.requestBody
+    );
+    const { bestMatch } = MemeGenerator.findClosestMemeName(
+      memeName,
+      memeNamesResponse
+    );
+    const imgResponse = await Http.get<Buffer>(
+      this.buildUrl(bestMatch?.target, topText, bottomText),
       'buffer',
       this.requestBody
     );
 
-    await command.channel.send(new MessageAttachment(response));
+    await command.channel.send(new MessageAttachment(imgResponse));
   }
 
   buildUrl(name: string, topText: string, bottomText: string): string {
