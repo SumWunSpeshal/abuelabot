@@ -5,7 +5,7 @@ type DelimiterArr = Array<' ' | '-'>;
 export abstract class CommandHelper {
   static stripCommandKeyWord({ commandContent }: CommandMessage): string {
     const [_, ...rest] = commandContent ? commandContent.split(' ') : [];
-    return rest ? rest.join(' ') : '';
+    return rest.join(' ');
   }
 
   static safeObjectKeyAccess(obj: any): any | string {
