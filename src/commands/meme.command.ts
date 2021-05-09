@@ -1,13 +1,14 @@
-import { Client, Command, CommandMessage, Guard } from '@typeit/discord';
+import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand } from '../types';
 import config from '../config';
 import { Http } from '../utils/http';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
-import { url } from '../utils/tagged-templates';
+import { code, url } from '../utils/tagged-templates';
 import { RequestInit } from 'node-fetch';
 import { MessageAttachment } from 'discord.js';
 import { MemeGenerator } from '../api/meme-generator';
+import { NotHelpGuard } from '../guards/not-help.guard';
 
 export abstract class MemeCommand implements AbuelaCommand {
   private readonly requestBody: RequestInit = {
@@ -19,8 +20,9 @@ export abstract class MemeCommand implements AbuelaCommand {
   };
 
   @Command('meme')
+  @Infos({ description: 'TODO', usage: `TODO with ${code`code`}` })
+  @Guard(NotHelpGuard, NotBotGuard)
   @GetAllUserArgs('|')
-  @Guard(NotBotGuard)
   async execute(
     command: CommandMessage,
     client: Client,

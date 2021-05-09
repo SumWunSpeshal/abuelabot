@@ -24,7 +24,6 @@ export abstract class MemeGenerator {
     input: string,
     memeNames: string[] = this.localMemeNames
   ): BestMatch {
-    console.log(this.localMemeNames);
     const capitalized = CommandHelper.ucFirstLetterOfWords(input);
     const kebabCased = capitalized.split(' ').join('-');
     const match: BestMatch = findBestMatch(kebabCased, [

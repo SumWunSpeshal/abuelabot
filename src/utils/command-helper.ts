@@ -1,4 +1,5 @@
-import { CommandMessage } from '@typeit/discord';
+import { Client, CommandInfos, CommandMessage } from '@typeit/discord';
+import { Message } from 'discord.js';
 
 type DelimiterArr = Array<' ' | '-'>;
 
@@ -32,5 +33,30 @@ export abstract class CommandHelper {
   static ucFirstLetter(input: string): string {
     const [firstLetter, ...rest] = input;
     return (firstLetter || '').toUpperCase() + (rest || []).join('');
+  }
+
+  static getCommandName({ commandContent }: CommandMessage): CommandInfos | undefined {
+    const commands: CommandInfos[] = Client.getCommands();
+    const match = commands.find(command => {
+      return commandContent?.includes(command.commandName as string);
+    });
+
+    return match;
+  }
+
+  static containsDescriptionFlag(userInput: string): boolean {
+    return !!userInput
+      .split(' ')
+      .find(snippet => snippet === process.env.EXTENDED_DESCRIPTION_FLAG);
+  }
+
+  /**
+   * @description
+   * Remove all template args like {:slug :number}
+   *
+   * @param input
+   */
+  static stripArgs(input: string): string {
+    return input.split(' ').filter(item => !item.includes(':')).join(' ');
   }
 }

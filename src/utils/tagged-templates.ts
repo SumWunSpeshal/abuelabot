@@ -30,3 +30,8 @@ export const __ucFirst = (delimiter: Delimiter = '-') => {
     }).join('');
   }
 }
+
+export const code = (stringPartials: TemplateStringsArray, ...snippets: string[]): string => {
+  const ret = stringPartials.map((item, index) => item + (snippets[index] || '')).join('');
+  return `\`${ret}\``;
+}

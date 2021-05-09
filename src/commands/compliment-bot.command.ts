@@ -1,8 +1,10 @@
-import { Command, CommandMessage, Guard } from '@typeit/discord';
+import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand } from '../types';
 import { Aliases } from '../decorators/aliases';
 import { Random } from '../utils/random';
+import { NotHelpGuard } from '../guards/not-help.guard';
+import { code } from '../utils/tagged-templates';
 
 export abstract class ComplimentBotCommand implements AbuelaCommand {
   private readonly botResponses = [
@@ -16,6 +18,8 @@ export abstract class ComplimentBotCommand implements AbuelaCommand {
   ];
 
   @Command()
+  @Infos({ description: 'TODO', usage: `TODO with ${code`code`}` })
+  @Guard(NotHelpGuard, NotBotGuard)
   @Aliases(
     'good bot',
     'goodbot',
@@ -26,7 +30,6 @@ export abstract class ComplimentBotCommand implements AbuelaCommand {
     'iloveu',
     'iloveyou'
   )
-  @Guard(NotBotGuard)
   async execute(command: CommandMessage) {
     await command.reply(Random.getRandomFrom(this.botResponses));
   }
