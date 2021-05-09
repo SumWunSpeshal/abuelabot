@@ -21,9 +21,9 @@ import { code } from '../utils/tagged-templates';
 import { NotHelpGuard } from '../guards/not-help.guard';
 
 export abstract class HelpCommand implements AbuelaCommand {
-  private static headline = 'Available Commands';
-  private static description = `Explore all Abuela's commands! If you want to know more about a specific command or its usage, type ${code`!{command} -h`}`;
-  private static descriptionFallback = 'No description available';
+  private static readonly headline = 'Available Commands';
+  private static readonly description = `Explore all Abuela's commands! If you want to know more about a specific command or its usage, type ${code`!{command} -h`}`;
+  private static readonly descriptionFallback = 'No description available';
 
   @Command('help')
   @Infos({ description: 'Welp, you just found out...', usage: `...really?` })
