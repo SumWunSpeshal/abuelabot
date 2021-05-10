@@ -10,11 +10,9 @@ import { EmojiListInterface } from '../api/emoji-list.interface';
 
 export abstract class EmojifyCommand implements AbuelaCommand {
   private static readonly aliases = ['emoji', 'copypasta', 'shitpost'];
-  
+
   private static emojis: EmojiListInterface = JSON.parse(
-    readFileSync(
-      Path.join(__dirname, '..', 'assets', 'emojis.json')
-    ).toString()
+    readFileSync(Path.join(__dirname, '..', 'assets', 'emojis.json')).toString()
   );
 
   @Command('emojify')
@@ -38,7 +36,14 @@ export abstract class EmojifyCommand implements AbuelaCommand {
 
     return userInputSplit
       .map(word => {
-        const match = emojis.find(({ shortname }) => shortname.replace(/:/gi, '') === word);
+        const match = emojis.find(({ name }) =>
+          name
+            .split(' ')
+            .find(
+              emojiDescriptionName =>
+                emojiDescriptionName === word.toLowerCase()
+            )
+        );
         return match ? word + ' ' + match.emoji : word;
       })
       .join(' ');
