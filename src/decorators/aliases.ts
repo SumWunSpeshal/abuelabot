@@ -1,13 +1,6 @@
-import {
-  DCommand,
-  DDiscord,
-  Expression,
-  MetadataStorage,
-  Modifier,
-  Rule
-} from '@typeit/discord';
+import { DCommand, DDiscord, Expression, MetadataStorage, Modifier, Rule } from '@typeit/discord';
 
-export function Aliases(...aliases: Expression[]) {
+export function Aliases(aliases: Expression[] | string[]) {
   return (target: any, key?: string, descriptor?: PropertyDescriptor) => {
     aliases.forEach(alias => {
       MetadataStorage.instance.addModifier(

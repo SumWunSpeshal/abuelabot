@@ -9,7 +9,7 @@
 export const url = (stringPartials: TemplateStringsArray, ...snippets: string[]): string => {
   const encoded = snippets.map(snippet => encodeURIComponent(snippet));
   return stringPartials.map((stringPartial, inx) => stringPartial + (encoded[inx] || '')).join('');
-}
+};
 
 /**
  * @description
@@ -22,16 +22,25 @@ type Delimiter = '-' | '.' | '_' | '&';
 
 export const __ucFirst = (delimiter: Delimiter = '-') => {
   return (stringPartials: TemplateStringsArray, ...snippets: string[]) => {
-    return stringPartials.map(item => {
-      return item.split(delimiter).map(word => {
-        const [firstLetter, ...rest] = word;
-        return firstLetter.toUpperCase() + rest.join('');
-      }).join(delimiter);
-    }).join('');
-  }
-}
+    return stringPartials
+      .map(item => {
+        return item
+          .split(delimiter)
+          .map(word => {
+            const [firstLetter, ...rest] = word;
+            return firstLetter.toUpperCase() + rest.join('');
+          })
+          .join(delimiter);
+      })
+      .join('');
+  };
+};
 
-export const code = (stringPartials: TemplateStringsArray, ...snippets: string[]): string => {
-  const ret = stringPartials.map((item, index) => item + (snippets[index] ? `\`${snippets[index]}\`` : '')).join('');
-  return ret;
-}
+export const format = (open: string, close?: string) => {
+  return (stringPartials: TemplateStringsArray, ...snippets: string[]): string => {
+    const ret = stringPartials
+      .map((item, index) => item + (snippets[index] ? open + snippets[index] + (close || open) : ''))
+      .join('');
+    return ret;
+  };
+};

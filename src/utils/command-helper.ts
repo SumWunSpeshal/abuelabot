@@ -10,10 +10,7 @@ export abstract class CommandHelper {
   }
 
   static safeObjectKeyAccess(obj: any): any | string {
-    return (
-      obj ??
-      'Internal error. There is probably a problem with one of the APIs in use.'
-    );
+    return obj ?? 'Internal error. There is probably a problem with one of the APIs in use.';
   }
 
   static ucFirstLetterOfWords(input: string): string {
@@ -45,9 +42,7 @@ export abstract class CommandHelper {
   }
 
   static containsDescriptionFlag(userInput: string): boolean {
-    return !!userInput
-      .split(' ')
-      .find(snippet => snippet === process.env.EXTENDED_DESCRIPTION_FLAG);
+    return !!userInput.split(' ').find(snippet => snippet === process.env.EXTENDED_DESCRIPTION_FLAG);
   }
 
   /**
@@ -57,6 +52,9 @@ export abstract class CommandHelper {
    * @param input
    */
   static stripArgs(input: string): string {
-    return input.split(' ').filter(item => !item.includes(':')).join(' ');
+    return input
+      .split(' ')
+      .filter(item => !item.includes(':'))
+      .join(' ');
   }
 }

@@ -1,11 +1,7 @@
 import { CommandMessage, GuardFunction } from '@typeit/discord';
 import { CommandHelper } from '../utils/command-helper';
 
-export const NotHelpGuard: GuardFunction<'message'> = async (
-  [message],
-  client,
-  next
-) => {
+export const NotHelpGuard: GuardFunction<'message'> = async ([message], client, next) => {
   const { commandContent } = message as CommandMessage;
   const userWantsDetails = CommandHelper.containsDescriptionFlag(commandContent);
 

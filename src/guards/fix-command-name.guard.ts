@@ -12,9 +12,7 @@ import { GuardFunction } from '@typeit/discord';
  * @param commandNames
  * @constructor
  */
-export const FixCommandNameGuard = (
-  ...commandNames: string[]
-): GuardFunction<'commandMessage'> => {
+export const FixCommandNameGuard = (...commandNames: string[]): GuardFunction<'commandMessage'> => {
   return async ([message], client, next) => {
     const match = commandNames.find(name => message.commandContent.includes(name));
 

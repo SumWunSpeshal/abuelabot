@@ -1,6 +1,6 @@
 import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
-import { AbuelaCommand } from '../types';
+import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import config from '../config';
 import { CommandHelper } from '../utils/command-helper';
 import { Http } from '../utils/http';
@@ -12,11 +12,13 @@ import { NotHelpGuard } from '../guards/not-help.guard';
 export abstract class GifCommand implements AbuelaCommand {
   private readonly rating = 'r';
 
-  @Command('gif')
-  @Infos({
+  private static readonly infos: AbuelaCommandInfos = {
     description: 'Get a random GIF with an optional search term to narrow down the results',
     usage: '`!gif` or `!gif {searchTerm}`'
-  })
+  };
+
+  @Command('gif')
+  @Infos(GifCommand.infos)
   @Guard(NotHelpGuard, NotBotGuard)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {

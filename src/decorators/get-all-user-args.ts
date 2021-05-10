@@ -13,12 +13,7 @@ export function GetAllUserArgs(delimiter?: Delimiter) {
       const userArgsSplit: string[] | undefined =
         delimiter && userArgs.split(delimiter).map(fragment => fragment.trim());
 
-      return targetMethod.call(
-        this,
-        command,
-        client,
-        userArgsSplit || userArgs
-      );
+      return targetMethod.call(this, command, client, userArgsSplit || userArgs);
     };
 
     return descriptor;

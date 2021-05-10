@@ -12,11 +12,7 @@ import { CommandHelper } from '../utils/command-helper';
  * @param next
  * @constructor
  */
-export const NotKnownCommandGuard: GuardFunction<'message'> = async (
-  [message],
-  client,
-  next
-) => {
+export const NotKnownCommandGuard: GuardFunction<'message'> = async ([message], client, next) => {
   if (CommandHelper.getCommandName(message as CommandMessage)) {
     await next();
   }
