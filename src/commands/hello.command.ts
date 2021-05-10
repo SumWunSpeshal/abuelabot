@@ -9,7 +9,7 @@ export abstract class HelloCommand implements AbuelaCommand {
   private readonly emojis = ['👋', '🖖', '👊', '✌️'];
 
   @Command('hello')
-  @Infos({ description: 'TODO', usage: `TODO with ${code`code`}` })
+  @Infos({ description: 'TODO', usage: 'TODO with `code`' })
   @Guard(NotHelpGuard, NotBotGuard)
   async execute(command: CommandMessage) {
     await command.react(Random.getRandomFrom(this.emojis));

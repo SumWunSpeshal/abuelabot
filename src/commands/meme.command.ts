@@ -4,9 +4,9 @@ import { AbuelaCommand } from '../types';
 import config from '../config';
 import { Http } from '../utils/http';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
-import { code, url } from '../utils/tagged-templates';
+import { url } from '../utils/tagged-templates';
 import { RequestInit } from 'node-fetch';
-import { MessageAttachment } from 'discord.js';
+import { MessageAttachment, MessageEmbed } from 'discord.js';
 import { MemeGenerator } from '../api/meme-generator';
 import { NotHelpGuard } from '../guards/not-help.guard';
 
@@ -20,7 +20,7 @@ export abstract class MemeCommand implements AbuelaCommand {
   };
 
   @Command('meme')
-  @Infos({ description: 'TODO', usage: `TODO with ${code`code`}` })
+  @Infos({ description: 'TODO', usage: 'TODO with `code`' })
   @Guard(NotHelpGuard, NotBotGuard)
   @GetAllUserArgs('|')
   async execute(

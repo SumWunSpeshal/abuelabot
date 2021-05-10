@@ -4,11 +4,10 @@ import { AbuelaCommand } from '../types';
 import { Aliases } from '../decorators/aliases';
 import { FixCommandNameGuard } from '../guards/fix-command-name.guard';
 import { NotHelpGuard } from '../guards/not-help.guard';
-import { code } from '../utils/tagged-templates';
 
 export abstract class FlipFlopCommand implements AbuelaCommand {
   @Command('flip :slug :number')
-  @Infos({ description: 'TODO', usage: `TODO with ${code`code`}` })
+  @Infos({ description: 'TODO', usage: 'TODO with `code`' })
   @Aliases('flop :slug :number', 'flup :slug :number')
   @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard('flip', 'flop', 'flup'))
   async execute(command: CommandMessage) {

@@ -6,7 +6,7 @@ import { code } from '../utils/tagged-templates';
 
 export abstract class PingCommand implements AbuelaCommand {
   @Command('ping')
-  @Infos({ description: 'TODO', usage: `TODO with ${code`code`}` })
+  @Infos({ description: 'TODO', usage: 'TODO with `code`' })
   @Guard(NotHelpGuard, NotBotGuard)
   async execute(command: CommandMessage) {
     await command.channel.send('pong');
