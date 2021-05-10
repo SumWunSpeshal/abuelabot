@@ -4,7 +4,7 @@ import { AbuelaCommand } from '../types';
 import config from '../config';
 import { Http } from '../utils/http';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
-import { url } from '../utils/tagged-templates';
+import { code, url } from '../utils/tagged-templates';
 import { RequestInit } from 'node-fetch';
 import { MessageAttachment, MessageEmbed } from 'discord.js';
 import { MemeGenerator } from '../api/meme-generator';
@@ -44,7 +44,10 @@ export abstract class MemeCommand implements AbuelaCommand {
       this.requestBody
     );
 
-    await command.channel.send(new MessageAttachment(imgResponse));
+    await command.channel.send(
+      code`${bestMatch?.target} found for search term ${memeName} with ${(bestMatch?.rating * 100).toFixed(2) + '%'} correlation`,
+      new MessageAttachment(imgResponse)
+    );
   }
 
   buildUrl(name: string, topText: string, bottomText: string): string {

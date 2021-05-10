@@ -32,6 +32,6 @@ export const __ucFirst = (delimiter: Delimiter = '-') => {
 }
 
 export const code = (stringPartials: TemplateStringsArray, ...snippets: string[]): string => {
-  const ret = stringPartials.map((item, index) => item + (snippets[index] || '')).join('');
-  return `\`${ret}\``;
+  const ret = stringPartials.map((item, index) => item + (snippets[index] ? `\`${snippets[index]}\`` : '')).join('');
+  return ret;
 }
