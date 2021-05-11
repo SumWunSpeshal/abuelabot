@@ -5,6 +5,8 @@ import { Buffer } from 'buffer';
 import { ClippyInterface, LocalTemplateName } from '../api/clippy.interface';
 import { readFileSync } from 'fs';
 
+const CONFIG = JSON.parse(readFileSync(Path.join(__dirname, '..', 'assets', 'clippy.json')).toString());
+
 export class CanvasService {
   private readonly imgPath: string;
 
@@ -25,9 +27,7 @@ export class CanvasService {
   constructor(imgName: LocalTemplateName, text: string) {
     this.imgPath = Path.join(__dirname, '..', 'assets', 'img', `${imgName}.png`);
     this.text = text;
-    this.config = JSON.parse(readFileSync(Path.join(__dirname, '..', 'assets', 'clippy.json')).toString()).find(
-      (item: ClippyInterface) => item.name === imgName
-    );
+    this.config = CONFIG.find((item: ClippyInterface) => item.name === imgName);
 
     const dimensions = imageSize(this.imgPath);
     this.canvasWidth = dimensions.width!;

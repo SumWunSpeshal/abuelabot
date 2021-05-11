@@ -7,22 +7,22 @@ import { CanvasService } from '../services/canvas.service';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { Aliases } from '../decorators/aliases';
 import { LocalTemplateName } from '../api/clippy.interface';
+import { FixCommandNameGuard } from '../guards/fix-command-name.guard';
 
 export abstract class ClippyCommand implements AbuelaCommand {
   private static readonly infos: AbuelaCommandInfos = {
-    description: 'TODO',
-    usage: 'TODO with `code`',
+    description: 'Decorate clippy or one of his aliases with an original caption',
+    usage: '`!clippy {caption?}` ... try the other ones too!',
     aliases: ['hagrid', 'jotaro', 'keem', 'plankton'] as LocalTemplateName[]
   };
 
   @Command('clippy')
   @Infos(ClippyCommand.infos)
   @Aliases(ClippyCommand.infos.aliases!)
-  @Guard(NotHelpGuard, NotBotGuard)
+  @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard(['clippy', ...ClippyCommand.infos.aliases!]))
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const templateName = command.args[0].substring(1).trim().toLowerCase(); // FIXME ugly, fix this
-    const canvas = new CanvasService(templateName as LocalTemplateName, allUserArgs);
+    const canvas = new CanvasService(command.commandName as LocalTemplateName, allUserArgs);
     await canvas.loadImage();
     canvas.addText();
     const image = canvas.exportAsBuffer();
