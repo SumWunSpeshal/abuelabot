@@ -22,7 +22,7 @@ export abstract class GifCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const response = await Http.get<GiphyInterface.RootObject>(
+    const response = await Http.fetch<GiphyInterface.RootObject>(
       url`https://api.giphy.com/v1/gifs/random?api_key=${config.giphyKey}&tag=${allUserArgs}&rating=${this.rating}`
     );
 
