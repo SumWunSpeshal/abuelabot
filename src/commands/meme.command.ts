@@ -1,6 +1,6 @@
 import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
-import { AbuelaCommand } from '../types';
+import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import config from '../config';
 import { Http } from '../utils/http';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
@@ -19,7 +19,7 @@ export abstract class MemeCommand implements AbuelaCommand {
     }
   };
 
-  private static readonly infos = {
+  private static readonly infos: AbuelaCommandInfos = {
     description: 'TODO',
     usage: 'TODO with `code`'
   };

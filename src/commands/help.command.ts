@@ -27,7 +27,7 @@ export abstract class HelpCommand implements AbuelaCommand {
   };
 
   @Command('help')
-  @Infos({ description: 'Welp, you just found out...', usage: `...really?` })
+  @Infos(HelpCommand.infos)
   @Aliases(HelpCommand.infos.aliases!)
   @Guard(NotHelpGuard, NotBotGuard)
   async execute(command: CommandMessage) {
