@@ -3,6 +3,7 @@ import Path from 'path';
 import { BestMatch, findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
 import { ImgFlipInterface } from '../api/img-flip.interface';
+import { Random } from '../utils/random';
 
 interface Aliases {
   [key: string]: string;
@@ -38,16 +39,30 @@ export abstract class ImgFlip {
   ): BestMatch {
     const capitalized = CommandHelper.ucFirstLetterOfWords(input);
     const memeNames = memes.map(meme => meme.name);
-    const match: BestMatch = findBestMatch(capitalized, [...Object.keys(this.aliases), ...memeNames]);
+    const match: BestMatch = findBestMatch(capitalized, [...Object.keys(ImgFlip.aliases), ...memeNames]);
+    const matchInAliases = ImgFlip.aliases[match?.bestMatch?.target];
 
-    return this.aliases[match?.bestMatch?.target]
-      ? {
+    switch (true as any) {
+      case !!matchInAliases:
+        return {
           ...match,
           bestMatch: {
             ...match.bestMatch,
-            target: this.aliases[match?.bestMatch?.target]
+            target: matchInAliases
           }
-        }
-      : match;
+        };
+
+      case input === '':
+        return {
+          ...match,
+          bestMatch: {
+            ...match.bestMatch,
+            target: Random.getRandomFrom(memeNames)
+          }
+        };
+
+      default:
+        return match;
+    }
   }
 }

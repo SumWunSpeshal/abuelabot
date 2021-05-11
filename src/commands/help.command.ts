@@ -10,9 +10,7 @@ import { NotHelpGuard } from '../guards/not-help.guard';
 
 export abstract class HelpCommand implements AbuelaCommand {
   private static readonly headline = 'Available Commands';
-  private static readonly description = `Explore all Abuela's commands! 
-  If you want to know more about a specific command or its usage, 
-  type \`!{command} -h\``;
+  private static readonly description = `Explore all Abuela's commands! If you want to know more about a specific command or its usage, type \`!{command} -h\``;
 
   private static readonly fallbacks = {
     description: 'No description available...',
@@ -23,7 +21,7 @@ export abstract class HelpCommand implements AbuelaCommand {
   private static readonly infos: AbuelaCommandInfos = {
     description: 'Welp, you just found out...',
     usage: `...really?`,
-    aliases: ['ls', 'list', 'man']
+    aliases: ['ls', 'list', 'man', '!']
   };
 
   @Command('help')
@@ -56,7 +54,7 @@ export abstract class HelpCommand implements AbuelaCommand {
         description: description || HelpCommand.fallbacks.description,
         fields: [
           {
-            name: 'Usage',
+            name: `Usage ('?' means the field is optional)`,
             value: infos?.usage || this.fallbacks.usage
           },
           {
