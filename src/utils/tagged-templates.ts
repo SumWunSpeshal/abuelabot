@@ -36,6 +36,17 @@ export const __ucFirst = (delimiter: Delimiter = '-') => {
   };
 };
 
+/**
+ * @description
+ * Apply text formatting for every variable interpolation in a string.
+ * Useful for formatting key infos injected into a string.
+ *
+ * @example
+ * format('**')`${'someVar'} plain text ${'someVar'} plain text ${'someVar'} plain text`;
+ *
+ * @param open
+ * @param close
+ */
 export const format = (open: string, close?: string) => {
   return (stringPartials: TemplateStringsArray, ...snippets: string[]): string => {
     const ret = stringPartials

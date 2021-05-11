@@ -10,6 +10,7 @@ import { ImgFlipInterface } from '../api/img-flip.interface';
 import { format } from '../utils/tagged-templates';
 import { Aliases } from '../decorators/aliases';
 import { Rating } from 'string-similarity';
+import { colorText } from '../utils/color-text';
 
 export abstract class MemeCommand implements AbuelaCommand {
   private static readonly getUrl = 'https://api.imgflip.com/get_memes';
@@ -50,9 +51,12 @@ export abstract class MemeCommand implements AbuelaCommand {
   }
 
   private static getStats(bestMatch: Rating, memeName: string): string {
-    return format('_`', '`_')`${bestMatch?.target} found for search term ${memeName} with ${
-      +(bestMatch?.rating * 100).toFixed(2) + '%'
-    } correlation`;
+    return colorText(
+      'blue',
+      `[${bestMatch?.target}] found for search term [${memeName}] with [${
+        +(bestMatch?.rating * 100).toFixed(2) + '%'
+      }] correlation`
+    );
   }
 
   private static createRequestBody(id: string, text0: string = ' ', text1: string = ' '): string {
