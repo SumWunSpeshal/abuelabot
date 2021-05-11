@@ -7,46 +7,51 @@
     "x": 40,
     "y": 50,
     "maxWidth": 330,
-    "whiteBackground": false
+    "whiteBackground": false,
+    "rotate": 0
   },
   {
     "name": "hagrid",
-    "style": "bold 30px Arial",
+    "style": "bold 35px Arial",
     "color": "#000",
-    "lineHeight": 35,
-    "x": 40,
-    "y": 50,
-    "maxWidth": 330,
-    "whiteBackground": true
+    "lineHeight": 42,
+    "x": 30,
+    "y": 350,
+    "maxWidth": 350,
+    "whiteBackground": true,
+    "rotate": 0
   },
   {
     "name": "jotaro",
-    "style": "bold 30px Arial",
+    "style": "bold 35px Arial",
     "color": "#000",
-    "lineHeight": 35,
-    "x": 40,
-    "y": 50,
-    "maxWidth": 330,
-    "whiteBackground": false
+    "lineHeight": 42,
+    "x": 110,
+    "y": 370,
+    "maxWidth": 290,
+    "whiteBackground": true,
+    "rotate": 0
   },
   {
     "name": "keem",
-    "style": "bold 30px Arial",
+    "style": "bold 50px Arial",
     "color": "#000",
-    "lineHeight": 35,
-    "x": 40,
-    "y": 50,
-    "maxWidth": 330,
-    "whiteBackground": false
+    "lineHeight": 58,
+    "x": 250,
+    "y": 600,
+    "maxWidth": 350,
+    "whiteBackground": true,
+    "rotate": -0.2
   },
   {
     "name": "plankton",
-    "style": "bold 30px Arial",
+    "style": "bold 40px Arial",
     "color": "#000",
-    "lineHeight": 35,
-    "x": 40,
-    "y": 50,
-    "maxWidth": 330,
-    "whiteBackground": false
+    "lineHeight": 48,
+    "x": 100,
+    "y": 470,
+    "maxWidth": 460,
+    "whiteBackground": true,
+    "rotate": 0
   }
 ]

@@ -49,6 +49,7 @@ export class CanvasService {
   addText(): void {
     this.context.fillStyle = this.config.color;
     this.context.font = this.config.style;
+    this.context.rotate(this.config.rotate);
     this.wrapText();
   }
 

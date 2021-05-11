@@ -9,4 +9,5 @@ export interface ClippyInterface {
   y: number;
   maxWidth: number;
   whiteBackground: boolean;
+  rotate: number;
 }
