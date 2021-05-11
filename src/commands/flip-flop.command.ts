@@ -15,7 +15,7 @@ export abstract class FlipFlopCommand implements AbuelaCommand {
   @Command('flip :slug :number')
   @Infos(FlipFlopCommand.infos)
   @Aliases(FlipFlopCommand.infos.aliases!)
-  @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard('flip', 'flop', 'flup'))
+  @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard(['flip', 'flop', 'flup']))
   async execute(command: CommandMessage) {
     const { slug, number } = command.args;
     await command.channel.send('Testing Aliases');

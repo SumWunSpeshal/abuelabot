@@ -1,0 +1,52 @@
+[
+  {
+    "name": "clippy",
+    "style": "bold 30px Arial",
+    "color": "#000",
+    "lineHeight": 35,
+    "x": 40,
+    "y": 50,
+    "maxWidth": 330,
+    "whiteBackground": false
+  },
+  {
+    "name": "hagrid",
+    "style": "bold 30px Arial",
+    "color": "#000",
+    "lineHeight": 35,
+    "x": 40,
+    "y": 50,
+    "maxWidth": 330,
+    "whiteBackground": true
+  },
+  {
+    "name": "jotaro",
+    "style": "bold 30px Arial",
+    "color": "#000",
+    "lineHeight": 35,
+    "x": 40,
+    "y": 50,
+    "maxWidth": 330,
+    "whiteBackground": false
+  },
+  {
+    "name": "keem",
+    "style": "bold 30px Arial",
+    "color": "#000",
+    "lineHeight": 35,
+    "x": 40,
+    "y": 50,
+    "maxWidth": 330,
+    "whiteBackground": false
+  },
+  {
+    "name": "plankton",
+    "style": "bold 30px Arial",
+    "color": "#000",
+    "lineHeight": 35,
+    "x": 40,
+    "y": 50,
+    "maxWidth": 330,
+    "whiteBackground": false
+  }
+]

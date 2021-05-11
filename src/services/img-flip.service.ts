@@ -9,7 +9,7 @@ interface Aliases {
   [key: string]: string;
 }
 
-export abstract class ImgFlip {
+export abstract class ImgFlipService {
   private static localMemes: ImgFlipInterface.GetResponse = JSON.parse(
     readFileSync(Path.join(__dirname, '..', 'assets', 'static-memes.json')).toString()
   );
@@ -39,8 +39,8 @@ export abstract class ImgFlip {
   ): BestMatch {
     const capitalized = CommandHelper.ucFirstLetterOfWords(input);
     const memeNames = memes.map(meme => meme.name);
-    const match: BestMatch = findBestMatch(capitalized, [...Object.keys(ImgFlip.aliases), ...memeNames]);
-    const matchInAliases = ImgFlip.aliases[match?.bestMatch?.target];
+    const match: BestMatch = findBestMatch(capitalized, [...Object.keys(ImgFlipService.aliases), ...memeNames]);
+    const matchInAliases = ImgFlipService.aliases[match?.bestMatch?.target];
 
     switch (true as any) {
       case !!matchInAliases:

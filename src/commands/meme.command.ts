@@ -5,7 +5,7 @@ import config from '../config';
 import { Http } from '../utils/http';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { NotHelpGuard } from '../guards/not-help.guard';
-import { ImgFlip } from '../services/img-flip';
+import { ImgFlipService } from '../services/img-flip.service';
 import { ImgFlipInterface } from '../api/img-flip.interface';
 import { Aliases } from '../decorators/aliases';
 import { Rating } from 'string-similarity';
@@ -30,10 +30,8 @@ export abstract class MemeCommand implements AbuelaCommand {
   async execute(command: CommandMessage, client: Client, allUserArgs: string[]) {
     const [memeName, text0, text1] = allUserArgs;
     const memes: ImgFlipInterface.GetResponse = await Http.fetch<ImgFlipInterface.GetResponse>(MemeCommand.getUrl);
-    const { bestMatch } = ImgFlip.findClosestMemeName(memeName, memes);
-    const singleMeme = memes.data.memes.find(meme => {
-      return meme.name === bestMatch.target;
-    });
+    const { bestMatch } = ImgFlipService.findClosestMemeName(memeName, memes);
+    const singleMeme = memes.data.memes.find(meme => meme.name === bestMatch.target);
     const response: ImgFlipInterface.SuccessResponse = await Http.fetch(
       MemeCommand.createRequestBody(singleMeme!.id, text0, text1),
       'json'
