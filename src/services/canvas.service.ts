@@ -14,73 +14,95 @@ export abstract class CanvasService {
 
   private static canvasHeight: number;
 
-  private static canvas: Canvas;
+  private static _canvas: Canvas;
 
-  private static context: CanvasRenderingContext2D;
+  private static _context: CanvasRenderingContext2D;
 
   private static image: Image;
 
   private static text: string;
 
-  private static config: ClippyInterface;
+  private static _config: ClippyInterface;
 
   static async init(imgName: LocalTemplateName, text: string): Promise<Buffer> {
     this.imgPath = Path.join(__dirname, '..', 'assets', 'img', `${imgName}.png`);
     this.text = text;
-    this.config = CONFIG.find((item: ClippyInterface) => item.name === imgName);
+    this._config = CONFIG.find((item: ClippyInterface) => item.name === imgName);
 
     this.setupCanvas();
     await this.loadImage();
     this.addText();
 
-    return this.canvas.toBuffer();
+    return this._canvas.toBuffer();
   }
 
   private static setupCanvas() {
     const dimensions = imageSize(this.imgPath);
     this.canvasWidth = dimensions.width!;
     this.canvasHeight = dimensions.height!;
-    this.canvas = createCanvas(this.canvasWidth, this.canvasHeight);
-    this.context = CanvasService.canvas.getContext('2d');
+    this._canvas = createCanvas(this.canvasWidth, this.canvasHeight);
+    this._context = CanvasService._canvas.getContext('2d');
   }
 
   private static async loadImage(): Promise<void> {
-    if (this.config.whiteBackground) {
-      this.context.fillStyle = '#fff';
-      this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+    if (this._config.whiteBackground) {
+      this._context.fillStyle = '#fff';
+      this._context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
     this.image = await loadImage(this.imgPath);
-    this.context.drawImage(this.image, 0, 0, this.canvasWidth, this.canvasHeight);
+    this._context.drawImage(this.image, 0, 0, this.canvasWidth, this.canvasHeight);
   }
 
   private static addText(): void {
-    this.context.fillStyle = this.config.color;
-    this.context.font = this.config.style;
-    this.context.rotate(this.config.rotate);
+    this._context.fillStyle = this._config.color;
+    this._context.font = this._config.style;
+    this._context.rotate(this._config.rotate);
     this.wrapText();
   }
 
   private static wrapText(): void {
     const words = this.text.split(' ');
     let line = '';
-    let y = this.config.y;
-    let x = this.config.x;
+    let y = this._config.y;
+    let x = this._config.x;
 
     words.forEach((word, index) => {
       const testLine = line + word + ' ';
-      const metrics = this.context.measureText(testLine);
+      const metrics = this._context.measureText(testLine);
       const testWidth = metrics.width;
 
-      if (testWidth > this.config.maxWidth && index > 0) {
-        this.context.fillText(line, x, y);
+      if (testWidth > this._config.maxWidth && index > 0) {
+        this._context.fillText(line, x, y);
         line = word + ' ';
-        y += this.config.lineHeight;
+        y += this._config.lineHeight;
       } else {
         line = testLine;
       }
     });
 
-    this.context.fillText(line, x, y);
+    this._context.fillText(line, x, y);
+  }
+
+  static get config(): ClippyInterface {
+    return this._config;
+  }
+
+  static set config(value: ClippyInterface) {
+    this._config = value;
+  }
+  static get context(): CanvasRenderingContext2D {
+    return this._context;
+  }
+
+  static set context(value: CanvasRenderingContext2D) {
+    this._context = value;
+  }
+  static get canvas(): Canvas {
+    return this._canvas;
+  }
+
+  static set canvas(value: Canvas) {
+    this._canvas = value;
   }
 }
