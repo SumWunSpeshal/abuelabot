@@ -7,36 +7,44 @@ import { readFileSync } from 'fs';
 
 const CONFIG = JSON.parse(readFileSync(Path.join(__dirname, '..', 'assets', 'clippy.json')).toString());
 
-export class CanvasService {
-  private readonly imgPath: string;
+export abstract class CanvasService {
+  private static imgPath: string;
 
-  private readonly canvasWidth: number;
+  private static canvasWidth: number;
 
-  private readonly canvasHeight: number;
+  private static canvasHeight: number;
 
-  private canvas: Canvas;
+  private static canvas: Canvas;
 
-  private context: CanvasRenderingContext2D;
+  private static context: CanvasRenderingContext2D;
 
-  private image: Image | undefined;
+  private static image: Image;
 
-  private text: string;
+  private static text: string;
 
-  private readonly config: ClippyInterface;
+  private static config: ClippyInterface;
 
-  constructor(imgName: LocalTemplateName, text: string) {
+  static async init(imgName: LocalTemplateName, text: string): Promise<Buffer> {
     this.imgPath = Path.join(__dirname, '..', 'assets', 'img', `${imgName}.png`);
     this.text = text;
     this.config = CONFIG.find((item: ClippyInterface) => item.name === imgName);
 
+    this.setupCanvas();
+    await this.loadImage();
+    this.addText();
+
+    return this.canvas.toBuffer();
+  }
+
+  private static setupCanvas() {
     const dimensions = imageSize(this.imgPath);
     this.canvasWidth = dimensions.width!;
     this.canvasHeight = dimensions.height!;
     this.canvas = createCanvas(this.canvasWidth, this.canvasHeight);
-    this.context = this.canvas.getContext('2d');
+    this.context = CanvasService.canvas.getContext('2d');
   }
 
-  async loadImage(): Promise<void> {
+  private static async loadImage(): Promise<void> {
     if (this.config.whiteBackground) {
       this.context.fillStyle = '#fff';
       this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -46,16 +54,14 @@ export class CanvasService {
     this.context.drawImage(this.image, 0, 0, this.canvasWidth, this.canvasHeight);
   }
 
-  addText(): void {
+  private static addText(): void {
     this.context.fillStyle = this.config.color;
     this.context.font = this.config.style;
     this.context.rotate(this.config.rotate);
     this.wrapText();
   }
 
-  private wrapText(
-    maxHeight: number = Infinity // implement logic
-  ): void {
+  private static wrapText(): void {
     const words = this.text.split(' ');
     let line = '';
     let y = this.config.y;
@@ -76,9 +82,5 @@ export class CanvasService {
     });
 
     this.context.fillText(line, x, y);
-  }
-
-  exportAsBuffer(): Buffer {
-    return this.canvas.toBuffer();
   }
 }
