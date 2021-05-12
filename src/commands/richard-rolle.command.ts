@@ -8,7 +8,7 @@ export abstract class RichardRolleCommand implements AbuelaCommand {
   private static readonly infos: AbuelaCommandInfos = {
     description: 'This command is very usefull.',
     usage: 'type "richardrolle" and see magic happen :sparkles:',
-    aliases: ['rolle','richard','rr']
+    aliases: ['rolle', 'richard', 'richard-rolle', 'rr']
   };
 
   @Command('richardrolle')

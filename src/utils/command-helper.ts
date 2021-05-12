@@ -1,5 +1,4 @@
 import { Client, CommandInfos, CommandMessage } from '@typeit/discord';
-import { Message } from 'discord.js';
 
 type DelimiterArr = Array<' ' | '-'>;
 
@@ -34,11 +33,12 @@ export abstract class CommandHelper {
 
   static getCommandName({ commandContent }: CommandMessage): CommandInfos | undefined {
     const commands: CommandInfos[] = Client.getCommands();
-    const match = commands.find(command => {
-      return commandContent?.includes(command.commandName as string);
-    });
 
-    return match;
+    return commands.find(({ commandName, infos }) => {
+      return [commandName, ...(infos.aliases || [])].find(item => {
+        return commandContent?.toLowerCase().includes(item);
+      });
+    });
   }
 
   static containsDescriptionFlag(userInput: string): boolean {
