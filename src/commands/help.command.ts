@@ -8,6 +8,13 @@ import { CommandHelper } from '../utils/command-helper';
 import { HelpGuard } from '../guards/help.guard';
 import { NotHelpGuard } from '../guards/not-help.guard';
 
+const INFOS: AbuelaCommandInfos = {
+  commandName: 'help',
+  description: 'Welp, you just found out...',
+  usage: `...really?`,
+  aliases: ['ls', 'list', 'man', '!']
+};
+
 export abstract class HelpCommand implements AbuelaCommand {
   private static readonly headline = 'Available Commands';
   private static readonly description = `Explore all Abuela's commands! If you want to know more about a specific command or its usage, type \`!{command} -h\``;
@@ -18,15 +25,9 @@ export abstract class HelpCommand implements AbuelaCommand {
     aliases: 'None'
   };
 
-  private static readonly infos: AbuelaCommandInfos = {
-    description: 'Welp, you just found out...',
-    usage: `...really?`,
-    aliases: ['ls', 'list', 'man', '!']
-  };
-
-  @Command('help')
-  @Infos(HelpCommand.infos)
-  @Aliases(HelpCommand.infos.aliases!)
+  @Command(INFOS.commandName)
+  @Infos(INFOS)
+  @Aliases(INFOS.aliases)
   @Guard(NotHelpGuard, NotBotGuard)
   async execute(command: CommandMessage) {
     const commands = Client.getCommands();

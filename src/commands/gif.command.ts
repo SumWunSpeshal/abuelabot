@@ -9,16 +9,18 @@ import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { url } from '../utils/tagged-templates';
 import { NotHelpGuard } from '../guards/not-help.guard';
 
+const INFOS: AbuelaCommandInfos = {
+  commandName: 'gif',
+  description: 'Get a random GIF with an optional search term to narrow down the results',
+  usage: '`!gif` or `!gif {searchTerm}`',
+  aliases: []
+};
+
 export abstract class GifCommand implements AbuelaCommand {
   private readonly rating = 'r';
 
-  private static readonly infos: AbuelaCommandInfos = {
-    description: 'Get a random GIF with an optional search term to narrow down the results',
-    usage: '`!gif` or `!gif {searchTerm}`'
-  };
-
-  @Command('gif')
-  @Infos(GifCommand.infos)
+  @Command(INFOS.commandName)
+  @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {

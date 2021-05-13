@@ -3,19 +3,13 @@ import { Client } from '@typeit/discord';
 
 export interface AbuelaCommand {
   execute(command: CommandMessage, client: Client, ...rest: any[]): Promise<void>;
-
-  /**
-   * @description
-   * The implementation of this property needs to be static and required!
-   * TypeScript doesn't allow for static properties in Interfaces, so this comment is necessary
-   */
-  readonly infos?: AbuelaCommandInfos;
 }
 
 export interface AbuelaCommandInfos {
+  commandName: string;
   description: string;
   usage: string;
-  aliases?: string[];
+  aliases: string[];
 }
 
 export interface AbuelaEvent {

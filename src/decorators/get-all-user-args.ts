@@ -2,7 +2,7 @@ import { CommandMessage } from '@typeit/discord';
 import { CommandHelper } from '../utils/command-helper';
 import { Client } from '@typeit/discord';
 
-type Delimiter = '|' | '&';
+type Delimiter = '|' | '&' | '/';
 
 export function GetAllUserArgs(delimiter?: Delimiter) {
   return function (target: any, key: string, descriptor: PropertyDescriptor) {

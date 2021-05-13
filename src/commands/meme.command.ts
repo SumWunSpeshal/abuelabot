@@ -11,22 +11,23 @@ import { Aliases } from '../decorators/aliases';
 import { Rating } from 'string-similarity';
 import { colorText } from '../utils/color-text';
 
+const INFOS: AbuelaCommandInfos = {
+  commandName: 'meme',
+  description: `Search a meme from imgflip and add your own caption to it! Add up to two captions to your meme. The captions will be conveniently placed, trying to fit the meme. We check for search term similarities so your query doesn't need to be exact.`,
+  usage: '`!meme {searchTerm?} / {caption1?} / {caption2?}` or just `!meme` for a random, non-captioned meme',
+  aliases: ['imgflip', 'img', 'caption', 'cap']
+};
+
 export abstract class MemeCommand implements AbuelaCommand {
   private static readonly getUrl = 'https://api.imgflip.com/get_memes';
 
   private static readonly captionUrl = 'https://api.imgflip.com/caption_image';
 
-  private static readonly infos: AbuelaCommandInfos = {
-    description: `Search a meme from imgflip and add your own caption to it! Add up to two captions to your meme. The captions will be conveniently placed, trying to fit the meme. We check for search term similarities so your query doesn't need to be exact.`,
-    usage: '`!meme {searchTerm?} | {caption1?} | {caption2?}` or just `!meme` for a random, non-captioned meme',
-    aliases: ['imgflip', 'img', 'caption', 'cap']
-  };
-
-  @Command('meme')
-  @Infos(MemeCommand.infos)
-  @Aliases(MemeCommand.infos.aliases!)
+  @Command(INFOS.commandName)
+  @Infos(INFOS)
+  @Aliases(INFOS.aliases)
   @Guard(NotHelpGuard, NotBotGuard)
-  @GetAllUserArgs('|')
+  @GetAllUserArgs('/')
   async execute(command: CommandMessage, client: Client, allUserArgs: string[]) {
     const [memeName, text0, text1] = allUserArgs;
     const memes: ImgFlipInterface.GetResponse = await Http.fetch<ImgFlipInterface.GetResponse>(MemeCommand.getUrl);

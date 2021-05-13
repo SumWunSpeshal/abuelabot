@@ -5,13 +5,14 @@ import { Aliases } from '../decorators/aliases';
 import { Random } from '../utils/random';
 import { NotHelpGuard } from '../guards/not-help.guard';
 
-export abstract class ComplimentBotCommand implements AbuelaCommand {
-  private static readonly infos: AbuelaCommandInfos = {
-    description: 'TODO',
-    usage: 'TODO with `code`',
-    aliases: ['bestbot', 'gj', 'love', 'iloveu', 'iloveyou']
-  };
+const INFOS: AbuelaCommandInfos = {
+  commandName: 'goodbot',
+  description: 'Tell me how much you love me! :heart:',
+  usage: '`!goodbot`',
+  aliases: ['bestbot', 'gj', 'love', 'iloveu', 'iloveyou']
+};
 
+export abstract class ComplimentBotCommand implements AbuelaCommand {
   private static readonly botResponses = [
     'Thank you, I love you too!',
     `I know I'm awesome.`,
@@ -22,10 +23,10 @@ export abstract class ComplimentBotCommand implements AbuelaCommand {
     'hdgdl, brudi'
   ];
 
-  @Command('goodbot')
-  @Infos(ComplimentBotCommand.infos)
+  @Command(INFOS.commandName)
+  @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard)
-  @Aliases(ComplimentBotCommand.infos.aliases!)
+  @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
     await command.reply(Random.getRandomFrom(ComplimentBotCommand.botResponses));
   }
