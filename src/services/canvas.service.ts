@@ -5,7 +5,7 @@ import { Buffer } from 'buffer';
 import { ClippyInterface, LocalTemplateName } from '../api/clippy.interface';
 import { readFileSync } from 'fs';
 
-const CONFIG = JSON.parse(readFileSync(Path.join(__dirname, '..', 'assets', 'clippy.json')).toString());
+const IMG_CONFIG = JSON.parse(readFileSync(Path.join(__dirname, '..', 'assets', 'clippy.json')).toString());
 
 export abstract class CanvasService {
   private static imgPath: string;
@@ -27,7 +27,7 @@ export abstract class CanvasService {
   static async init(imgName: LocalTemplateName, text: string): Promise<Buffer> {
     this.imgPath = Path.join(__dirname, '..', 'assets', 'img', `${imgName}.png`);
     this.text = text;
-    this._config = CONFIG.find((item: ClippyInterface) => item.name === imgName);
+    this._config = IMG_CONFIG.find((item: ClippyInterface) => item.name === imgName);
 
     this.setupCanvas();
     await this.loadImage();

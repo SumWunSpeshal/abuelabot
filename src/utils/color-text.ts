@@ -1,11 +1,12 @@
 type Colors = {
-  [key in 'blue' | 'yellow' | 'dark_yellow' | 'turquoise' | 'green']: string;
+  [key in 'blue' | 'yellow' | 'dark_yellow' | 'turquoise' | 'green' | 'red']: string;
 };
 
 const languages: Colors = {
-  blue: 'ini',
+  blue: 'ini', // use with brackets
   yellow: 'fix',
   dark_yellow: 'apache',
+  red: 'css', // use with brackets
   turquoise: 'bash',
   green: 'json'
 };
