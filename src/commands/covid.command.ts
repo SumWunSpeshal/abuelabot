@@ -76,7 +76,9 @@ export abstract class CovidCommand implements AbuelaCommand {
         title: `Aktuelle COVID Daten für \`Deutschland\``,
         fields: [...CovidCommand.buildCovidInfos(germanyData)],
         footer: {
-          text: `Quelle: ${germanyData.meta!.source} | Letztes Update: ${CovidCommand.formatDate(germanyData.meta!.lastUpdate)}`
+          text: `Quelle: ${germanyData.meta!.source} | Letztes Update: ${CovidCommand.formatDate(
+            germanyData.meta!.lastUpdate
+          )}`
         }
       }
     });
@@ -87,11 +89,9 @@ export abstract class CovidCommand implements AbuelaCommand {
     meta: RkiCovidInterface.Meta,
     colorRange: RkiCovidInterface.ColorRoot
   ): MessageOptions {
-    const incidentColor = CovidCommand.getIncidentColor(colorRange, district?.weekIncidence);
-
     return {
       embed: {
-        color: incidentColor?.color || '#000',
+        color: CovidCommand.getIncidentColor(colorRange, district?.weekIncidence)?.color || '#000',
         title: `Aktuelle COVID Daten für \`${district.name}\``,
         fields: [...CovidCommand.buildCovidInfos(district)],
         footer: {
@@ -107,11 +107,9 @@ export abstract class CovidCommand implements AbuelaCommand {
     meta: RkiCovidInterface.Meta,
     colorRange: RkiCovidInterface.ColorRoot
   ): MessageOptions {
-    const incidentColor = CovidCommand.getIncidentColor(colorRange, state?.weekIncidence);
-
     return {
       embed: {
-        color: incidentColor?.color || '#000',
+        color: CovidCommand.getIncidentColor(colorRange, state?.weekIncidence)?.color || '#000',
         title: `Aktuelle Daten für das entsprechende Bundesland \`${state?.name}\``,
         fields: [
           ...CovidCommand.buildCovidInfos(state),
@@ -125,7 +123,10 @@ export abstract class CovidCommand implements AbuelaCommand {
             name: ':one: Impfung insg. (in %)',
             value: colorText(
               'green',
-              `[${(vaccData?.vaccinated).toLocaleString()} (${CovidCommand.inPercent(vaccData?.vaccinated, state?.population)})]`
+              `[${(vaccData?.vaccinated).toLocaleString()} (${CovidCommand.inPercent(
+                vaccData?.vaccinated,
+                state?.population
+              )})]`
             ),
             inline: true
           },
@@ -173,7 +174,7 @@ export abstract class CovidCommand implements AbuelaCommand {
     });
   }
 
-  static buildCovidInfos(location: RkiCovidInterface.Ags) {
+  static buildCovidInfos(location: RkiCovidInterface.Ags): EmbedField[] {
     return [
       { name: 'Wocheninzidenz', value: colorText('blue', `[${location?.weekIncidence}]`), inline: false },
       { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false },
@@ -183,15 +184,26 @@ export abstract class CovidCommand implements AbuelaCommand {
         value: colorText('green', `[${(location?.delta?.recovered).toLocaleString()}]`),
         inline: true
       },
-      { name: ':microbe: Δ Fälle', value: colorText('yellow', `[${(location?.delta?.cases).toLocaleString()}]`), inline: true },
-      { name: ':skull: Δ Tode', value: colorText('red', `[${(location?.delta?.deaths).toLocaleString()}]`), inline: true },
+      {
+        name: ':microbe: Δ Fälle',
+        value: colorText('yellow', `[${(location?.delta?.cases).toLocaleString()}]`),
+        inline: true
+      },
+      {
+        name: ':skull: Δ Tode',
+        value: colorText('red', `[${(location?.delta?.deaths).toLocaleString()}]`),
+        inline: true
+      },
       { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false },
       { name: '**Insgesamt (in %)**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
       {
         name: ':four_leaf_clover: Genesen',
         value: colorText(
           'green',
-          `[${(location?.recovered).toLocaleString()} (${CovidCommand.inPercent(location?.recovered, location?.population)})]`
+          `[${(location?.recovered).toLocaleString()} (${CovidCommand.inPercent(
+            location?.recovered,
+            location?.population
+          )})]`
         ),
         inline: true
       },
