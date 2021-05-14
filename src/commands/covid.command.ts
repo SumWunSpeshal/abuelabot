@@ -11,12 +11,14 @@ import { findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
 import { EmbedField, MessageOptions } from 'discord.js';
 import { colorText } from '../utils/color-text';
+import { Aliases } from '../decorators/aliases';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'covid',
-  description: 'TODO',
-  usage: 'TODO with `code`',
-  aliases: ['corona', 'covid19', 'sarscov2']
+  description:
+    'Get the latest COVID related information about your district (Landkreis) as well as the COVID infos about your state (Bundesland) as well as your states vaccination infos. OR... get all the info about all of Germany by not sending any args at all',
+  usage: '`!covid` for all of Germany\n`!covid {district}` for a specific district',
+  aliases: ['corona', 'covid19', 'sarscov2', 'ncov', 'cov']
 };
 
 export abstract class CovidCommand implements AbuelaCommand {
@@ -26,11 +28,19 @@ export abstract class CovidCommand implements AbuelaCommand {
     readFileSync(Path.join(__dirname, '..', 'assets', 'german-districts.json')).toString()
   );
 
+  private static readonly zeroWidthSpace = '\u200b';
+
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard)
+  @Aliases(INFOS.aliases)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
+    if (!allUserArgs) {
+      await CovidCommand.displayGermanyData(command);
+      return;
+    }
+
     const agsObj: RkiCovidInterface.AgsShort | undefined = CovidCommand.getClosestDistrictMatch(allUserArgs);
     const district = await CovidCommand.getRkiData<RkiCovidInterface.DistrictRoot>('districts', agsObj?.ags);
     const metaData: RkiCovidInterface.Meta = district.meta;
@@ -52,58 +62,38 @@ export abstract class CovidCommand implements AbuelaCommand {
     await command.channel.send(vaccinationEmbed);
   }
 
+  static async displayGermanyData(command: CommandMessage) {
+    const [germanyData, colorRanges] = await Promise.all([
+      CovidCommand.getRkiData<RkiCovidInterface.Ags>('germany'),
+      CovidCommand.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
+    ]);
+
+    germanyData.population = 83756658; // fixme kek
+
+    await command.channel.send({
+      embed: {
+        color: CovidCommand.getIncidentColor(colorRanges, germanyData?.weekIncidence)?.color || '#000',
+        title: `Aktuelle COVID Daten für \`Deutschland\``,
+        fields: [...CovidCommand.buildCovidInfos(germanyData)],
+        footer: {
+          text: `Quelle: ${germanyData.meta!.source} | Letztes Update: ${CovidCommand.formatDate(germanyData.meta!.lastUpdate)}`
+        }
+      }
+    });
+  }
+
   static buildInfectionEmbed(
     district: RkiCovidInterface.Ags,
     meta: RkiCovidInterface.Meta,
     colorRange: RkiCovidInterface.ColorRoot
   ): MessageOptions {
-    const zeroWidthSpace = '\u200b';
     const incidentColor = CovidCommand.getIncidentColor(colorRange, district?.weekIncidence);
 
     return {
       embed: {
         color: incidentColor?.color || '#000',
         title: `Aktuelle COVID Daten für \`${district.name}\``,
-        fields: [
-          { name: 'Wocheninzidenz', value: colorText('blue', `[${district?.weekIncidence}]`), inline: false },
-          { name: zeroWidthSpace, value: zeroWidthSpace, inline: false },
-          { name: '**Unterschied zu gestern**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
-          {
-            name: ':four_leaf_clover: Δ Genesen',
-            value: colorText('green', `[${district?.delta?.recovered}]`),
-            inline: true
-          },
-          { name: ':microbe: Δ Fälle', value: colorText('yellow', `[${district?.delta?.cases}]`), inline: true },
-          { name: ':skull: Δ Tode', value: colorText('red', `[${district?.delta?.deaths}]`), inline: true },
-          { name: zeroWidthSpace, value: zeroWidthSpace, inline: false },
-          { name: '**Insgesamt (in %)**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
-          {
-            name: ':four_leaf_clover: Genesen',
-            value: colorText(
-              'green',
-              `[${district?.recovered} (${CovidCommand.inPercent(district?.recovered, district?.population)})]`
-            ),
-            inline: true
-          },
-          {
-            name: ':microbe: Fälle',
-            value: colorText(
-              'yellow',
-              `[${district?.cases} (${CovidCommand.inPercent(district?.cases, district?.population)})]`
-            ),
-            inline: true
-          },
-          {
-            name: ':skull: Tode',
-            value: colorText(
-              'red',
-              `[${district?.deaths} (${CovidCommand.inPercent(district?.deaths, district?.population)})]`
-            ),
-            inline: true
-          },
-
-          { name: zeroWidthSpace, value: zeroWidthSpace, inline: false }
-        ],
+        fields: [...CovidCommand.buildCovidInfos(district)],
         footer: {
           text: `Quelle: ${meta.source} | Letztes Update: ${CovidCommand.formatDate(meta.lastUpdate)}`
         }
@@ -117,7 +107,6 @@ export abstract class CovidCommand implements AbuelaCommand {
     meta: RkiCovidInterface.Meta,
     colorRange: RkiCovidInterface.ColorRoot
   ): MessageOptions {
-    const zeroWidthSpace = '\u200b';
     const incidentColor = CovidCommand.getIncidentColor(colorRange, state?.weekIncidence);
 
     return {
@@ -125,40 +114,7 @@ export abstract class CovidCommand implements AbuelaCommand {
         color: incidentColor?.color || '#000',
         title: `Aktuelle Daten für das entsprechende Bundesland \`${state?.name}\``,
         fields: [
-          { name: 'Wocheninzidenz', value: colorText('blue', `[${state?.weekIncidence}]`), inline: false },
-          { name: zeroWidthSpace, value: zeroWidthSpace, inline: false },
-          { name: '**Unterschied zu gestern**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
-          {
-            name: ':four_leaf_clover: Δ Genesen',
-            value: colorText('green', `[${state?.delta?.recovered}]`),
-            inline: true
-          },
-          { name: ':microbe: Δ Fälle', value: colorText('yellow', `[${state?.delta?.cases}]`), inline: true },
-          { name: ':skull: Δ Tode', value: colorText('red', `[${state?.delta?.deaths}]`), inline: true },
-          { name: zeroWidthSpace, value: zeroWidthSpace, inline: false },
-          { name: '**Insgesamt (in %)**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
-          {
-            name: ':four_leaf_clover: Genesen',
-            value: colorText(
-              'green',
-              `[${state?.recovered} (${CovidCommand.inPercent(state?.recovered, state?.population)})]`
-            ),
-            inline: true
-          },
-          {
-            name: ':microbe: Fälle',
-            value: colorText(
-              'yellow',
-              `[${state?.cases} (${CovidCommand.inPercent(state?.cases, state?.population)})]`
-            ),
-            inline: true
-          },
-          {
-            name: ':skull: Tode',
-            value: colorText('red', `[${state?.deaths} (${CovidCommand.inPercent(state?.deaths, state?.population)})]`),
-            inline: true
-          },
-          { name: zeroWidthSpace, value: zeroWidthSpace, inline: false },
+          ...CovidCommand.buildCovidInfos(state),
           { name: '**Impfungen**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
           {
             name: ':syringe: seit gestern',
@@ -184,7 +140,7 @@ export abstract class CovidCommand implements AbuelaCommand {
             ),
             inline: true
           },
-          { name: zeroWidthSpace, value: zeroWidthSpace, inline: false }
+          { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false }
         ],
         footer: {
           text: `Quelle: ${meta.source} | Letztes Update: ${CovidCommand.formatDate(meta.lastUpdate)}`
@@ -215,6 +171,48 @@ export abstract class CovidCommand implements AbuelaCommand {
       month: 'long',
       day: 'numeric'
     });
+  }
+
+  static buildCovidInfos(location: RkiCovidInterface.Ags) {
+    return [
+      { name: 'Wocheninzidenz', value: colorText('blue', `[${location?.weekIncidence}]`), inline: false },
+      { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false },
+      { name: '**Unterschied zu gestern**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
+      {
+        name: ':four_leaf_clover: Δ Genesen',
+        value: colorText('green', `[${location?.delta?.recovered}]`),
+        inline: true
+      },
+      { name: ':microbe: Δ Fälle', value: colorText('yellow', `[${location?.delta?.cases}]`), inline: true },
+      { name: ':skull: Δ Tode', value: colorText('red', `[${location?.delta?.deaths}]`), inline: true },
+      { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false },
+      { name: '**Insgesamt (in %)**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
+      {
+        name: ':four_leaf_clover: Genesen',
+        value: colorText(
+          'green',
+          `[${location?.recovered} (${CovidCommand.inPercent(location?.recovered, location?.population)})]`
+        ),
+        inline: true
+      },
+      {
+        name: ':microbe: Fälle',
+        value: colorText(
+          'yellow',
+          `[${location?.cases} (${CovidCommand.inPercent(location?.cases, location?.population)})]`
+        ),
+        inline: true
+      },
+      {
+        name: ':skull: Tode',
+        value: colorText(
+          'red',
+          `[${location?.deaths} (${CovidCommand.inPercent(location?.deaths, location?.population)})]`
+        ),
+        inline: true
+      },
+      { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false }
+    ];
   }
 
   static async getRkiData<T>(endPoint: RkiCovidInterface.ApiEndPoint, arg?: string | undefined): Promise<T> {

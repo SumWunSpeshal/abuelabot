@@ -1,5 +1,4 @@
 export declare module RkiCovidInterface {
-
   export type ApiEndPoint = 'districts' | 'states' | 'germany' | 'vaccinations' | 'map' | 'testing';
 
   export type AgsString = string; // FIXME find a way to type this as 'numberstring'
@@ -37,7 +36,7 @@ export declare module RkiCovidInterface {
   }
 
   export interface Ags {
-    id?: number,
+    id?: number;
     ags?: AgsString;
     name: string;
     county: string;
@@ -52,7 +51,14 @@ export declare module RkiCovidInterface {
     weekIncidence: number;
     casesPer100k: number;
     delta: Delta;
+    r?: R;
+    meta?: Meta
   }
+  export interface R {
+    value: number;
+    date: Date;
+  }
+
 
   export interface DistrictData {
     [key: string]: Ags; // key is of type AgsString
@@ -92,13 +98,13 @@ export declare module RkiCovidInterface {
   };
 
   export interface State {
-    name: string,
-    administeredVaccinations: number,
-    vaccinated: number,
-    vaccination: VaccProduct,
-    delta: number,
-    quote: number,
-    secondVaccination: SecondVaccination,
+    name: string;
+    administeredVaccinations: number;
+    vaccinated: number;
+    vaccination: VaccProduct;
+    delta: number;
+    quote: number;
+    secondVaccination: SecondVaccination;
     indication?: Indication;
   }
 
