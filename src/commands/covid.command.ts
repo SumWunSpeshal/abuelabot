@@ -63,8 +63,9 @@ export abstract class CovidCommand implements AbuelaCommand {
   }
 
   static async displayGermanyData(command: CommandMessage) {
-    const [germanyData, colorRanges] = await Promise.all([
+    const [germanyData, vaccinations, colorRanges] = await Promise.all([
       CovidCommand.getRkiData<RkiCovidInterface.Ags>('germany'),
+      CovidCommand.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
       CovidCommand.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
     ]);
 
@@ -74,7 +75,10 @@ export abstract class CovidCommand implements AbuelaCommand {
       embed: {
         color: CovidCommand.getIncidentColor(colorRanges, germanyData?.weekIncidence)?.color || '#000',
         title: `Aktuelle COVID Daten für \`Deutschland\``,
-        fields: [...CovidCommand.buildCovidInfos(germanyData)],
+        fields: [
+          ...CovidCommand.buildCovidInfos(germanyData),
+          ...CovidCommand.buildVaccInfos(vaccinations.data, { population: germanyData.population })
+        ],
         footer: {
           text: `Quelle: ${germanyData.meta!.source} | Letztes Update: ${CovidCommand.formatDate(
             germanyData.meta!.lastUpdate
@@ -103,7 +107,7 @@ export abstract class CovidCommand implements AbuelaCommand {
 
   static buildVaccinationEmbed(
     state: RkiCovidInterface.Ags,
-    vaccData: any,
+    vaccData: RkiCovidInterface.VaccData | RkiCovidInterface.State,
     meta: RkiCovidInterface.Meta,
     colorRange: RkiCovidInterface.ColorRoot
   ): MessageOptions {
@@ -111,38 +115,7 @@ export abstract class CovidCommand implements AbuelaCommand {
       embed: {
         color: CovidCommand.getIncidentColor(colorRange, state?.weekIncidence)?.color || '#000',
         title: `Aktuelle Daten für das entsprechende Bundesland \`${state?.name}\``,
-        fields: [
-          ...CovidCommand.buildCovidInfos(state),
-          { name: '**Impfungen**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
-          {
-            name: ':syringe: seit gestern',
-            value: colorText('green', `[${(vaccData?.delta).toLocaleString()}]`),
-            inline: true
-          },
-          {
-            name: ':one: Impfung insg. (in %)',
-            value: colorText(
-              'green',
-              `[${(vaccData?.vaccinated).toLocaleString()} (${CovidCommand.inPercent(
-                vaccData?.vaccinated,
-                state?.population
-              )})]`
-            ),
-            inline: true
-          },
-          {
-            name: ':two: Impfung insg. (in %)',
-            value: colorText(
-              'green',
-              `[${(vaccData?.secondVaccination.vaccinated).toLocaleString()} (${CovidCommand.inPercent(
-                vaccData?.secondVaccination.vaccinated,
-                state?.population
-              )})]`
-            ),
-            inline: true
-          },
-          { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false }
-        ],
+        fields: [...CovidCommand.buildCovidInfos(state), ...CovidCommand.buildVaccInfos(vaccData, state)],
         footer: {
           text: `Quelle: ${meta.source} | Letztes Update: ${CovidCommand.formatDate(meta.lastUpdate)}`
         }
@@ -150,33 +123,9 @@ export abstract class CovidCommand implements AbuelaCommand {
     };
   }
 
-  static inPercent(stat: number, population: number): string {
-    return `${+((stat / population) * 100).toFixed(2)}%`;
-  }
-
-  static computeEmbedFields<T extends RkiCovidInterface.Ags | RkiCovidInterface.Meta | RkiCovidInterface.State>(
-    obj: T
-  ): EmbedField[] {
-    return Object.keys(obj)
-      .filter(key => {
-        const type = typeof obj[key as keyof T];
-        return type === 'string' || type === 'number';
-      })
-      .map(key => ({ name: key, value: obj[key as keyof T], inline: false })) as any;
-  }
-
-  static formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('de-DE', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }
-
   static buildCovidInfos(location: RkiCovidInterface.Ags): EmbedField[] {
     return [
-      { name: 'Wocheninzidenz', value: colorText('blue', `[${location?.weekIncidence}]`), inline: false },
+      { name: 'Wocheninzidenz', value: colorText('blue', `[${(location?.weekIncidence).toLocaleString()}]`), inline: false },
       { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false },
       { name: '**Unterschied zu gestern**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
       {
@@ -225,6 +174,67 @@ export abstract class CovidCommand implements AbuelaCommand {
       },
       { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false }
     ];
+  }
+
+  static buildVaccInfos(
+    vaccData: RkiCovidInterface.VaccData | RkiCovidInterface.State,
+    location: { population: number }
+  ): EmbedField[] {
+    return [
+      { name: '**Impfungen**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
+      {
+        name: ':syringe: seit gestern',
+        value: colorText('green', `[${(vaccData?.delta).toLocaleString()}]`),
+        inline: true
+      },
+      {
+        name: ':one: Impfung insg. (in %)',
+        value: colorText(
+          'green',
+          `[${(vaccData?.vaccinated).toLocaleString()} (${CovidCommand.inPercent(
+            vaccData?.vaccinated,
+            location?.population
+          )})]`
+        ),
+        inline: true
+      },
+      {
+        name: ':two: Impfung insg. (in %)',
+        value: colorText(
+          'green',
+          `[${(vaccData?.secondVaccination.vaccinated).toLocaleString()} (${CovidCommand.inPercent(
+            vaccData?.secondVaccination.vaccinated,
+            location?.population
+          )})]`
+        ),
+        inline: true
+      },
+      { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false }
+    ];
+  }
+
+  static inPercent(stat: number, population: number): string {
+    return `${(+((stat / population) * 100).toFixed(2)).toLocaleString()}%`;
+  }
+
+  static computeEmbedFields<T extends RkiCovidInterface.Ags | RkiCovidInterface.Meta | RkiCovidInterface.State>(
+    obj: T
+  ): EmbedField[] {
+    return Object.keys(obj)
+      .filter(key => {
+        const type = typeof obj[key as keyof T];
+        return type === 'string' || type === 'number';
+      })
+      .map(key => ({ name: key, value: obj[key as keyof T], inline: false })) as any;
+  }
+
+  static formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString('de-DE', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 
   static async getRkiData<T>(endPoint: RkiCovidInterface.ApiEndPoint, arg?: string | undefined): Promise<T> {
