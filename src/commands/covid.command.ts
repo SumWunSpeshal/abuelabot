@@ -26,10 +26,6 @@ export abstract class CovidCommand implements AbuelaCommand {
     readFileSync(Path.join(__dirname, '..', 'assets', 'german-districts.json')).toString()
   );
 
-  private static readonly incidenceColorMap: RkiCovidInterface.ColorRoot = JSON.parse(
-    readFileSync(Path.join(__dirname, '..', 'assets', 'incidence-color-map.json')).toString()
-  );
-
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard)
@@ -40,12 +36,17 @@ export abstract class CovidCommand implements AbuelaCommand {
     const metaData: RkiCovidInterface.Meta = district.meta;
     const districtDetails: RkiCovidInterface.Ags = district.data[agsObj!.ags];
     const stateAbbreviation = districtDetails.stateAbbreviation as RkiCovidInterface.StateAbbreviation;
-    const state = await CovidCommand.getRkiData<RkiCovidInterface.DistrictRoot>('states', stateAbbreviation);
+
+    const [state, vaccinations, colorRange] = await Promise.all([
+      CovidCommand.getRkiData<RkiCovidInterface.DistrictRoot>('states', stateAbbreviation),
+      CovidCommand.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
+      CovidCommand.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
+    ]);
+
     const stateDetails = state.data[stateAbbreviation];
-    const vaccinations = await CovidCommand.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations');
     const stateVaccData = vaccinations.data.states[stateAbbreviation];
-    const infectionEmbed = CovidCommand.buildInfectionEmbed(districtDetails, metaData);
-    const vaccinationEmbed = CovidCommand.buildVaccinationEmbed(stateDetails, stateVaccData, metaData);
+    const infectionEmbed = CovidCommand.buildInfectionEmbed(districtDetails, metaData, colorRange);
+    const vaccinationEmbed = CovidCommand.buildVaccinationEmbed(stateDetails, stateVaccData, metaData, colorRange);
 
     await command.channel.send(infectionEmbed);
     await command.channel.send(vaccinationEmbed);
@@ -53,10 +54,11 @@ export abstract class CovidCommand implements AbuelaCommand {
 
   static buildInfectionEmbed(
     district: RkiCovidInterface.Ags,
-    meta: RkiCovidInterface.Meta
+    meta: RkiCovidInterface.Meta,
+    colorRange: RkiCovidInterface.ColorRoot
   ): MessageOptions {
     const zeroWidthSpace = '\u200b';
-    const incidentColor = CovidCommand.getIncidentColor(district?.weekIncidence);
+    const incidentColor = CovidCommand.getIncidentColor(colorRange, district?.weekIncidence);
 
     return {
       embed: {
@@ -112,10 +114,11 @@ export abstract class CovidCommand implements AbuelaCommand {
   static buildVaccinationEmbed(
     state: RkiCovidInterface.Ags,
     vaccData: any,
-    meta: RkiCovidInterface.Meta
+    meta: RkiCovidInterface.Meta,
+    colorRange: RkiCovidInterface.ColorRoot
   ): MessageOptions {
     const zeroWidthSpace = '\u200b';
-    const incidentColor = CovidCommand.getIncidentColor(state?.weekIncidence);
+    const incidentColor = CovidCommand.getIncidentColor(colorRange, state?.weekIncidence);
 
     return {
       embed: {
@@ -224,8 +227,10 @@ export abstract class CovidCommand implements AbuelaCommand {
     return CovidCommand.agsMap.find(item => item.name === bestMatch?.target);
   }
 
-  static getIncidentColor(incidence: number): RkiCovidInterface.IncidentRange | undefined {
-    const ranges: RkiCovidInterface.IncidentRange[] = CovidCommand.incidenceColorMap.incidentRanges;
-    return ranges.find(item => incidence >= item.min! && incidence <= item.max!);
+  static getIncidentColor(
+    colorMap: RkiCovidInterface.ColorRoot,
+    incidence: number
+  ): RkiCovidInterface.IncidentRange | undefined {
+    return colorMap.incidentRanges.find(item => incidence >= item.min! && incidence <= item.max!);
   }
 }

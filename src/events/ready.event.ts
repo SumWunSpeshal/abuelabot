@@ -1,6 +1,5 @@
-import { Once } from '@typeit/discord';
+import { Client, Once } from '@typeit/discord';
 import { AbuelaReady } from '../types';
-import { Client } from '@typeit/discord';
 
 export abstract class ReadyEvent implements AbuelaReady {
   @Once('ready')
