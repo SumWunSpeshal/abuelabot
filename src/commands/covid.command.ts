@@ -118,14 +118,14 @@ export abstract class CovidCommand implements AbuelaCommand {
           { name: '**Impfungen**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
           {
             name: ':syringe: seit gestern',
-            value: colorText('green', `[${vaccData?.delta}]`),
+            value: colorText('green', `[${(vaccData?.delta).toLocaleString()}]`),
             inline: true
           },
           {
             name: ':one: Impfung insg. (in %)',
             value: colorText(
               'green',
-              `[${vaccData?.vaccinated} (${CovidCommand.inPercent(vaccData?.vaccinated, state?.population)})]`
+              `[${(vaccData?.vaccinated).toLocaleString()} (${CovidCommand.inPercent(vaccData?.vaccinated, state?.population)})]`
             ),
             inline: true
           },
@@ -133,7 +133,7 @@ export abstract class CovidCommand implements AbuelaCommand {
             name: ':two: Impfung insg. (in %)',
             value: colorText(
               'green',
-              `[${vaccData?.secondVaccination.vaccinated} (${CovidCommand.inPercent(
+              `[${(vaccData?.secondVaccination.vaccinated).toLocaleString()} (${CovidCommand.inPercent(
                 vaccData?.secondVaccination.vaccinated,
                 state?.population
               )})]`
@@ -180,18 +180,18 @@ export abstract class CovidCommand implements AbuelaCommand {
       { name: '**Unterschied zu gestern**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
       {
         name: ':four_leaf_clover: Δ Genesen',
-        value: colorText('green', `[${location?.delta?.recovered}]`),
+        value: colorText('green', `[${(location?.delta?.recovered).toLocaleString()}]`),
         inline: true
       },
-      { name: ':microbe: Δ Fälle', value: colorText('yellow', `[${location?.delta?.cases}]`), inline: true },
-      { name: ':skull: Δ Tode', value: colorText('red', `[${location?.delta?.deaths}]`), inline: true },
+      { name: ':microbe: Δ Fälle', value: colorText('yellow', `[${(location?.delta?.cases).toLocaleString()}]`), inline: true },
+      { name: ':skull: Δ Tode', value: colorText('red', `[${(location?.delta?.deaths).toLocaleString()}]`), inline: true },
       { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false },
       { name: '**Insgesamt (in %)**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
       {
         name: ':four_leaf_clover: Genesen',
         value: colorText(
           'green',
-          `[${location?.recovered} (${CovidCommand.inPercent(location?.recovered, location?.population)})]`
+          `[${(location?.recovered).toLocaleString()} (${CovidCommand.inPercent(location?.recovered, location?.population)})]`
         ),
         inline: true
       },
@@ -199,7 +199,7 @@ export abstract class CovidCommand implements AbuelaCommand {
         name: ':microbe: Fälle',
         value: colorText(
           'yellow',
-          `[${location?.cases} (${CovidCommand.inPercent(location?.cases, location?.population)})]`
+          `[${(location?.cases).toLocaleString()} (${CovidCommand.inPercent(location?.cases, location?.population)})]`
         ),
         inline: true
       },
@@ -207,7 +207,7 @@ export abstract class CovidCommand implements AbuelaCommand {
         name: ':skull: Tode',
         value: colorText(
           'red',
-          `[${location?.deaths} (${CovidCommand.inPercent(location?.deaths, location?.population)})]`
+          `[${(location?.deaths).toLocaleString()} (${CovidCommand.inPercent(location?.deaths, location?.population)})]`
         ),
         inline: true
       },
