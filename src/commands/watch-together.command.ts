@@ -9,8 +9,8 @@ import { GetAllUserArgs } from '../decorators/get-all-user-args';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'watchtogether',
-  description: `Quickly share a Watch2Gether link. Use the {searchTerms} argument just like you would use the YouTube search`,
-  usage: '`!watchtogether {searchTerms}`',
+  description: `Quickly share a Watch2Gether link. Use the {searchTerms} argument just like you would use the YouTube search or paste a link to the Youtube video.`,
+  usage: '`!watchtogether {searchTerms}` or `!watchtogether {youtubeURL}`',
   aliases: ['w2g', 'watch', 'together']
 };
 
@@ -27,17 +27,21 @@ export abstract class WatchTogetherCommand implements AbuelaCommand {
   @Aliases(INFOS.aliases)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const ytUrl = this.buildYtUrl(allUserArgs);
-    const ytResponse: ImALazyFuck = await Http.fetch(ytUrl);
-    const w2gRequestBody = this.buildW2gRequestBody(ytResponse?.items[0]?.id?.videoId);
+    const url = await this.buildYtUrl(allUserArgs);
+    const w2gRequestBody = this.buildW2gRequestBody(url);
     const w2gResponse: ImALazyFuck = await Http.fetch(this.w2gUrl, 'json', w2gRequestBody);
     await command.channel.send(
-      `${!allUserArgs ? `You should tell me what you're looking for ...\n` : ''}` +
+      `${!allUserArgs ? `Eh stupid, You should tell me what you're looking for ...\n` : ''}` +
         `https://w2g.tv/rooms/${w2gResponse?.streamkey}`
     );
   }
 
-  private buildYtUrl(userInput: string) {
+  private isYoutubeUrl (userInput: string):boolean {
+    const isUrl = userInput.includes('http') && userInput.includes('youtu');
+    return isUrl;
+  }
+
+  private buildYtApiUrl(userInput: string) {
     const params = {
       part: 'snippet',
       order: 'viewCount',
@@ -48,10 +52,26 @@ export abstract class WatchTogetherCommand implements AbuelaCommand {
     return this.ytUrl + '?' + new URLSearchParams(params);
   }
 
-  private buildW2gRequestBody(videoId: string) {
+  private async buildYtUrl (allUserArgs:string):Promise<string> {
+    if (this.isYoutubeUrl(allUserArgs)){
+      return allUserArgs;
+    }else{
+      const ytUrl = this.buildYtApiUrl(allUserArgs);
+      const ytResponse: ImALazyFuck = await Http.fetch(ytUrl);
+      return 'https://www.youtube.com/watch?v=' + (ytResponse?.items[0]?.id?.videoId);
+    }
+  }
+
+  /**
+   * @description
+   * todo: add method that returns a massage when a false link e.g. amazon ist sent.
+   * @param url 
+   * @returns 
+   */
+  private buildW2gRequestBody(url: string) {
     const body = {
       w2g_api_key: config.w2gKey,
-      share: `https://www.youtube.com/watch?v=${videoId}`,
+      share: url,
       bg_color: '#00ff00',
       bg_opacity: '50'
     };
