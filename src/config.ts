@@ -9,6 +9,8 @@ export type SetupConfig = {
   descriptionFlag: string;
   imgFlipUser: string;
   imgFlipPw: string;
+  w2gKey: string;
+  ytKey: string;
 };
 
 const SETUP_CONFIG: SetupConfig = {
@@ -17,7 +19,9 @@ const SETUP_CONFIG: SetupConfig = {
   giphyKey: process.env.GIPHY_KEY!,
   descriptionFlag: process.env.EXTENDED_DESCRIPTION_FLAG!,
   imgFlipUser: process.env.IMGFLIP_USER!,
-  imgFlipPw: process.env.IMGFLIP_PW!
+  imgFlipPw: process.env.IMGFLIP_PW!,
+  w2gKey: process.env.W2G_KEY!,
+  ytKey: process.env.YT_KEY!
 };
 
 export default SETUP_CONFIG;

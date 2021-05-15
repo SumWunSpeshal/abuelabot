@@ -13,13 +13,13 @@ const CONFIG: AbuelaCommandInfos = {
 }
 
 export abstract class HelloCommand implements AbuelaCommand {
-  private static readonly emojis = ['👋', '🖖', '👊', '✌️'];
+  private readonly emojis = ['👋', '🖖', '👊', '✌️'];
 
   @Command(CONFIG.commandName)
   @Infos(CONFIG)
   @Aliases(CONFIG.aliases)
   @Guard(NotHelpGuard, NotBotGuard)
   async execute(command: CommandMessage) {
-    await command.react(Random.getRandomFrom(HelloCommand.emojis));
+    await command.react(Random.getRandomFrom(this.emojis));
   }
 }

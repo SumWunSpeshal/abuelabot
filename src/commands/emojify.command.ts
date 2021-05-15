@@ -16,7 +16,7 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class EmojifyCommand implements AbuelaCommand {
-  private static readonly emojis: EmojiListInterface = JSON.parse(
+  private readonly emojis: EmojiListInterface = JSON.parse(
     readFileSync(Path.join(__dirname, '..', 'assets', 'emojis.json')).toString()
   );
 
@@ -26,13 +26,13 @@ export abstract class EmojifyCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const result = EmojifyCommand.replaceAllOccurrences(allUserArgs);
+    const result = this.replaceAllOccurrences(allUserArgs);
     await command.channel.send(result);
   }
 
-  private static replaceAllOccurrences(userInput: string): string {
+  private replaceAllOccurrences(userInput: string): string {
     const userInputSplit = userInput.split(' ');
-    const { emojis } = EmojifyCommand.emojis;
+    const { emojis } = this.emojis;
 
     return userInputSplit
       .map(word => {

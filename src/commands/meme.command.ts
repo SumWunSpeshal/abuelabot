@@ -19,9 +19,9 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class MemeCommand implements AbuelaCommand {
-  private static readonly getUrl = 'https://api.imgflip.com/get_memes';
+  private readonly getUrl = 'https://api.imgflip.com/get_memes';
 
-  private static readonly captionUrl = 'https://api.imgflip.com/caption_image';
+  private readonly captionUrl = 'https://api.imgflip.com/caption_image';
 
   @Command(INFOS.commandName)
   @Infos(INFOS)
@@ -30,11 +30,11 @@ export abstract class MemeCommand implements AbuelaCommand {
   @GetAllUserArgs('/')
   async execute(command: CommandMessage, client: Client, allUserArgs: string[]) {
     const [memeName, text0, text1] = allUserArgs;
-    const memes: ImgFlipInterface.GetResponse = await Http.fetch<ImgFlipInterface.GetResponse>(MemeCommand.getUrl);
+    const memes: ImgFlipInterface.GetResponse = await Http.fetch<ImgFlipInterface.GetResponse>(this.getUrl);
     const { bestMatch } = ImgFlipService.findClosestMemeName(memeName, memes);
     const singleMeme = memes.data.memes.find(meme => meme.name === bestMatch.target);
     const response: ImgFlipInterface.SuccessResponse = await Http.fetch(
-      MemeCommand.createRequestBody(singleMeme!.id, text0, text1),
+      this.createRequestBody(singleMeme!.id, text0, text1),
       'json'
     );
 
@@ -55,7 +55,7 @@ export abstract class MemeCommand implements AbuelaCommand {
     });
   }
 
-  private static getStats(bestMatch: Rating, memeName: string): string {
+  private getStats(bestMatch: Rating, memeName: string): string {
     return colorText(
       'blue',
       `[${bestMatch?.target}] found for search term [${memeName}] with [${
@@ -64,7 +64,7 @@ export abstract class MemeCommand implements AbuelaCommand {
     );
   }
 
-  private static createRequestBody(id: string, text0: string = ' ', text1: string = ' '): string {
+  private createRequestBody(id: string, text0: string = ' ', text1: string = ' '): string {
     const body: ImgFlipInterface.CaptionRequestBody = {
       password: config.imgFlipPw,
       template_id: id,
@@ -75,6 +75,6 @@ export abstract class MemeCommand implements AbuelaCommand {
       max_font_size: '50px'
     };
 
-    return MemeCommand.captionUrl + '?' + new URLSearchParams((body as unknown) as URLSearchParams);
+    return this.captionUrl + '?' + new URLSearchParams((body as unknown) as URLSearchParams);
   }
 }

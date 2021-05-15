@@ -16,10 +16,10 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class HelpCommand implements AbuelaCommand {
-  private static readonly headline = 'Available Commands';
-  private static readonly description = `Explore all Abuela's commands! If you want to know more about a specific command or its usage, type \`!{command} -h\``;
+  private readonly headline = 'Available Commands';
+  private readonly description = `Explore all Abuela's commands! If you want to know more about a specific command or its usage, type \`!{command} -h\``;
 
-  private static readonly fallbacks = {
+  private readonly fallbacks = {
     description: 'No description available...',
     usage: 'No usage available...',
     aliases: 'None'
@@ -34,11 +34,11 @@ export abstract class HelpCommand implements AbuelaCommand {
 
     await command.channel.send({
       embed: {
-        title: HelpCommand.headline as string,
-        description: HelpCommand.description,
+        title: this.headline as string,
+        description: this.description,
         fields: commands.map(({ commandName, description }) => ({
           name: CommandHelper.stripArgs(commandName as string),
-          value: description || HelpCommand.fallbacks.description
+          value: description || this.fallbacks.description
         }))
       }
     });
@@ -46,13 +46,13 @@ export abstract class HelpCommand implements AbuelaCommand {
 
   @On('message')
   @Guard(NotBotGuard, NotCommandGuard, NotKnownCommandGuard, HelpGuard)
-  static async commandDetails([message]: ArgsOf<'message'>, client: Client) {
+  async commandDetails([message]: ArgsOf<'message'>, client: Client) {
     const { commandName, description, infos } = CommandHelper.getCommandName(message as CommandMessage) as CommandInfos;
 
     await message.channel.send({
       embed: {
         title: commandName as string,
-        description: description || HelpCommand.fallbacks.description,
+        description: description || this.fallbacks.description,
         fields: [
           {
             name: `Usage ('?' means the field is optional)`,
@@ -63,7 +63,7 @@ export abstract class HelpCommand implements AbuelaCommand {
             value:
               infos?.aliases && infos?.aliases?.length
                 ? infos?.aliases.map((alias: string) => '• `!' + alias + '`')
-                : HelpCommand.fallbacks.aliases
+                : this.fallbacks.aliases
           }
         ]
       }

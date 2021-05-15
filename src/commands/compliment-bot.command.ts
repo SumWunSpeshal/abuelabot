@@ -13,7 +13,7 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class ComplimentBotCommand implements AbuelaCommand {
-  private static readonly botResponses = [
+  private readonly botResponses = [
     'Thank you, I love you too!',
     `I know I'm awesome.`,
     'Aww, thank you!',
@@ -28,6 +28,6 @@ export abstract class ComplimentBotCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard)
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
-    await command.reply(Random.getRandomFrom(ComplimentBotCommand.botResponses));
+    await command.reply(Random.getRandomFrom(this.botResponses));
   }
 }

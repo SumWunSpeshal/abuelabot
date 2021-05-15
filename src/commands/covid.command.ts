@@ -22,13 +22,13 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class CovidCommand implements AbuelaCommand {
-  private static readonly baseUrl = 'https://api.corona-zahlen.org/';
+  private readonly baseUrl = 'https://api.corona-zahlen.org/';
 
-  private static readonly agsMap: RkiCovidInterface.AgsMap = JSON.parse(
+  private readonly agsMap: RkiCovidInterface.AgsMap = JSON.parse(
     readFileSync(Path.join(__dirname, '..', 'assets', 'german-districts.json')).toString()
   );
 
-  private static readonly zeroWidthSpace = '\u200b';
+  private readonly zeroWidthSpace = '\u200b';
 
   @Command(INFOS.commandName)
   @Infos(INFOS)
@@ -37,75 +37,73 @@ export abstract class CovidCommand implements AbuelaCommand {
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
     if (!allUserArgs) {
-      await CovidCommand.displayGermanyData(command);
+      await this.displayGermanyData(command);
       return;
     }
 
-    const agsObj: RkiCovidInterface.AgsShort | undefined = CovidCommand.getClosestDistrictMatch(allUserArgs);
-    const district = await CovidCommand.getRkiData<RkiCovidInterface.DistrictRoot>('districts', agsObj?.ags);
+    const agsObj: RkiCovidInterface.AgsShort | undefined = this.getClosestDistrictMatch(allUserArgs);
+    const district = await this.getRkiData<RkiCovidInterface.DistrictRoot>('districts', agsObj?.ags);
     const metaData: RkiCovidInterface.Meta = district.meta;
     const districtDetails: RkiCovidInterface.Ags = district.data[agsObj!.ags];
     const stateAbbreviation = districtDetails.stateAbbreviation as RkiCovidInterface.StateAbbreviation;
 
     const [state, vaccinations, colorRange] = await Promise.all([
-      CovidCommand.getRkiData<RkiCovidInterface.DistrictRoot>('states', stateAbbreviation),
-      CovidCommand.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
-      CovidCommand.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
+      this.getRkiData<RkiCovidInterface.DistrictRoot>('states', stateAbbreviation),
+      this.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
+      this.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
     ]);
 
     const stateDetails = state.data[stateAbbreviation];
     const stateVaccData = vaccinations.data.states[stateAbbreviation];
-    const infectionEmbed = CovidCommand.buildInfectionEmbed(districtDetails, metaData, colorRange);
-    const vaccinationEmbed = CovidCommand.buildVaccinationEmbed(stateDetails, stateVaccData, metaData, colorRange);
+    const infectionEmbed = this.buildInfectionEmbed(districtDetails, metaData, colorRange);
+    const vaccinationEmbed = this.buildVaccinationEmbed(stateDetails, stateVaccData, metaData, colorRange);
 
     await command.channel.send(infectionEmbed);
     await command.channel.send(vaccinationEmbed);
   }
 
-  static async displayGermanyData(command: CommandMessage) {
+  private async displayGermanyData(command: CommandMessage) {
     const [germanyData, vaccinations, colorRanges] = await Promise.all([
-      CovidCommand.getRkiData<RkiCovidInterface.Ags>('germany'),
-      CovidCommand.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
-      CovidCommand.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
+      this.getRkiData<RkiCovidInterface.Ags>('germany'),
+      this.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
+      this.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
     ]);
 
     germanyData.population = 83756658; // fixme kek
 
     await command.channel.send({
       embed: {
-        color: CovidCommand.getIncidentColor(colorRanges, germanyData?.weekIncidence)?.color || '#000',
+        color: this.getIncidentColor(colorRanges, germanyData?.weekIncidence)?.color || '#000',
         title: `Aktuelle COVID Daten für \`Deutschland\``,
         fields: [
-          ...CovidCommand.buildCovidInfos(germanyData),
-          ...CovidCommand.buildVaccInfos(vaccinations.data, { population: germanyData.population })
+          ...this.buildCovidInfos(germanyData),
+          ...this.buildVaccInfos(vaccinations.data, { population: germanyData.population })
         ],
         footer: {
-          text: `Quelle: ${germanyData.meta!.source} | Letztes Update: ${CovidCommand.formatDate(
-            germanyData.meta!.lastUpdate
-          )}`
+          text: `Quelle: ${germanyData.meta!.source} | Letztes Update: ${this.formatDate(germanyData.meta!.lastUpdate)}`
         }
       }
     });
   }
 
-  static buildInfectionEmbed(
+  private buildInfectionEmbed(
     district: RkiCovidInterface.Ags,
     meta: RkiCovidInterface.Meta,
     colorRange: RkiCovidInterface.ColorRoot
   ): MessageOptions {
     return {
       embed: {
-        color: CovidCommand.getIncidentColor(colorRange, district?.weekIncidence)?.color || '#000',
+        color: this.getIncidentColor(colorRange, district?.weekIncidence)?.color || '#000',
         title: `Aktuelle COVID Daten für \`${district.name}\``,
-        fields: [...CovidCommand.buildCovidInfos(district)],
+        fields: [...this.buildCovidInfos(district)],
         footer: {
-          text: `Quelle: ${meta.source} | Letztes Update: ${CovidCommand.formatDate(meta.lastUpdate)}`
+          text: `Quelle: ${meta.source} | Letztes Update: ${this.formatDate(meta.lastUpdate)}`
         }
       }
     };
   }
 
-  static buildVaccinationEmbed(
+  private buildVaccinationEmbed(
     state: RkiCovidInterface.Ags,
     vaccData: RkiCovidInterface.VaccData | RkiCovidInterface.State,
     meta: RkiCovidInterface.Meta,
@@ -113,20 +111,24 @@ export abstract class CovidCommand implements AbuelaCommand {
   ): MessageOptions {
     return {
       embed: {
-        color: CovidCommand.getIncidentColor(colorRange, state?.weekIncidence)?.color || '#000',
+        color: this.getIncidentColor(colorRange, state?.weekIncidence)?.color || '#000',
         title: `Aktuelle Daten für das entsprechende Bundesland \`${state?.name}\``,
-        fields: [...CovidCommand.buildCovidInfos(state), ...CovidCommand.buildVaccInfos(vaccData, state)],
+        fields: [...this.buildCovidInfos(state), ...this.buildVaccInfos(vaccData, state)],
         footer: {
-          text: `Quelle: ${meta.source} | Letztes Update: ${CovidCommand.formatDate(meta.lastUpdate)}`
+          text: `Quelle: ${meta.source} | Letztes Update: ${this.formatDate(meta.lastUpdate)}`
         }
       }
     };
   }
 
-  static buildCovidInfos(location: RkiCovidInterface.Ags): EmbedField[] {
+  private buildCovidInfos(location: RkiCovidInterface.Ags): EmbedField[] {
     return [
-      { name: 'Wocheninzidenz', value: colorText('blue', `[${(location?.weekIncidence).toLocaleString()}]`), inline: false },
-      { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false },
+      {
+        name: 'Wocheninzidenz',
+        value: colorText('blue', `[${(location?.weekIncidence).toLocaleString()}]`),
+        inline: false
+      },
+      { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false },
       { name: '**Unterschied zu gestern**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
       {
         name: ':four_leaf_clover: Δ Genesen',
@@ -143,16 +145,13 @@ export abstract class CovidCommand implements AbuelaCommand {
         value: colorText('red', `[${(location?.delta?.deaths).toLocaleString()}]`),
         inline: true
       },
-      { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false },
+      { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false },
       { name: '**Insgesamt (in %)**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
       {
         name: ':four_leaf_clover: Genesen',
         value: colorText(
           'green',
-          `[${(location?.recovered).toLocaleString()} (${CovidCommand.inPercent(
-            location?.recovered,
-            location?.population
-          )})]`
+          `[${(location?.recovered).toLocaleString()} (${this.inPercent(location?.recovered, location?.population)})]`
         ),
         inline: true
       },
@@ -160,7 +159,7 @@ export abstract class CovidCommand implements AbuelaCommand {
         name: ':microbe: Fälle',
         value: colorText(
           'yellow',
-          `[${(location?.cases).toLocaleString()} (${CovidCommand.inPercent(location?.cases, location?.population)})]`
+          `[${(location?.cases).toLocaleString()} (${this.inPercent(location?.cases, location?.population)})]`
         ),
         inline: true
       },
@@ -168,15 +167,15 @@ export abstract class CovidCommand implements AbuelaCommand {
         name: ':skull: Tode',
         value: colorText(
           'red',
-          `[${(location?.deaths).toLocaleString()} (${CovidCommand.inPercent(location?.deaths, location?.population)})]`
+          `[${(location?.deaths).toLocaleString()} (${this.inPercent(location?.deaths, location?.population)})]`
         ),
         inline: true
       },
-      { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false }
+      { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false }
     ];
   }
 
-  static buildVaccInfos(
+  private buildVaccInfos(
     vaccData: RkiCovidInterface.VaccData | RkiCovidInterface.State,
     location: { population: number }
   ): EmbedField[] {
@@ -191,10 +190,7 @@ export abstract class CovidCommand implements AbuelaCommand {
         name: ':one: Impfung insg. (in %)',
         value: colorText(
           'green',
-          `[${(vaccData?.vaccinated).toLocaleString()} (${CovidCommand.inPercent(
-            vaccData?.vaccinated,
-            location?.population
-          )})]`
+          `[${(vaccData?.vaccinated).toLocaleString()} (${this.inPercent(vaccData?.vaccinated, location?.population)})]`
         ),
         inline: true
       },
@@ -202,22 +198,22 @@ export abstract class CovidCommand implements AbuelaCommand {
         name: ':two: Impfung insg. (in %)',
         value: colorText(
           'green',
-          `[${(vaccData?.secondVaccination.vaccinated).toLocaleString()} (${CovidCommand.inPercent(
+          `[${(vaccData?.secondVaccination.vaccinated).toLocaleString()} (${this.inPercent(
             vaccData?.secondVaccination.vaccinated,
             location?.population
           )})]`
         ),
         inline: true
       },
-      { name: CovidCommand.zeroWidthSpace, value: CovidCommand.zeroWidthSpace, inline: false }
+      { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false }
     ];
   }
 
-  static inPercent(stat: number, population: number): string {
+  private inPercent(stat: number, population: number): string {
     return `${(+((stat / population) * 100).toFixed(2)).toLocaleString()}%`;
   }
 
-  static computeEmbedFields<T extends RkiCovidInterface.Ags | RkiCovidInterface.Meta | RkiCovidInterface.State>(
+  private computeEmbedFields<T extends RkiCovidInterface.Ags | RkiCovidInterface.Meta | RkiCovidInterface.State>(
     obj: T
   ): EmbedField[] {
     return Object.keys(obj)
@@ -228,7 +224,7 @@ export abstract class CovidCommand implements AbuelaCommand {
       .map(key => ({ name: key, value: obj[key as keyof T], inline: false })) as any;
   }
 
-  static formatDate(date: Date): string {
+  private formatDate(date: Date): string {
     return new Date(date).toLocaleDateString('de-DE', {
       weekday: 'long',
       year: 'numeric',
@@ -237,17 +233,17 @@ export abstract class CovidCommand implements AbuelaCommand {
     });
   }
 
-  static async getRkiData<T>(endPoint: RkiCovidInterface.ApiEndPoint, arg?: string | undefined): Promise<T> {
-    return Http.fetch<T>(`${CovidCommand.baseUrl + endPoint}/${arg || ''}`);
+  private async getRkiData<T>(endPoint: RkiCovidInterface.ApiEndPoint, arg?: string | undefined): Promise<T> {
+    return Http.fetch<T>(`${this.baseUrl + endPoint}/${arg || ''}`);
   }
 
-  static getClosestDistrictMatch(userInput: string): RkiCovidInterface.AgsShort | undefined {
-    const districts = CovidCommand.agsMap.map(item => item.name);
+  private getClosestDistrictMatch(userInput: string): RkiCovidInterface.AgsShort | undefined {
+    const districts = this.agsMap.map(item => item.name);
     const { bestMatch } = findBestMatch(CommandHelper.ucFirstLetterOfWords(userInput), districts);
-    return CovidCommand.agsMap.find(item => item.name === bestMatch?.target);
+    return this.agsMap.find(item => item.name === bestMatch?.target);
   }
 
-  static getIncidentColor(
+  private getIncidentColor(
     colorMap: RkiCovidInterface.ColorRoot,
     incidence: number
   ): RkiCovidInterface.IncidentRange | undefined {
