@@ -11,7 +11,7 @@ import { ConnectionService } from '../services/connection.service';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'play',
-  description: `The "play" command lets AbueleBot play a song`,
+  description: `The "play" command lets AbuelaBot play a song`,
   usage: '`!play`',
   aliases: ['music', 'p']
 };
@@ -24,10 +24,9 @@ export abstract class PlayCommand {
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
     await ConnectionService.join(command);
-    const connection = ConnectionService.voiceConnection;
     const ytResponse: ImALazyFuck = await YoutubeService.getSearchListResponse(allUserArgs);
     const ytdlInfo = await ytdl.getInfo(ytResponse.items[0].id.videoId);
-    connection?.play(ytdl(ytdlInfo.videoDetails.video_url));
+    ConnectionService.voiceConnection?.play(ytdl(ytdlInfo.videoDetails.video_url));
     await command.channel.send(`playing \`${ytResponse?.items[0]?.snippet?.title}\``);
   }
 }
