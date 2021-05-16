@@ -6,7 +6,7 @@ import { Aliases } from '../decorators/aliases';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'leave',
-  description: `The "join" command lets AbuelaBot leave your voice channel.`,
+  description: `The "leave" command lets AbuelaBot leave your voice channel.`,
   usage: '`!leave`',
   aliases: ['bye']
 };
