@@ -19,6 +19,6 @@ export class JoinCommand {
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
     await command.channel.send('joining...');
-    await command?.member?.voice?.channel?.join();
+    return command?.member?.voice?.channel?.join();
   }
 }
