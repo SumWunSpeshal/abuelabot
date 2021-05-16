@@ -43,13 +43,6 @@ export abstract class WatchTogetherCommand implements AbuelaCommand {
     await command.channel.send(message);
   }
 
-  /**
-   * @description
-   * todo: add method that returns a massage when a false link e.g. amazon ist sent.
-   *
-   * @param url
-   * @returns
-   */
   private buildW2gRequestBody(url: string): RequestInit {
     const body = {
       w2g_api_key: config.w2gKey,

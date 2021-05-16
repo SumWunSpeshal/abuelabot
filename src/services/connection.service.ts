@@ -8,12 +8,12 @@ export abstract class ConnectionService {
     this._voiceConnection = await member?.voice?.channel?.join();
   }
 
-  static async leave({ member }: CommandMessage) {
-    if(!this._voiceConnection) {
+  static leave({ member }: CommandMessage) {
+    if (!this._voiceConnection) {
       return;
     }
 
-    await member?.voice?.channel?.leave();
+    member?.voice?.channel?.leave();
     this._voiceConnection = undefined;
   }
 

@@ -1,6 +1,6 @@
 import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
-import { AbuelaCommandInfos } from '../types';
+import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { Aliases } from '../decorators/aliases';
 import { NotPermissionsForGuard } from '../guards/not-permissions-for.guard';
@@ -16,7 +16,7 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['music', 'p']
 };
 
-export abstract class PlayCommand {
+export abstract class PlayCommand implements AbuelaCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard, NotPermissionsForGuard(['CONNECT', 'SPEAK']))
