@@ -30,8 +30,6 @@ export abstract class PlayCommand {
     const ytApiUrl = this.buildYtApiUrl(allUserArgs);
     const ytResponse: any = await Http.fetch(ytApiUrl);
     const newPackage = await ytdl.getInfo(ytResponse.items[0].id.videoId);
-    //console.log(newPackage);
-    //console.log(connection?.play(ytdl()));
     connection?.play(ytdl(newPackage.videoDetails.video_url));
     await command.channel.send('play');
   }
@@ -44,9 +42,5 @@ export abstract class PlayCommand {
       q: userInput || 'Rick Astley - Never Gonna Give You Up (Video)'
     };
     return 'https://youtube.googleapis.com/youtube/v3/search?' + new URLSearchParams(params);
-  }
-
-  private play(guild:any,song:any){
-    
   }
 }
