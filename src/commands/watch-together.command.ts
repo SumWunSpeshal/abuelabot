@@ -6,6 +6,8 @@ import { Http } from '../utils/http';
 import config from '../config';
 import { Aliases } from '../decorators/aliases';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
+import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
+import { RequestInit } from 'node-fetch';
 import { colorText } from '../utils/color-text';
 
 const INFOS: AbuelaCommandInfos = {
@@ -15,12 +17,12 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['w2g', 'watch', 'together']
 };
 
-type ImALazyFuck = any; // FIXME obviously
+interface W2gResponse {
+  streamkey: string;
+}
 
 export abstract class WatchTogetherCommand implements AbuelaCommand {
   private readonly w2gUrl = 'https://w2g.tv/rooms/create.json';
-
-  private readonly ytUrl = 'https://youtube.googleapis.com/youtube/v3/search';
 
   @Command(INFOS.commandName)
   @Infos(INFOS)
@@ -28,43 +30,17 @@ export abstract class WatchTogetherCommand implements AbuelaCommand {
   @Aliases(INFOS.aliases)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
+    const ytResponse: ImALazyFuck = await YoutubeService.getSearchListResponse(allUserArgs);
+    const w2gRequestBody: RequestInit = this.buildW2gRequestBody(
+      YoutubeService.getFullUrl(ytResponse?.items[0]?.id?.videoId)
+    );
+    const w2gResponse: W2gResponse = await Http.fetch(this.w2gUrl, 'json', w2gRequestBody);
 
-    let ytUrl = '';
-    let message = '';
-
-    if (this.isYoutubeUrl(allUserArgs)) {
-      ytUrl = allUserArgs;
-    } else {
-      const ytHttpGetUrl = this.buildYtApiUrl(allUserArgs);
-      const ytResponse: ImALazyFuck = await Http.fetch(ytHttpGetUrl);
-      const firstYtVideo = ytResponse?.items[0];
-      ytUrl = 'https://www.youtube.com/watch?v=' + firstYtVideo?.id?.videoId;
-      message += `Youtube video about to play: \`${firstYtVideo?.snippet?.title}\`\n\n`;
-    }
-
-    const w2gRequestBody = this.buildW2gRequestBody(ytUrl);
-    const w2gResponse: ImALazyFuck = await Http.fetch(this.w2gUrl, 'json', w2gRequestBody);
-
-    message += `${!allUserArgs ? `Eh stupid, You should tell me what you're looking for ...\n` : ''}`;
+    let message = `${!allUserArgs ? `Eh stupid, You should tell me what you're looking for ...\n\n` : ''}`;
+    message += `${colorText('yellow', ytResponse?.items[0]?.snippet?.title)}\n`;
     message += `https://w2g.tv/rooms/${w2gResponse?.streamkey}`;
 
     await command.channel.send(message);
-  }
-
-  private isYoutubeUrl(userInput: string): boolean {
-    const isUrl = userInput.includes('http') && userInput.includes('youtu');
-    return isUrl;
-  }
-
-  private buildYtApiUrl(userInput: string): string {
-    const params = {
-      part: 'snippet',
-      order: 'viewCount',
-      key: config.ytKey,
-      q: userInput || 'Rick Astley - Never Gonna Give You Up (Video)'
-    };
-
-    return this.ytUrl + '?' + new URLSearchParams(params);
   }
 
   /**
@@ -74,7 +50,7 @@ export abstract class WatchTogetherCommand implements AbuelaCommand {
    * @param url
    * @returns
    */
-  private buildW2gRequestBody(url: string) {
+  private buildW2gRequestBody(url: string): RequestInit {
     const body = {
       w2g_api_key: config.w2gKey,
       share: url,

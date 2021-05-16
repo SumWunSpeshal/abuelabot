@@ -6,10 +6,9 @@ import { Aliases } from '../decorators/aliases';
 import { JoinCommand } from './join.command';
 import { NotPermissionsForGuard } from '../guards/not-permissions-for.guard';
 import ytdl from 'ytdl-core';
-import config from '../config';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
-import { Http } from '../utils/http';
 import { VoiceConnection } from 'discord.js';
+import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'play',
@@ -27,20 +26,10 @@ export abstract class PlayCommand {
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
     const joinCommand = new JoinCommand();
     const connection: VoiceConnection | undefined = await joinCommand.execute(command);
-    const ytApiUrl = this.buildYtApiUrl(allUserArgs);
-    const ytResponse: any = await Http.fetch(ytApiUrl);
-    const newPackage = await ytdl.getInfo(ytResponse.items[0].id.videoId);
-    connection?.play(ytdl(newPackage.videoDetails.video_url));
-    await command.channel.send('play');
-  }
-
-  private buildYtApiUrl(userInput: string): string {
-    const params = {
-      part: 'snippet',
-      order: 'viewCount',
-      key: config.ytKey,
-      q: userInput || 'Rick Astley - Never Gonna Give You Up (Video)'
-    };
-    return 'https://youtube.googleapis.com/youtube/v3/search?' + new URLSearchParams(params);
+    const ytResponse: ImALazyFuck = await YoutubeService.getSearchListResponse(allUserArgs);
+    const ytdlInfo = await ytdl.getInfo(ytResponse.items[0].id.videoId);
+    console.log(ytdlInfo.videoDetails.video_url);
+    connection?.play(ytdl(ytdlInfo.videoDetails.video_url));
+    await command.channel.send(`playing \`${ytResponse?.items[0]?.snippet?.title}\``);
   }
 }
