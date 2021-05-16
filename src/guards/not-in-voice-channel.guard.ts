@@ -5,6 +5,6 @@ export const NotInVoiceChannelGuard: GuardFunction<'message'> = async ([message]
   if (voiceChannel) {
     await next();
   } else {
-    message.channel.send('Where u @ bitch?!');
+    await message.channel.send('Where u @ bitch?!');
   }
 };

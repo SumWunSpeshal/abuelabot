@@ -1,4 +1,4 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
+import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
@@ -12,13 +12,13 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['come', 'here']
 };
 
-export abstract class JoinCommand {
+export class JoinCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard)
   @Aliases(INFOS.aliases)
-  async execute(command: CommandMessage, client: Client) {
-    command.channel.send('joining...')
+  async execute(command: CommandMessage) {
+    await command.channel.send('joining...');
     await command?.member?.voice?.channel?.join();
   }
 }
