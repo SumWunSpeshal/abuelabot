@@ -3,6 +3,7 @@ import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { Aliases } from '../decorators/aliases';
+import { ConnectionService } from '../services/connection.service';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'leave',
@@ -16,8 +17,8 @@ export abstract class LeaveCommand {
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard)
   @Aliases(INFOS.aliases)
-  async execute(command: CommandMessage, client: Client) {
-    command?.member?.voice?.channel?.leave();
+  async execute(command: CommandMessage) {
     await command.channel.send('leaving...');
+    await ConnectionService.leave(command);
   }
 }

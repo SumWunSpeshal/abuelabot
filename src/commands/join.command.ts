@@ -4,6 +4,7 @@ import { AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { Aliases } from '../decorators/aliases';
 import { NotInVoiceChannelGuard } from '../guards/not-in-voice-channel.guard';
+import { ConnectionService } from '../services/connection.service';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'join',
@@ -19,6 +20,6 @@ export class JoinCommand {
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
     await command.channel.send('joining...');
-    return command?.member?.voice?.channel?.join();
+    await ConnectionService.join(command);
   }
 }
