@@ -6,6 +6,7 @@ import { Http } from '../utils/http';
 import config from '../config';
 import { Aliases } from '../decorators/aliases';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
+import { colorText } from '../utils/color-text';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'watchtogether',
@@ -27,21 +28,35 @@ export abstract class WatchTogetherCommand implements AbuelaCommand {
   @Aliases(INFOS.aliases)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const url = await this.buildYtUrl(allUserArgs);
-    const w2gRequestBody = this.buildW2gRequestBody(url);
+
+    let ytUrl = '';
+    let message = '';
+
+    if (this.isYoutubeUrl(allUserArgs)) {
+      ytUrl = allUserArgs;
+    } else {
+      const ytHttpGetUrl = this.buildYtApiUrl(allUserArgs);
+      const ytResponse: ImALazyFuck = await Http.fetch(ytHttpGetUrl);
+      const firstYtVideo = ytResponse?.items[0];
+      ytUrl = 'https://www.youtube.com/watch?v=' + firstYtVideo?.id?.videoId;
+      message += `Youtube video about to play: \`${firstYtVideo?.snippet?.title}\`\n\n`;
+    }
+
+    const w2gRequestBody = this.buildW2gRequestBody(ytUrl);
     const w2gResponse: ImALazyFuck = await Http.fetch(this.w2gUrl, 'json', w2gRequestBody);
-    await command.channel.send(
-      `${!allUserArgs ? `Eh stupid, You should tell me what you're looking for ...\n` : ''}` +
-        `https://w2g.tv/rooms/${w2gResponse?.streamkey}`
-    );
+
+    message += `${!allUserArgs ? `Eh stupid, You should tell me what you're looking for ...\n` : ''}`;
+    message += `https://w2g.tv/rooms/${w2gResponse?.streamkey}`;
+
+    await command.channel.send(message);
   }
 
-  private isYoutubeUrl (userInput: string):boolean {
+  private isYoutubeUrl(userInput: string): boolean {
     const isUrl = userInput.includes('http') && userInput.includes('youtu');
     return isUrl;
   }
 
-  private buildYtApiUrl(userInput: string) {
+  private buildYtApiUrl(userInput: string): string {
     const params = {
       part: 'snippet',
       order: 'viewCount',
@@ -52,21 +67,12 @@ export abstract class WatchTogetherCommand implements AbuelaCommand {
     return this.ytUrl + '?' + new URLSearchParams(params);
   }
 
-  private async buildYtUrl (allUserArgs:string):Promise<string> {
-    if (this.isYoutubeUrl(allUserArgs)){
-      return allUserArgs;
-    }else{
-      const ytUrl = this.buildYtApiUrl(allUserArgs);
-      const ytResponse: ImALazyFuck = await Http.fetch(ytUrl);
-      return 'https://www.youtube.com/watch?v=' + (ytResponse?.items[0]?.id?.videoId);
-    }
-  }
-
   /**
    * @description
    * todo: add method that returns a massage when a false link e.g. amazon ist sent.
-   * @param url 
-   * @returns 
+   *
+   * @param url
+   * @returns
    */
   private buildW2gRequestBody(url: string) {
     const body = {
