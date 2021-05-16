@@ -6,19 +6,19 @@ import { Aliases } from '../decorators/aliases';
 import { NotInVoiceChannelGuard } from '../guards/not-in-voice-channel.guard';
 
 const INFOS: AbuelaCommandInfos = {
-  commandName: 'join',
-  description: `The "join" command lets AbuelaBot join your voice channel.`,
-  usage: '`!join`',
-  aliases: ['come', 'here']
+  commandName: 'leave',
+  description: `The "join" command lets AbuelaBot leave your voice channel.`,
+  usage: '`!leave`',
+  aliases: ['bye']
 };
 
-export abstract class JoinCommand {
+export abstract class LeaveCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard)
+  @Guard(NotHelpGuard, NotBotGuard)
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage, client: Client) {
-    command.channel.send('joining...')
-    await command?.member?.voice?.channel?.join();
+    command.channel.send('leaving...');
+    command?.member?.voice?.channel?.leave();
   }
 }

@@ -9,7 +9,7 @@ const CONFIG: AbuelaCommandInfos = {
   commandName: 'hello',
   description: 'Say hello to me :slight_smile:',
   usage: '`!hello`',
-  aliases: ['hi', 'salut', 'bonjour', 'buongiorno', 'priviet']
+  aliases: ['hi', 'salut', 'bonjour', 'buongiorno', 'priviet', 'hey']
 }
 
 export abstract class HelloCommand implements AbuelaCommand {
