@@ -17,7 +17,7 @@ export const NotPermissionsForGuard = (_permissions: PermissionString[]): GuardF
       await next();
     } else {
       const permsString = (_permissions as string[]).reduce((acc, curr) => acc + ', ' + curr);
-      await message.channel.send(`AbuelaBot does not have some or all of these permissions: ${permsString}`);
+      await message.channel.send(`AbuelaBot does not have some or all of these permissions: \`${permsString}\``);
     }
   };
 };
