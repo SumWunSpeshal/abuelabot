@@ -11,7 +11,6 @@ export function Aliases(aliases: Expression[] | string[]) {
     aliases.forEach(alias => {
       MetadataStorage.instance.addModifier(
         Modifier.createModifier<DCommand | DDiscord>(async original => {
-          // original.argsRules = [...original.argsRules, () => [Rule(alias + '(\\s{1,}|$)')]];
           original.argsRules = [...original.argsRules, () => [Rule(alias).spaceOrEnd()]];
         }).decorateUnknown(target, key, descriptor)
       );

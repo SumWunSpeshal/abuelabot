@@ -28,9 +28,6 @@ export abstract class ComplimentBotCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard)
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
-    await command.argsRules.forEach(async (item) => {
-      console.log((await item()));
-    })
     await command.reply(Random.getRandomFrom(this.botResponses));
   }
 }
