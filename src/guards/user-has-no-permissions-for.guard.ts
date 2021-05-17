@@ -3,7 +3,6 @@ import { PermissionString } from 'discord.js';
 
 /**
  * @description
- * FIXME Haven't tested this yet. Might not work, dunno.
  *
  * @param _permissions
  * @constructor
