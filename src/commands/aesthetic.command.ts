@@ -5,20 +5,20 @@ import { NotHelpGuard } from '../guards/not-help.guard';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 
 const INFOS: AbuelaCommandInfos = {
-  commandName: 'mock',
-  description: `Make fun of somebody by mockifying your own message!`,
-  usage: '`!mock {sentence}`',
+  commandName: 'aesthetic',
+  description: `Let your message look A E S T H E T I C!`,
+  usage: '`!aesthetic {sentence}`',
   aliases: []
 };
 
-export abstract class MockCommand implements AbuelaCommand {
+export abstract class AestheticCommand implements AbuelaCommand {
 
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, userInput: string) {
-    const ret = userInput.split('').map((item, index) => (index % 2 ? item.toUpperCase() : item.toLowerCase())).join('');
+    const ret = userInput.split('').map(item => item.toUpperCase()).join(' ');
     await command.channel.send(ret);
   }
 }

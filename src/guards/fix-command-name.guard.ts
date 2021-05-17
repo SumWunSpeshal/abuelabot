@@ -14,9 +14,8 @@ import { GuardFunction } from '@typeit/discord';
  */
 export const FixCommandNameGuard = (commandNames: string[]): GuardFunction<'commandMessage'> => {
   return async ([message], client, next) => {
-    const userInputSplit = message?.commandContent.toLowerCase().split(' ');
-    const aliases = commandNames.map(name => name.toLowerCase());
-    const match = userInputSplit.find(word => aliases.find(name => name === word));
+    const userInputSplit = message?.commandContent.split(' ');
+    const match = userInputSplit.find(word => commandNames.find(name => name === word));
 
     if (match && match.length) {
       message.commandName = match;
