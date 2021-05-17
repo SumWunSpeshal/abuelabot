@@ -12,7 +12,7 @@ import { statusTypes } from '../utils/status-types';
 const INFOS: AbuelaCommandInfos = {
   commandName: 'status',
   description: `[ADMINS ONLY] Set my status`,
-  usage: '`!status  {text} / {type}`',
+  usage: '`!status  {text} / {type?}`',
   aliases: []
 };
 

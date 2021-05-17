@@ -9,7 +9,7 @@ const INFOS: AbuelaCommandInfos = {
   commandName: 'goodbot',
   description: 'Tell me how much you love me! :heart:',
   usage: '`!goodbot`',
-  aliases: ['bestbot', 'gj', 'love', 'iloveu', 'iloveyou']
+  aliases: ['bestbot', 'goodjob', 'gj', 'love', 'iloveu', 'iloveyou', 'nice']
 };
 
 export abstract class ComplimentBotCommand implements AbuelaCommand {
