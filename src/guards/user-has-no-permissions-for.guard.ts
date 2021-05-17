@@ -8,16 +8,15 @@ import { PermissionString } from 'discord.js';
  * @param _permissions
  * @constructor
  */
-export const NotPermissionsForGuard = (_permissions: PermissionString[]): GuardFunction<'commandMessage'> => {
+export const UserHasNoPermissionsForGuard = (_permissions: PermissionString[]): GuardFunction<'commandMessage'> => {
   return async ([message], client, next) => {
-    const voiceChannel = message?.member?.voice?.channel;
-    const permissions = voiceChannel?.permissionsFor(message.client.user!);
+    const match = _permissions.find(perm => message?.member?.permissions.has(perm));
 
-    if (permissions?.has(_permissions)) {
+    if (match) {
       await next();
     } else {
       const permsString = (_permissions as string[]).reduce((acc, curr) => acc + ', ' + curr);
-      await message.channel.send(`AbuelaBot does not have some or all of these permissions: \`${permsString}\``);
+      await message.channel.send(`You don't have any of these permissions: \`${permsString}\``);
     }
   };
 };
