@@ -21,6 +21,6 @@ export abstract class AestheticCommand implements AbuelaCommand {
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, userInput: string) {
     const ret = userInput.split('').map(item => item.toUpperCase()).join(' ');
-    await command.channel.send(ret);
+    await command.channel.send(`**_${ret}_**`);
   }
 }
