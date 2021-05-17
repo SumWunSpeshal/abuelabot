@@ -19,6 +19,6 @@ export abstract class LeaveCommand implements AbuelaCommand {
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
     ConnectionService.leave(command);
-    await command.channel.send('leaving...');
+    await command.channel.send('leaving voice channel...');
   }
 }

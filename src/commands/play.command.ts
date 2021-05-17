@@ -8,6 +8,9 @@ import ytdl from 'ytdl-core';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
 import { ConnectionService } from '../services/connection.service';
+import { NotInVoiceChannelGuard } from '../guards/not-in-voice-channel.guard';
+import { Message } from 'discord.js';
+import { colorText } from '../utils/color-text';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'play',
@@ -20,13 +23,19 @@ export abstract class PlayCommand implements AbuelaCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard, NotPermissionsForGuard(['CONNECT', 'SPEAK']))
+  @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard, NotPermissionsForGuard(['CONNECT', 'SPEAK']))
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    await ConnectionService.join(command);
-    const ytResponse: ImALazyFuck = await YoutubeService.getSearchListResponse(allUserArgs);
-    const ytdlInfo = await ytdl.getInfo(ytResponse.items[0].id.videoId);
-    ConnectionService.voiceConnection?.play(ytdl(ytdlInfo.videoDetails.video_url));
-    await command.channel.send(`playing \`${ytResponse?.items[0]?.snippet?.title}\``);
+    const [ytResponse]: [ImALazyFuck, void] = await Promise.all([
+      YoutubeService.getSearchListResponse(allUserArgs),
+      ConnectionService.join(command)
+    ]);
+
+    const [ytdlInfo]: [ytdl.videoInfo, Message] = await Promise.all([
+      ytdl.getInfo(ytResponse.items[0].id.videoId),
+      command.channel.send(colorText('blue', `playing [${ytResponse?.items[0]?.snippet?.title}]`))
+    ]);
+
+    ConnectionService.voiceConnection?.play(ytdl(ytdlInfo?.videoDetails?.video_url));
   }
 }

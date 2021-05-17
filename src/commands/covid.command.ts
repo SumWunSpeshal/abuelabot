@@ -131,8 +131,13 @@ export abstract class CovidCommand implements AbuelaCommand {
     return [
       {
         name: 'Wocheninzidenz',
-        value: colorText('blue', `[${(location?.weekIncidence).toLocaleString()}]`),
-        inline: false
+        value: colorText('blue', `[${(location?.weekIncidence).toFixed().toLocaleString()}]`),
+        inline: true
+      },
+      {
+        name: '7-Tage-Mittelwert',
+        value: colorText('blue', `[${(location?.casesPerWeek / 7).toFixed().toLocaleString()}]`),
+        inline: true
       },
       { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false },
       { name: '**Unterschied zu gestern**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
