@@ -26,7 +26,7 @@ export abstract class StatusCommand {
 
     const typeMatch = type
       ? (findBestMatch(type.toUpperCase(), statusTypes).bestMatch.target as ActivityType)
-      : 'CUSTOM_STATUS';
+      : 'PLAYING';
 
     await client.user?.setActivity(text, {
       type: typeMatch,
