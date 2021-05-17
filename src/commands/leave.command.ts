@@ -9,7 +9,7 @@ const INFOS: AbuelaCommandInfos = {
   commandName: 'leave',
   description: `The "leave" command lets AbuelaBot leave your voice channel.`,
   usage: '`!leave`',
-  aliases: ['bye']
+  aliases: ['bye', 'stop', 'pause']
 };
 
 export abstract class LeaveCommand implements AbuelaCommand {

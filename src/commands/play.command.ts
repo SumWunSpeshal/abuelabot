@@ -13,14 +13,14 @@ const INFOS: AbuelaCommandInfos = {
   commandName: 'play',
   description: `The "play" command lets AbuelaBot play a song`,
   usage: '`!play`',
-  aliases: ['music', 'p']
+  aliases: ['music', 'pl']
 };
 
 export abstract class PlayCommand implements AbuelaCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard, NotPermissionsForGuard(['CONNECT', 'SPEAK']))
   @Aliases(INFOS.aliases)
+  @Guard(NotHelpGuard, NotBotGuard, NotPermissionsForGuard(['CONNECT', 'SPEAK']))
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
     await ConnectionService.join(command);
