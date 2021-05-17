@@ -63,13 +63,18 @@ export abstract class CovidCommand implements AbuelaCommand {
   }
 
   private async displayGermanyData(command: CommandMessage) {
-    const [germanyData, vaccinations, colorRanges] = await Promise.all([
+    const [germanyData, states, vaccinations, colorRanges] = await Promise.all([
       this.getRkiData<RkiCovidInterface.Ags>('germany'),
+      this.getRkiData<RkiCovidInterface.DistrictRoot>('states'),
       this.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
       this.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
     ]);
 
-    germanyData.population = 83756658; // fixme kek
+    const totalPopulation = Object.keys(states.data)
+      .map(key => states.data[key].population)
+      .reduce((acc, curr) => acc + curr);
+
+    germanyData.population = totalPopulation; // monkey patching the german population
 
     await command.channel.send({
       embed: {
