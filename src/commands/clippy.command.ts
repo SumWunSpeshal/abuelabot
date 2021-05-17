@@ -23,12 +23,7 @@ export abstract class ClippyCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard([INFOS.commandName, ...INFOS.aliases]))
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    // fixme This is actually a huge issue. If the user types multiple template names in his command, ${command.commandName}
-    // fixme will actually be the last RegExp match from the aliases! Meaning that "!hagrid I love clippy" will
-    // fixme result in ${command.commandName} being "clippy". The line below is just a quick fix to bypass this problem.
-
-    const [commandName] = command.commandContent.split(' ');
-    const image = await CanvasService.init(commandName as LocalTemplateName, allUserArgs);
+    const image = await CanvasService.init(command.commandName as LocalTemplateName, allUserArgs);
     await command.channel.send(new MessageAttachment(image));
   }
 }
