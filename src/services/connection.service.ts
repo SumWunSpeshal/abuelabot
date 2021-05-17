@@ -9,10 +9,6 @@ export abstract class ConnectionService {
   }
 
   static leave({ member }: CommandMessage) {
-    if (!this._voiceConnection) {
-      return;
-    }
-
     member?.voice?.channel?.leave();
     this._voiceConnection = undefined;
   }

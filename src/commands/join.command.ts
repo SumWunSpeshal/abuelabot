@@ -19,9 +19,10 @@ export class JoinCommand {
   @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard)
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
+
     await Promise.all([
       command.channel.send('joining...'),
       ConnectionService.join(command)
-    ])
+    ]);
   }
 }

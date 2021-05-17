@@ -20,6 +20,7 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class PlayCommand implements AbuelaCommand {
+
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Aliases(INFOS.aliases)
@@ -33,9 +34,17 @@ export abstract class PlayCommand implements AbuelaCommand {
 
     const [ytdlInfo]: [ytdl.videoInfo, Message] = await Promise.all([
       ytdl.getInfo(ytResponse.items[0].id.videoId),
-      command.channel.send(colorText('blue', `playing [${ytResponse?.items[0]?.snippet?.title}]`))
+      command.channel.send(colorText('turquoise', `playing "${ytResponse?.items[0]?.snippet?.title}"`))
     ]);
 
-    ConnectionService.voiceConnection?.play(ytdl(ytdlInfo?.videoDetails?.video_url));
+    ConnectionService.voiceConnection
+      ?.play(ytdl(ytdlInfo?.videoDetails?.video_url))
+      .on('finish', () => {
+        ConnectionService.leave(command);
+      })
+      .on('error', async error => {
+        console.error(error);
+        await command.channel.send(colorText('red', `something went wrong: [${error}]`));
+      });
   }
 }
