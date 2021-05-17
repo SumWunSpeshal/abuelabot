@@ -47,7 +47,7 @@ export abstract class CovidCommand implements AbuelaCommand {
     const districtDetails: RkiCovidInterface.Ags = district.data[agsObj!.ags];
     const stateAbbreviation = districtDetails.stateAbbreviation as RkiCovidInterface.StateAbbreviation;
 
-    const [state, vaccinations, colorRange] = await Promise.all([
+    const [state, vaccinations, colorRanges] = await Promise.all([
       this.getRkiData<RkiCovidInterface.DistrictRoot>('states', stateAbbreviation),
       this.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
       this.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
@@ -55,43 +55,43 @@ export abstract class CovidCommand implements AbuelaCommand {
 
     const stateDetails = state.data[stateAbbreviation];
     const stateVaccData = vaccinations.data.states[stateAbbreviation];
-    const infectionEmbed = this.buildInfectionEmbed(districtDetails, metaData, colorRange);
-    const vaccinationEmbed = this.buildVaccinationEmbed(stateDetails, stateVaccData, metaData, colorRange);
+    const districtEmbed = this.buildDistrictEmbed(districtDetails, metaData, colorRanges);
+    const stateEmbed = this.buildStateEmbed(
+      `Aktuelle Daten für das entsprechende Bundesland \`${stateDetails?.name}\``,
+      stateDetails,
+      stateVaccData,
+      metaData,
+      colorRanges
+    );
 
-    await command.channel.send(infectionEmbed);
-    await command.channel.send(vaccinationEmbed);
+    await command.channel.send(districtEmbed);
+    await command.channel.send(stateEmbed);
   }
 
   private async displayGermanyData(command: CommandMessage) {
-    const [germanyData, states, vaccinations, colorRanges] = await Promise.all([
-      this.getRkiData<RkiCovidInterface.Ags>('germany'),
+    const [states, vaccinations, colorRanges, germanyData] = await Promise.all([
       this.getRkiData<RkiCovidInterface.DistrictRoot>('states'),
       this.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
-      this.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend')
+      this.getRkiData<RkiCovidInterface.ColorRoot>('map', 'districts/legend'),
+      this.getRkiData<RkiCovidInterface.Ags>('germany')
     ]);
 
-    const totalPopulation = Object.keys(states.data)
+    germanyData.population = Object.keys(states.data)
       .map(key => states.data[key].population)
-      .reduce((acc, curr) => acc + curr);
+      .reduce((acc, curr) => acc + curr); // monkey patching the german population
 
-    germanyData.population = totalPopulation; // monkey patching the german population
+    const germanyEmbed = this.buildStateEmbed(
+      `Aktuelle COVID Daten für \`Deutschland\``,
+      germanyData,
+      vaccinations.data,
+      germanyData.meta!,
+      colorRanges
+    );
 
-    await command.channel.send({
-      embed: {
-        color: this.getIncidentColor(colorRanges, germanyData?.weekIncidence)?.color || '#000',
-        title: `Aktuelle COVID Daten für \`Deutschland\``,
-        fields: [
-          ...this.buildCovidInfos(germanyData),
-          ...this.buildVaccInfos(vaccinations.data, { population: germanyData.population })
-        ],
-        footer: {
-          text: `Quelle: ${germanyData.meta!.source} | Letztes Update: ${this.formatDate(germanyData.meta!.lastUpdate)}`
-        }
-      }
-    });
+    await command.channel.send(germanyEmbed);
   }
 
-  private buildInfectionEmbed(
+  private buildDistrictEmbed(
     district: RkiCovidInterface.Ags,
     meta: RkiCovidInterface.Meta,
     colorRange: RkiCovidInterface.ColorRoot
@@ -108,7 +108,8 @@ export abstract class CovidCommand implements AbuelaCommand {
     };
   }
 
-  private buildVaccinationEmbed(
+  private buildStateEmbed(
+    title: string,
     state: RkiCovidInterface.Ags,
     vaccData: RkiCovidInterface.VaccData | RkiCovidInterface.State,
     meta: RkiCovidInterface.Meta,
@@ -117,7 +118,7 @@ export abstract class CovidCommand implements AbuelaCommand {
     return {
       embed: {
         color: this.getIncidentColor(colorRange, state?.weekIncidence)?.color || '#000',
-        title: `Aktuelle Daten für das entsprechende Bundesland \`${state?.name}\``,
+        title: title,
         fields: [...this.buildCovidInfos(state), ...this.buildVaccInfos(vaccData, state)],
         footer: {
           text: `Quelle: ${meta.source} | Letztes Update: ${this.formatDate(meta.lastUpdate)}`
