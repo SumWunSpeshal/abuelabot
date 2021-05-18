@@ -34,7 +34,7 @@ export abstract class PlayCommand implements AbuelaCommand {
 
     const [ytdlInfo]: [ytdl.videoInfo, Message] = await Promise.all([
       ytdl.getInfo(ytResponse.items[0].id.videoId),
-      command.channel.send(colorText('turquoise', `playing "${ytResponse?.items[0]?.snippet?.title}"`))
+      command.reply(colorText('turquoise', `playing "${ytResponse?.items[0]?.snippet?.title}"`))
     ]);
 
     ConnectionService.voiceConnection
@@ -44,7 +44,7 @@ export abstract class PlayCommand implements AbuelaCommand {
       })
       .on('error', async error => {
         console.error(error);
-        await command.channel.send(colorText('red', `something went wrong: [${error}]`));
+        await command.reply(colorText('red', `something went wrong: [${error}]`));
       });
   }
 }

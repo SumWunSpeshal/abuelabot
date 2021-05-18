@@ -21,7 +21,7 @@ export class JoinCommand {
   async execute(command: CommandMessage) {
 
     await Promise.all([
-      command.channel.send('joining...'),
+      command.reply('joining...'),
       ConnectionService.join(command)
     ]);
   }
