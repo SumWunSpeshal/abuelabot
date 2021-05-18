@@ -19,7 +19,7 @@ export abstract class LeaveCommand implements AbuelaCommand {
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
     if (!ConnectionService.voiceConnection) {
-      await command.reply(`Can't leave when I was never there to begin with 🤷`);
+      await command.reply(`Can't leave if I was never there to begin with 🤷`);
     } else {
       ConnectionService.leave(command);
       await command.reply('leaving voice channel...');
