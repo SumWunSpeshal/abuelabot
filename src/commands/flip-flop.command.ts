@@ -1,9 +1,5 @@
-import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { CommandMessage } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { Aliases } from '../decorators/aliases';
-import { FixCommandNameGuard } from '../guards/fix-command-name.guard';
-import { NotHelpGuard } from '../guards/not-help.guard';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'flip :slug :number',
@@ -13,11 +9,17 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class FlipFlopCommand implements AbuelaCommand {
+  /**
+   * @description
+   * TODO Just for demonstration purpose. This command should not be in use.
+   *
+   * @param command
+   */
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard([INFOS.commandName, ...INFOS.aliases]))
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Aliases(INFOS.aliases)
+  // @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard([INFOS.commandName, ...INFOS.aliases]))
   async execute(command: CommandMessage) {
     const { slug, number } = command.args;
     await command.channel.send('Testing Aliases');
