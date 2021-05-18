@@ -8,10 +8,6 @@ export abstract class CommandHelper {
     return rest.join(' ');
   }
 
-  static safeObjectKeyAccess(obj: any): any | string {
-    return obj ?? 'Internal error. There is probably a problem with one of the APIs in use.';
-  }
-
   static ucFirstLetterOfWords(input: string): string {
     const delimiters: DelimiterArr = [' ', '-'];
     let ret: string = input;

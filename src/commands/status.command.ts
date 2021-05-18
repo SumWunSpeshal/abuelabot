@@ -3,11 +3,10 @@ import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { ActivityType, Client } from 'discord.js';
-import { BotNeedsPermissionsGuard } from '../guards/bot-needs-permissions.guard';
 import { UserNeedsPermissionsGuard } from '../guards/user-needs-permissions.guard';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { findBestMatch } from 'string-similarity';
-import { statusTypes } from '../utils/statusTypes';
+import { statusTypes } from '../utils/statics';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'status',

@@ -2,7 +2,6 @@ import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import config from '../config';
-import { CommandHelper } from '../utils/command-helper';
 import { Http } from '../utils/http';
 import { GiphyInterface } from '../api/giphy.interface';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
@@ -28,6 +27,6 @@ export abstract class GifCommand implements AbuelaCommand {
       url`https://api.giphy.com/v1/gifs/random?api_key=${config.giphyKey}&tag=${allUserArgs}&rating=${this.rating}`
     );
 
-    await command.channel.send(CommandHelper.safeObjectKeyAccess(response?.data?.image_original_url));
+    await command.channel.send(response?.data?.image_original_url);
   }
 }

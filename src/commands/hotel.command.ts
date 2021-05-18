@@ -2,7 +2,7 @@ import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
-import { LETTER_EMOJI } from '../utils/statusTypes';
+import { LETTER_EMOJI } from '../utils/statics';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'hotel',
@@ -26,8 +26,8 @@ export abstract class HotelCommand {
       LETTER_EMOJI.o
     ];
 
-    for (const item of trivago) {
-      await command.react(item);
+    for (const letter of trivago) {
+      await command.react(letter);
     }
   }
 }
