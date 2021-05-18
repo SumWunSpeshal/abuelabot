@@ -1,6 +1,6 @@
 import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
-import { AbuelaCommandInfos } from '../types';
+import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { Aliases } from '../decorators/aliases';
 import { NotInVoiceChannelGuard } from '../guards/not-in-voice-channel.guard';
@@ -13,7 +13,7 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['come', 'here']
 };
 
-export class JoinCommand {
+export class JoinCommand implements AbuelaCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard)

@@ -1,6 +1,6 @@
 import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
-import { AbuelaCommandInfos } from '../types';
+import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { LETTER_EMOJI } from '../utils/statics';
 
@@ -11,7 +11,7 @@ const INFOS: AbuelaCommandInfos = {
   aliases: []
 };
 
-export abstract class HotelCommand {
+export abstract class HotelCommand implements AbuelaCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard)

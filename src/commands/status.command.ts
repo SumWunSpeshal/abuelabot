@@ -1,6 +1,6 @@
 import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
-import { AbuelaCommandInfos } from '../types';
+import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { ActivityType, Client } from 'discord.js';
 import { UserNeedsPermissionsGuard } from '../guards/user-needs-permissions.guard';
@@ -15,7 +15,7 @@ const INFOS: AbuelaCommandInfos = {
   aliases: []
 };
 
-export abstract class StatusCommand {
+export abstract class StatusCommand implements AbuelaCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Guard(NotHelpGuard, NotBotGuard, UserNeedsPermissionsGuard(['ADMINISTRATOR']))
