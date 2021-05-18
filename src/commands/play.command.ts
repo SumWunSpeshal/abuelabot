@@ -16,7 +16,7 @@ const INFOS: AbuelaCommandInfos = {
   commandName: 'play',
   description: `The "play" command lets AbuelaBot play a song`,
   usage: '`!play`',
-  aliases: ['music', 'pl']
+  aliases: ['music', 'p']
 };
 
 export abstract class PlayCommand implements AbuelaCommand {
