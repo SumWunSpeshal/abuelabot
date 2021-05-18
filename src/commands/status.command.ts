@@ -3,11 +3,11 @@ import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { ActivityType, Client } from 'discord.js';
-import { BotHasNoPermissionsForGuard } from '../guards/bot-has-no-permissions-for.guard';
-import { UserHasNoPermissionsForGuard } from '../guards/user-has-no-permissions-for.guard';
+import { BotNeedsPermissionsGuard } from '../guards/bot-needs-permissions.guard';
+import { UserNeedsPermissionsGuard } from '../guards/user-needs-permissions.guard';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { findBestMatch } from 'string-similarity';
-import { statusTypes } from '../utils/status-types';
+import { statusTypes } from '../utils/statusTypes';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'status',
@@ -19,7 +19,7 @@ const INFOS: AbuelaCommandInfos = {
 export abstract class StatusCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard, UserHasNoPermissionsForGuard(['ADMINISTRATOR']))
+  @Guard(NotHelpGuard, NotBotGuard, UserNeedsPermissionsGuard(['ADMINISTRATOR']))
   @GetAllUserArgs('/')
   async execute(command: CommandMessage, client: Client, allUserArgs: string[]) {
     const [text, type] = allUserArgs;

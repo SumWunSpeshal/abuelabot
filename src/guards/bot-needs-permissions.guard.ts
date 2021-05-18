@@ -8,7 +8,7 @@ import { PermissionString } from 'discord.js';
  * @param _permissions
  * @constructor
  */
-export const BotHasNoPermissionsForGuard = (_permissions: PermissionString[]): GuardFunction<'commandMessage'> => {
+export const BotNeedsPermissionsGuard = (_permissions: PermissionString[]): GuardFunction<'commandMessage'> => {
   return async ([message], client, next) => {
     const voiceChannel = message?.member?.voice?.channel;
     const permissions = voiceChannel?.permissionsFor(message.client.user!);

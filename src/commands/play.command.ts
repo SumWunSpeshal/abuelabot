@@ -3,7 +3,7 @@ import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { Aliases } from '../decorators/aliases';
-import { BotHasNoPermissionsForGuard } from '../guards/bot-has-no-permissions-for.guard';
+import { BotNeedsPermissionsGuard } from '../guards/bot-needs-permissions.guard';
 import ytdl from 'ytdl-core';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
@@ -24,7 +24,7 @@ export abstract class PlayCommand implements AbuelaCommand {
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard, BotHasNoPermissionsForGuard(['CONNECT', 'SPEAK']))
+  @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard, BotNeedsPermissionsGuard(['CONNECT', 'SPEAK']))
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
     const [ytResponse]: [ImALazyFuck, void] = await Promise.all([

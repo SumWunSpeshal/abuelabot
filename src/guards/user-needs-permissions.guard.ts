@@ -7,7 +7,7 @@ import { PermissionString } from 'discord.js';
  * @param _permissions
  * @constructor
  */
-export const UserHasNoPermissionsForGuard = (_permissions: PermissionString[]): GuardFunction<'commandMessage'> => {
+export const UserNeedsPermissionsGuard = (_permissions: PermissionString[]): GuardFunction<'commandMessage'> => {
   return async ([message], client, next) => {
     const match = _permissions.find(perm => message?.member?.permissions.has(perm));
 
