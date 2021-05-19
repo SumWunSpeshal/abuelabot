@@ -32,13 +32,20 @@ export abstract class AestheticCommand implements AbuelaCommand {
     const spaced = replaced
       .split(' ')
       .map((word, index, arr) => {
-        return word + ((arr.length === index + 1) ? '' : Random.getRandomFrom(['   ', this.alphabet.space]));
+        return word + (arr.length === index + 1 ? '' : Random.getRandomFrom(['   ', this.alphabet.space]));
       })
       .join('');
 
-    const addBrackets = this.alphabet.bracket_open + spaced + this.alphabet.bracket_close
+    const addBrackets = Random.getRandomFrom([
+      this.alphabet.bracket_open + spaced + this.alphabet.bracket_close,
+      spaced
+    ]);
 
-    const japAdded = addBrackets + `   (${Random.getRandomFrom(this.alphabet.jap)})`;
-    await command.channel.send(japAdded);
+    const result = Random.getRandomFrom([
+      addBrackets,
+      addBrackets + `   (${Random.getRandomFrom(this.alphabet.jap)})`
+    ])
+
+    await command.channel.send(result);
   }
 }
