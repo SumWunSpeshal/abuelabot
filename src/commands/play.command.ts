@@ -9,8 +9,8 @@ import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
 import { ConnectionService } from '../services/connection.service';
 import { NotInVoiceChannelGuard } from '../guards/not-in-voice-channel.guard';
-import { Message } from 'discord.js';
 import { colorText } from '../utils/color-text';
+import { LoaderService } from '../services/loader.service';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'play',
@@ -20,25 +20,27 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class PlayCommand implements AbuelaCommand {
-
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Aliases(INFOS.aliases)
   @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard, BotNeedsPermissionsGuard(['CONNECT', 'SPEAK']))
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const [ytResponse]: [ImALazyFuck, void] = await Promise.all([
+    const [ytResponse]: [ImALazyFuck, void, void] = await Promise.all([
       YoutubeService.getSearchListResponse(allUserArgs),
+      LoaderService.start(command),
       ConnectionService.join(command)
     ]);
 
-    const [ytdlInfo]: [ytdl.videoInfo, Message] = await Promise.all([
-      ytdl.getInfo(ytResponse.items[0].id.videoId),
-      command.reply(colorText('turquoise', `playing "${ytResponse?.items[0]?.snippet?.title}"`))
-    ]);
+    const ytdlInfo: ytdl.videoInfo = await ytdl.getInfo(ytResponse.items[0].id.videoId);
 
     ConnectionService.voiceConnection
       ?.play(ytdl(ytdlInfo?.videoDetails?.video_url))
+      .once('speaking', async () => {
+        await LoaderService.done();
+        await command.reply(colorText('turquoise', `playing "${ytResponse?.items[0]?.snippet?.title}"`));
+        console.log('playing');
+      })
       .on('finish', () => {
         ConnectionService.leave(command);
       })

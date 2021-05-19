@@ -36,10 +36,16 @@ export abstract class HelpCommand implements AbuelaCommand {
       embed: {
         title: this.headline as string,
         description: this.description,
-        fields: commands.map(({ commandName, description }) => ({
-          name: CommandHelper.stripArgs(commandName as string),
-          value: description || this.fallbacks.description
-        }))
+        fields: commands.map(({ commandName, description }) => {
+          const shortenedDescription = description
+            ? description.split(' ').slice(0, 10).join(' ') + (description.split(' ').length > 10 ? ' [...]' : '')
+            : '';
+
+          return {
+            name: CommandHelper.stripArgs(commandName as string),
+            value: shortenedDescription || this.fallbacks.description
+          };
+        })
       }
     });
   }

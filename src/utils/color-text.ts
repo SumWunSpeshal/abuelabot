@@ -1,4 +1,4 @@
-type Colors = {
+export type Colors = {
   [key in 'blue' | 'yellow' | 'dark_yellow' | 'turquoise' | 'green' | 'red']: string;
 };
 
