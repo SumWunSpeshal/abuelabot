@@ -9,7 +9,7 @@ export abstract class ConnectionService {
   }
 
   static leave({ member }: CommandMessage) {
-    member?.voice?.channel?.leave();
+    member?.guild.me?.voice?.channel?.leave();
     this._voiceConnection = undefined;
   }
 

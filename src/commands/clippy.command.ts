@@ -23,7 +23,8 @@ export abstract class ClippyCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard([INFOS.commandName, ...INFOS.aliases]))
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const image = await CanvasService.init(command.commandName as LocalTemplateName, allUserArgs);
+    const commandName = (command.commandName as string).toLowerCase();
+    const image = await CanvasService.init(commandName as LocalTemplateName, allUserArgs);
     await command.channel.send(new MessageAttachment(image));
   }
 }
