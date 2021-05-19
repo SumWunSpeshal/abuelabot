@@ -8,8 +8,12 @@ export abstract class ConnectionService {
     this._voiceConnection = await member?.voice?.channel?.join();
   }
 
+  static isBotInVoiceChannel({ member }: CommandMessage) {
+    return !!member?.guild?.me?.voice?.channel;
+  }
+
   static leave({ member }: CommandMessage) {
-    member?.guild.me?.voice?.channel?.leave();
+    member?.guild?.me?.voice?.channel?.leave();
     this._voiceConnection = undefined;
   }
 

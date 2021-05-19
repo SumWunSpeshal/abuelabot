@@ -4,7 +4,7 @@ import { Message } from 'discord.js';
 import { sleep } from '../utils/sleep';
 
 export abstract class LoaderService {
-  private static interval: NodeJS.Timeout;
+  private static interval: NodeJS.Timeout | null = null;
   private static message: Message;
 
   static async start(command: CommandMessage) {
@@ -16,14 +16,19 @@ export abstract class LoaderService {
       counter = counter >= 12 || counter <= 0 ? 1 : counter + 1;
     }, 1000);
 
-    await sleep(30000);
-    console.log('Timeout!');
-    clearInterval(this.interval);
-    await this.message.edit(`:clock12: \`Loading... (Timeout)\``);
+    await sleep(20000);
+    if (this.interval && !this.message.deleted) {
+      console.log('Timeout!');
+      clearInterval(this.interval);
+      await this.message.edit(`:clock12: \`Loading... (Timeout)\``);
+    }
   }
 
   static async done() {
-    clearInterval(this.interval);
-    await this.message.delete();
+    if (this.interval && this.message) {
+      clearInterval(this.interval);
+      this.interval = null;
+      await this.message.delete();
+    }
   }
 }

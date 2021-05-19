@@ -26,9 +26,10 @@ export abstract class PlayCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard, BotNeedsPermissionsGuard(['CONNECT', 'SPEAK']))
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const [ytResponse]: [ImALazyFuck, void, void] = await Promise.all([
+    LoaderService.start(command).then();
+
+    const [ytResponse]: [ImALazyFuck, void] = await Promise.all([
       YoutubeService.getSearchListResponse(allUserArgs),
-      LoaderService.start(command),
       ConnectionService.join(command)
     ]);
 

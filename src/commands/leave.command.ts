@@ -18,7 +18,7 @@ export abstract class LeaveCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard)
   @Aliases(INFOS.aliases)
   async execute(command: CommandMessage) {
-    if (!ConnectionService.voiceConnection) {
+    if (!ConnectionService.isBotInVoiceChannel(command)) {
       await command.reply(`Can't leave if I was never there to begin with 🤷`);
     } else {
       ConnectionService.leave(command);
