@@ -27,7 +27,7 @@ export abstract class HazCommand implements AbuelaCommand {
     const article = await this.getInfo(allUserArgs);
 
     const embedFields = this.buildFields(article, 1000);
-    const messageSplits = CommandHelper.createChunkArray(embedFields, 3);
+    const messageSplits = CommandHelper.createArrayChunks(embedFields, 3);
 
     for await (let arrayChunk of messageSplits) {
 

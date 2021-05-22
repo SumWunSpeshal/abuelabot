@@ -1,12 +1,21 @@
 import { schedule } from 'node-cron';
 import { CommandHelper } from '../utils/command-helper';
-import { knownChannels } from '../utils/statics';
+import { KnownTextChannels } from '../utils/statics';
+import { readdirSync } from 'fs';
+import Path from 'path';
+import { Random } from '../utils/random';
 
-export const mittwochCron = schedule('* * * * *', async () => {
+const rule = '0 10 * * WED';
 
-  const memesChannel = CommandHelper.getTextChannelById(knownChannels.MEMES);
+export const mittwochCron = schedule(rule, async () => {
+  const memesChannel = CommandHelper.getTextChannelById(KnownTextChannels.MEMES);
 
-  if (memesChannel) {
-    await memesChannel.send(`my cronjob is working. I found the memes channel all by myself and I can now send scheduled messages`);
+  if (!memesChannel) {
+    return;
   }
+
+  const numOfFiles = readdirSync(Path.join(__dirname, '..', 'assets', 'img', 'mittwoch')).length - 1;
+  const randomNum = Random.getRandomNumBetween(1, numOfFiles);
+  const img = Path.join(__dirname, '..', 'assets', 'img', 'mittwoch', `${randomNum}.jpg`);
+  await memesChannel.send('Es ist Mittwoch, meine Buben :frog:', { files: [img] });
 });

@@ -1,13 +1,20 @@
 import { schedule } from 'node-cron';
 import { CommandHelper } from '../utils/command-helper';
-import { knownChannels } from '../utils/statics';
+import { KnownEmojis, KnownRoles, KnownTextChannels } from '../utils/statics';
 
-const rule = '* * * * *';
+const rule = '0 12 * * MON';
 
 export const amongUsMondayCron = schedule(rule, async () => {
-  const amongUsChannel = CommandHelper.getTextChannelById(knownChannels.AMONG_US);
+  const amongUsChannel = CommandHelper.getTextChannelById(KnownTextChannels.AMONG_US);
 
-  if (amongUsChannel) {
-    await amongUsChannel.send(`my cronjob is working. I found the amongus channel all by myself and I can now send scheduled messages`);
+  if (!amongUsChannel) {
+    return;
   }
+
+  const msg = await amongUsChannel.send(
+    `${CommandHelper.mention(KnownRoles.AMONG_US_GANG)} Wer ist heute am Start? :eye: :lips: :eye:`
+  );
+
+  await msg.react(KnownEmojis.JOYFUL_STAR);
+  await msg.react(KnownEmojis.OK_GOOD_COOL);
 });
