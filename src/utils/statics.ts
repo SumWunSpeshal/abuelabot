@@ -8,3 +8,9 @@ export const statusTypes: ActivityType[] = [
   'PLAYING',
   'STREAMING'
 ];
+
+export enum knownChannels {
+  GENERAL = '243082552783405056',
+  AMONG_US = '775108002658779197',
+  MEMES = '781559889859706910'
+}

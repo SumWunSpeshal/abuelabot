@@ -5,11 +5,13 @@ import Path from 'path';
 const { token } = SETUP_CONFIG;
 
 export class Main {
+
   private static _client: Client = new Client();
 
-  static getClient(): Client {
+  static get client(): Client {
     return this._client;
   }
+
 
   static async start(): Promise<void> {
     try {
@@ -21,4 +23,4 @@ export class Main {
   }
 }
 
-Main.start();
+Main.start().then();

@@ -1,4 +1,7 @@
 import { Client, CommandInfos, CommandMessage } from '@typeit/discord';
+import { Main } from '../main';
+import { knownChannels } from './statics';
+import { TextChannel } from 'discord.js';
 
 type DelimiterArr = Array<' ' | '-'>;
 
@@ -39,6 +42,19 @@ export abstract class CommandHelper {
 
   static containsDescriptionFlag(userInput: string): boolean {
     return !!userInput.split(' ').find(snippet => snippet === process.env.EXTENDED_DESCRIPTION_FLAG);
+  }
+
+  static createChunkArray(array: any[], chunkSize: number): any[][] {
+    const numberOfChunks = Math.ceil(array.length / chunkSize)
+
+    return [...Array(numberOfChunks)]
+      .map((value, index) => {
+        return array.slice(index * chunkSize, (index + 1) * chunkSize)
+      })
+  }
+
+  static getTextChannelById(id: knownChannels): TextChannel | undefined {
+    return Main.client.channels.cache.get(id) as TextChannel;
   }
 
   /**
