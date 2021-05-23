@@ -1,6 +1,7 @@
 import { Client } from '@typeit/discord';
 import SETUP_CONFIG from './config';
 import Path from 'path';
+import config from './config';
 
 const { token, devToken } = SETUP_CONFIG;
 
@@ -15,7 +16,9 @@ export class Main {
   }
 
   static async start(): Promise<void> {
-    this._client.login(token).catch(error => {
+    const _token = config.env === 'PROD' ? token : devToken;
+
+    this._client.login(_token).catch(error => {
       console.error(error);
       process.exit(0);
     });

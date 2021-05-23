@@ -2,7 +2,10 @@ import { config } from 'dotenv';
 
 config();
 
+export type EnvironmentOptions = 'PROD' | 'DEV';
+
 export type SetupConfig = {
+  env: EnvironmentOptions;
   token: string;
   devToken: string;
   prefix: string;
@@ -15,6 +18,7 @@ export type SetupConfig = {
 };
 
 const SETUP_CONFIG: SetupConfig = {
+  env: process.env.ENV! as EnvironmentOptions,
   token: process.env.BOT_TOKEN!,
   devToken: process.env.DEV_BOT_TOKEN!,
   prefix: process.env.PREFIX!,
