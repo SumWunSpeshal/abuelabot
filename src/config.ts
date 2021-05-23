@@ -4,6 +4,7 @@ config();
 
 export type SetupConfig = {
   token: string;
+  devToken: string;
   prefix: string;
   giphyKey: string;
   descriptionFlag: string;
@@ -15,6 +16,7 @@ export type SetupConfig = {
 
 const SETUP_CONFIG: SetupConfig = {
   token: process.env.BOT_TOKEN!,
+  devToken: process.env.DEV_BOT_TOKEN!,
   prefix: process.env.PREFIX!,
   giphyKey: process.env.GIPHY_KEY!,
   descriptionFlag: process.env.EXTENDED_DESCRIPTION_FLAG!,

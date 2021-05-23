@@ -2,7 +2,7 @@ import { Client } from '@typeit/discord';
 import SETUP_CONFIG from './config';
 import Path from 'path';
 
-const { token } = SETUP_CONFIG;
+const { token, devToken } = SETUP_CONFIG;
 
 export class Main {
 
