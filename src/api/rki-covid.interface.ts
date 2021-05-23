@@ -1,9 +1,9 @@
 export declare module RkiCovidInterface {
-  export type ApiEndPoint = 'districts' | 'states' | 'germany' | 'vaccinations' | 'map' | 'testing';
+  type ApiEndPoint = 'districts' | 'states' | 'germany' | 'vaccinations' | 'map' | 'testing';
 
-  export type AgsString = string; // FIXME find a way to type this as 'numberstring'
+  type AgsString = string; // FIXME find a way to type this as 'numberstring'
 
-  export type StateAbbreviation =
+  type StateAbbreviation =
     | 'BW'
     | 'BY'
     | 'BE'
@@ -22,20 +22,20 @@ export declare module RkiCovidInterface {
     | 'TH'
     | 'Bund';
 
-  export type AgsMap = AgsShort[];
+  type AgsMap = AgsShort[];
 
-  export interface AgsShort {
+  interface AgsShort {
     ags: AgsString;
     name: string;
   }
 
-  export interface Delta {
+  interface Delta {
     cases: number;
     deaths: number;
     recovered: number;
   }
 
-  export interface Ags {
+  interface Ags {
     id?: number;
     ags?: AgsString;
     name: string;
@@ -54,17 +54,17 @@ export declare module RkiCovidInterface {
     r?: R;
     meta?: Meta
   }
-  export interface R {
+  interface R {
     value: number;
     date: Date;
   }
 
 
-  export interface DistrictData {
+  interface DistrictData {
     [key: string]: Ags; // key is of type AgsString
   }
 
-  export interface Meta {
+  interface Meta {
     source: string;
     contact: string;
     info: string;
@@ -72,17 +72,17 @@ export declare module RkiCovidInterface {
     lastCheckedForUpdate: Date;
   }
 
-  export interface DistrictRoot {
+  interface DistrictRoot {
     data: DistrictData;
     meta: Meta;
   }
 
-  export interface VaccRoot {
+  interface VaccRoot {
     data: VaccData;
     meta: Meta;
   }
 
-  export interface VaccData {
+  interface VaccData {
     administeredVaccinations: number;
     vaccinated: number;
     vaccination: VaccProduct;
@@ -93,11 +93,11 @@ export declare module RkiCovidInterface {
     states: States;
   }
 
-  export type States = {
+  type States = {
     [key in StateAbbreviation]: State;
   };
 
-  export interface State {
+  interface State {
     name: string;
     administeredVaccinations: number;
     vaccinated: number;
@@ -108,21 +108,21 @@ export declare module RkiCovidInterface {
     indication?: Indication;
   }
 
-  export interface VaccProduct {
+  interface VaccProduct {
     biontech: number;
     moderna: number;
     astraZeneca: number;
     janssen: number;
   }
 
-  export interface SecondVaccination {
+  interface SecondVaccination {
     vaccinated: number;
     vaccination: VaccProduct;
     delta: number;
     quote: number;
   }
 
-  export interface Indication {
+  interface Indication {
     age: null;
     job: null;
     medical: null;
@@ -130,13 +130,13 @@ export declare module RkiCovidInterface {
     secondVaccination: {}; // todo
   }
 
-  export interface IncidentRange {
+  interface IncidentRange {
     min: number;
     max?: number;
     color: string;
   }
 
-  export interface ColorRoot {
+  interface ColorRoot {
     incidentRanges: IncidentRange[];
   }
 }

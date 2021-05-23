@@ -3,7 +3,7 @@ import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import config from '../config';
 import { Http } from '../utils/http';
-import { GiphyInterface } from '../api/giphy.interface';
+import { IGiphy } from '../api/giphy.interface';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { url } from '../utils/tagged-templates';
 import { NotHelpGuard } from '../guards/not-help.guard';
@@ -23,7 +23,7 @@ export abstract class GifCommand implements AbuelaCommand {
   @Guard(NotHelpGuard, NotBotGuard)
   @GetAllUserArgs()
   async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const response = await Http.fetch<GiphyInterface.RootObject>(
+    const response = await Http.fetch<IGiphy>(
       url`https://api.giphy.com/v1/gifs/random?api_key=${config.giphyKey}&tag=${allUserArgs}&rating=${this.rating}`
     );
 

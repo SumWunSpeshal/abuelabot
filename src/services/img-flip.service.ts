@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import Path from 'path';
 import { BestMatch, findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
-import { ImgFlipInterface } from '../api/img-flip.interface';
+import { IImgFlipGetResponse } from '../api/img-flip.interface';
 import { Random } from '../utils/random';
 
 interface Aliases {
@@ -10,7 +10,7 @@ interface Aliases {
 }
 
 export abstract class ImgFlipService {
-  private static localMemes: ImgFlipInterface.GetResponse = JSON.parse(
+  private static localMemes: IImgFlipGetResponse = JSON.parse(
     readFileSync(Path.join(__dirname, '..', 'assets', 'static-memes.json')).toString()
   );
 
@@ -35,7 +35,7 @@ export abstract class ImgFlipService {
    */
   static findClosestMemeName(
     input: string,
-    { data: { memes } }: ImgFlipInterface.GetResponse = this.localMemes
+    { data: { memes } }: IImgFlipGetResponse = this.localMemes
   ): BestMatch {
     const capitalized = CommandHelper.ucFirstLetterOfWords(input);
     const memeNames = memes.map(meme => meme.name);

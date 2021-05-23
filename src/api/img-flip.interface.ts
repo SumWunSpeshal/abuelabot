@@ -1,40 +1,38 @@
-export declare module ImgFlipInterface {
-  interface GetResponse {
-    success: boolean;
-    data: {
-      memes: Meme[];
-    };
-  }
+export interface IImgFlipGetResponse {
+  success: boolean;
+  data: {
+    memes: IImgFlipMeme[];
+  };
+}
 
-  interface Meme {
-    id: string;
-    name: string;
+export interface IImgFlipMeme {
+  id: string;
+  name: string;
+  url: string;
+  width: number;
+  height: number;
+  box_count: number;
+}
+
+export interface IImgFlipSuccessResponse {
+  success: true;
+  data: {
     url: string;
-    width: number;
-    height: number;
-    box_count: number;
-  }
+    page_url: string;
+  };
+}
 
-  interface SuccessResponse {
-    success: true;
-    data: {
-      url: string;
-      page_url: string;
-    }
-  }
+export interface IImgFlipFailureResponse {
+  success: false;
+  error_message: string;
+}
 
-  interface FailureResponse {
-    success: false;
-    error_message: string;
-  }
-
-  interface CaptionRequestBody {
-    template_id: string;
-    username: string;
-    password: string;
-    text0: string;
-    text1: string;
-    font?: 'impact' | 'arial';
-    max_font_size?: string;
-  }
+export interface IImgFlipCaptionRequestBody {
+  template_id: string;
+  username: string;
+  password: string;
+  text0: string;
+  text1: string;
+  font?: 'impact' | 'arial';
+  max_font_size?: string;
 }

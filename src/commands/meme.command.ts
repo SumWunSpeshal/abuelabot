@@ -6,7 +6,7 @@ import { Http } from '../utils/http';
 import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { NotHelpGuard } from '../guards/not-help.guard';
 import { ImgFlipService } from '../services/img-flip.service';
-import { ImgFlipInterface } from '../api/img-flip.interface';
+import { IImgFlipCaptionRequestBody, IImgFlipGetResponse, IImgFlipSuccessResponse } from '../api/img-flip.interface';
 import { Aliases } from '../decorators/aliases';
 import { Rating } from 'string-similarity';
 import { colorText } from '../utils/color-text';
@@ -30,10 +30,10 @@ export abstract class MemeCommand implements AbuelaCommand {
   @GetAllUserArgs('/')
   async execute(command: CommandMessage, client: Client, allUserArgs: string[]) {
     const [memeName, text0, text1] = allUserArgs;
-    const memes: ImgFlipInterface.GetResponse = await Http.fetch<ImgFlipInterface.GetResponse>(this.getUrl);
+    const memes = await Http.fetch<IImgFlipGetResponse>(this.getUrl);
     const { bestMatch } = ImgFlipService.findClosestMemeName(memeName, memes);
     const singleMeme = memes.data.memes.find(meme => meme.name === bestMatch.target);
-    const response: ImgFlipInterface.SuccessResponse = await Http.fetch(
+    const response = await Http.fetch<IImgFlipSuccessResponse>(
       this.createRequestBody(singleMeme!.id, text0, text1),
       'json'
     );
@@ -65,7 +65,7 @@ export abstract class MemeCommand implements AbuelaCommand {
   }
 
   private createRequestBody(id: string, text0: string = ' ', text1: string = ' '): string {
-    const body: ImgFlipInterface.CaptionRequestBody = {
+    const body: IImgFlipCaptionRequestBody = {
       password: config.imgFlipPw,
       template_id: id,
       text0: text0,
