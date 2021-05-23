@@ -12,6 +12,7 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class PingCommand implements AbuelaCommand {
+
   @Command(INFOS.commandName)
   @Infos(INFOS)
   @Aliases(INFOS.aliases)

@@ -31,7 +31,7 @@ export abstract class HotelCommand implements AbuelaCommand {
       this.letters.o
     ];
 
-    for (const letter of trivago) {
+    for await (const letter of trivago) {
       await command.react(letter);
     }
   }

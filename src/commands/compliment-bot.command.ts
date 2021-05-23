@@ -24,7 +24,7 @@ export abstract class ComplimentBotCommand implements AbuelaCommand {
   private path = Path.join(__dirname, '..', 'cache', 'counter.json');
 
   private readonly botResponses = [
-    'Thank you, I love you  !',
+    'Thank you, I love you too!',
     `I know I'm awesome.`,
     'Aww, thank you!',
     'Yeah! High five!',

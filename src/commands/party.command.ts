@@ -20,9 +20,9 @@ export abstract class PartyCommand implements AbuelaCommand {
 
   private dancingPeople = ['💃', '🙅', '🕺', '🙆', '🤟', '🕴', '🙋', '👯'];
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard)
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Guard(NotHelpGuard, NotBotGuard)
   async execute(command: CommandMessage) {
     const textMsg = await command.channel.send(this.randomTextMessage());
     const emojiMsg = await command.channel.send(this.randomEmojiMessage());

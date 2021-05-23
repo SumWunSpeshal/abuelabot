@@ -30,7 +30,6 @@ export abstract class HazCommand implements AbuelaCommand {
     const messageSplits = CommandHelper.createArrayChunks(embedFields, 3);
 
     for await (let arrayChunk of messageSplits) {
-
       await command.channel.send({
         embed: {
           title: article.headline,

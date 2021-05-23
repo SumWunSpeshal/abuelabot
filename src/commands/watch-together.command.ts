@@ -36,7 +36,7 @@ export abstract class WatchTogetherCommand implements AbuelaCommand {
     );
     const w2gResponse: W2gResponse = await Http.fetch(this.w2gUrl, 'json', w2gRequestBody);
 
-    let message = `${!allUserArgs ? `Eh stupid, You should tell me what you're looking for ...\n\n` : ''}`;
+    let message = `${!allUserArgs ? `You should tell me what you're looking for ...\n\n` : ''}`;
     message += `${colorText('yellow', ytResponse?.items[0]?.snippet?.title)}\n`;
     message += `https://w2g.tv/rooms/${w2gResponse?.streamkey}`;
 
