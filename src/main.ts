@@ -5,21 +5,20 @@ import Path from 'path';
 const { token, devToken } = SETUP_CONFIG;
 
 export class Main {
-
-  private static _client: Client = new Client();
+  private static _client: Client = new Client({
+    classes: [Path.join(__dirname, 'abuela.ts')],
+    variablesChar: ':'
+  });
 
   static get client(): Client {
     return this._client;
   }
 
-
   static async start(): Promise<void> {
-    try {
-      await this._client.login(token, Path.join(__dirname, 'abuela.ts'));
-    } catch (error) {
+    this._client.login(token).catch(error => {
       console.error(error);
       process.exit(0);
-    }
+    });
   }
 }
 
