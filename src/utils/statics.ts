@@ -31,3 +31,7 @@ export enum KnownEmojis {
   JOYFUL_SOB = '435013827248259073',
   OK_GOOD_COOL = '779123069394485290'
 }
+
+export enum CustomEvents {
+  MANUAL_HELP_TRIGGER = 'manual-help-trigger'
+}

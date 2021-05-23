@@ -1,4 +1,14 @@
-import { ArgsOf, Client, Command, CommandInfos, CommandMessage, Guard, Infos, On } from '@typeit/discord';
+import {
+  ArgsOf,
+  Client,
+  Command,
+  CommandInfos,
+  CommandMessage,
+  DiscordEvents,
+  Guard,
+  Infos,
+  On
+} from '@typeit/discord';
 import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { Aliases } from '../decorators/aliases';
@@ -7,6 +17,8 @@ import { NotKnownCommandGuard } from '../guards/not-known-command.guard';
 import { CommandHelper } from '../utils/command-helper';
 import { HelpGuard } from '../guards/help.guard';
 import { NotHelpGuard } from '../guards/not-help.guard';
+import { Message } from 'discord.js';
+import { CustomEvents } from '../utils/statics';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'help',
@@ -53,6 +65,15 @@ export abstract class HelpCommand implements AbuelaCommand {
   @On('message')
   @Guard(NotBotGuard, NotCommandGuard, NotKnownCommandGuard, HelpGuard)
   async commandDetails([message]: ArgsOf<'message'>, client: Client) {
+    await this.showDetailedHelp(message);
+  }
+
+  @On((CustomEvents.MANUAL_HELP_TRIGGER as unknown) as DiscordEvents)
+  async onManualHelpTrigger([message]: ArgsOf<'message'>) {
+    await this.showDetailedHelp(message);
+  }
+
+  async showDetailedHelp(message: Message) {
     const { commandName, description, infos } = CommandHelper.getCommandName(message as CommandMessage) as CommandInfos;
 
     await message.channel.send({
