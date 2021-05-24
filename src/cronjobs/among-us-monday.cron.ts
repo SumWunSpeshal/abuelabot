@@ -3,7 +3,7 @@ import { CommandHelper } from '../utils/command-helper';
 import { KnownEmojis, KnownGuilds, KnownRoles, KnownTextChannels } from '../utils/statics';
 import { Main } from '../main';
 
-const rule = '0 12 * * MON';
+const rule = '0 11 * * MON';
 
 export const amongUsMondayCron = schedule(rule, async () => {
   const amongUsChannel = CommandHelper.getTextChannelById(KnownTextChannels.DISCO_BOT);

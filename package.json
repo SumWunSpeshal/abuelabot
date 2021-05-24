@@ -42,6 +42,7 @@
     "node-cron": "^3.0.0",
     "node-fetch": "^2.6.1",
     "prettier": "2.2.1",
+    "reflect-metadata": "^0.1.13",
     "string-similarity": "^4.0.4",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
