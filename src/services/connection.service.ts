@@ -10,11 +10,15 @@ export abstract class ConnectionService {
     this._voiceConnection = await member?.voice?.channel?.join();
   }
 
-  static isBotInVoiceChannel({ member }: any) {
+  static isBotInVoiceChannel(commandInteraction: CommandInteraction) {
+    const guild = CommandHelper.getGuildById(commandInteraction.guildID!);
+    const member = CommandHelper.getMemberById(guild!, commandInteraction.user.id);
     return !!member?.guild?.me?.voice?.channel;
   }
 
-  static leave({ member }: any) {
+  static leave(commandInteraction: CommandInteraction) {
+    const guild = CommandHelper.getGuildById(commandInteraction.guildID!);
+    const member = CommandHelper.getMemberById(guild!, commandInteraction.user.id);
     member?.guild?.me?.voice?.channel?.leave();
     this._voiceConnection = undefined;
   }

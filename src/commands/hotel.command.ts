@@ -1,6 +1,8 @@
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { readFileSync } from 'fs';
 import Path from 'path';
+import { Discord, Slash } from '@typeit/discord';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'hotel',
@@ -9,15 +11,14 @@ const INFOS: AbuelaCommandInfos = {
   aliases: []
 };
 
-export abstract class HotelCommand implements AbuelaCommand {
+@Discord()
+export abstract class HotelCommand {
   private readonly letters = JSON.parse(
     readFileSync(Path.join(__dirname, '..', 'assets', 'letter-emojis.json')).toString()
   );
 
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Guard(NotHelpGuard, NotBotGuard)
-  async execute(command: any) {
+  @Slash(INFOS.commandName)
+  async execute(interaction: CommandInteraction) {
     const trivago = [
       this.letters.t,
       this.letters.r,
@@ -28,8 +29,10 @@ export abstract class HotelCommand implements AbuelaCommand {
       this.letters.o
     ];
 
-    for await (const letter of trivago) {
-      await command.react(letter);
-    }
+    // for await (const letter of trivago) {
+    //   await command.react(letter);
+    // }
+
+    await interaction.reply(trivago.join(''));
   }
 }
