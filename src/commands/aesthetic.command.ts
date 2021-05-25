@@ -1,5 +1,5 @@
-import { Client, Discord, Slash, Option } from '@typeit/discord';
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
+import { Discord, Option, Slash } from '@typeit/discord';
+import { AbuelaCommandInfos } from '../types';
 import { readFileSync } from 'fs';
 import Path from 'path';
 import { Random } from '../utils/random';

@@ -1,11 +1,8 @@
-import { Discord, Once } from '@typeit/discord';
-import { Main } from '../main';
+import { Discord, On } from '@typeit/discord';
 import { Interaction } from 'discord.js';
 
-// @Discord()
+@Discord()
 export abstract class ReadyEvent {
-  // @Once('interaction')
-  async onReady(interaction: Interaction): Promise<void> {
-    await Main.client.executeSlash(interaction);
-  }
+  @On('interaction')
+  async onInteraction(interaction: Interaction): Promise<void> {}
 }

@@ -1,5 +1,7 @@
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
+import { AbuelaCommandInfos } from '../types';
 import { ConnectionService } from '../services/connection.service';
+import { Discord, Slash } from '@typeit/discord';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'join',
@@ -8,16 +10,14 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['come', 'here']
 };
 
-export class JoinCommand implements AbuelaCommand {
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard)
-  // @Aliases(INFOS.aliases)
-  async execute(command: any) {
+@Discord()
+export class JoinCommand {
 
+  @Slash(INFOS.commandName)
+  async execute(interaction: CommandInteraction) {
     await Promise.all([
-      command.reply('joining...'),
-      ConnectionService.join(command)
+      ConnectionService.join(interaction),
+      interaction.reply('`voice channel joined!`')
     ]);
   }
 }

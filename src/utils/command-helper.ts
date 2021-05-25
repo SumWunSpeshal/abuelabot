@@ -1,6 +1,6 @@
 import { Main } from '../main';
 import { KnownRoles, KnownTextChannels } from './statics';
-import { TextChannel } from 'discord.js';
+import { Guild, GuildMember, Snowflake, TextChannel } from 'discord.js';
 
 type DelimiterArr = Array<' ' | '-'>;
 
@@ -52,8 +52,16 @@ export abstract class CommandHelper {
       })
   }
 
-  static getTextChannelById(id: KnownTextChannels): TextChannel | undefined {
+  static getTextChannelById(id: KnownTextChannels | string): TextChannel | undefined {
     return Main.client.channels.cache.get(id) as TextChannel;
+  }
+
+  static getGuildById(guildId: Snowflake): Guild | undefined {
+    return Main.client.guilds.cache.get(guildId);
+  }
+
+  static getMemberById(guild: Guild, memberId: Snowflake): GuildMember | undefined {
+    return guild.members.cache.get(memberId);
   }
 
   /**

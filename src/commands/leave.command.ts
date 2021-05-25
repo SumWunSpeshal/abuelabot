@@ -1,5 +1,7 @@
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { ConnectionService } from '../services/connection.service';
+import { Discord, Slash } from '@typeit/discord';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'leave',
@@ -8,17 +10,17 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['bye', 'stop', 'pause']
 };
 
+@Discord()
 export abstract class LeaveCommand implements AbuelaCommand {
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Guard(NotHelpGuard, NotBotGuard)
-  // @Aliases(INFOS.aliases)
-  async execute(command: any) {
-    if (!ConnectionService.isBotInVoiceChannel(command)) {
-      await command.reply(`Can't leave if I was never there to begin with 🤷`);
+
+  @Slash(INFOS.commandName)
+  async execute(interaction: CommandInteraction) {
+    await interaction.defer()
+    if (!ConnectionService.isBotInVoiceChannel(interaction)) {
+      await interaction.reply(`Can't leave if I was never there to begin with 🤷`);
     } else {
-      ConnectionService.leave(command);
-      await command.reply('leaving voice channel...');
+      ConnectionService.leave(interaction);
+      await interaction.reply('leaving voice channel...');
     }
   }
 }

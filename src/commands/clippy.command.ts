@@ -1,6 +1,6 @@
 import { Choices, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommandInfos } from '../types';
-import { CommandInteraction, MessageAttachment, MessageEmbed } from 'discord.js';
+import { CommandInteraction, MessageAttachment } from 'discord.js';
 import { CanvasService } from '../services/canvas.service';
 import { LocalTemplateName } from '../api/clippy.interface';
 
@@ -26,9 +26,10 @@ export abstract class ClippyCommand {
     template: LocalTemplateName,
     @Option('caption', { description: '... now add your caption' })
     text: string,
-    interaction: CommandInteraction
+    interaction: CommandInteraction,
   ) {
     const image = await CanvasService.init(template, text);
-    await interaction.reply(new MessageEmbed({ description: text, files: [new MessageAttachment(image)] }));
+    await interaction.defer();
+    await interaction.editReply(new MessageAttachment(image));
   }
 }

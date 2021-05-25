@@ -1,12 +1,12 @@
-import { Client } from '@typeit/discord';
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
+import { Discord, Option, Slash } from '@typeit/discord';
+import { AbuelaCommandInfos } from '../types';
 import { Http } from '../utils/http';
 import { RkiCovidInterface } from '../api/rki-covid.interface';
 import { readFileSync } from 'fs';
 import Path from 'path';
 import { findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
-import { EmbedField, MessageOptions } from 'discord.js';
+import { CommandInteraction, EmbedField, MessageEmbed, MessageOptions } from 'discord.js';
 import { colorText } from '../utils/color-text';
 
 const INFOS: AbuelaCommandInfos = {
@@ -17,7 +17,8 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['corona', 'covid19', 'sarscov2', 'ncov', 'cov']
 };
 
-export abstract class CovidCommand implements AbuelaCommand {
+@Discord()
+export abstract class CovidCommand {
   private readonly baseUrl = 'https://api.corona-zahlen.org/';
 
   private readonly agsMap: RkiCovidInterface.AgsMap = JSON.parse(
@@ -26,18 +27,18 @@ export abstract class CovidCommand implements AbuelaCommand {
 
   private readonly zeroWidthSpace = '\u200b';
 
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Guard(NotHelpGuard, NotBotGuard)
-  // @Aliases(INFOS.aliases)
-  // @GetAllUserArgs()
-  async execute(command: any, client: Client, allUserArgs: string) {
-    if (!allUserArgs) {
-      await this.displayGermanyData(command);
+  @Slash(INFOS.commandName)
+  async execute(
+    @Option('landkreis', { description: 'Type your district and get info for district and state, or leave empty for Germany' })
+    userInput: string,
+    interaction: CommandInteraction,
+  ) {
+    if (!userInput) {
+      await this.displayGermanyData(interaction);
       return;
     }
 
-    const agsObj: RkiCovidInterface.AgsShort | undefined = this.getClosestDistrictMatch(allUserArgs);
+    const agsObj: RkiCovidInterface.AgsShort | undefined = this.getClosestDistrictMatch(userInput);
     const district = await this.getRkiData<RkiCovidInterface.DistrictRoot>('districts', agsObj?.ags);
     const metaData: RkiCovidInterface.Meta = district.meta;
     const districtDetails: RkiCovidInterface.Ags = district.data[agsObj!.ags];
@@ -60,11 +61,11 @@ export abstract class CovidCommand implements AbuelaCommand {
       colorRanges
     );
 
-    await command.channel.send(districtEmbed);
-    await command.channel.send(stateEmbed);
+    await interaction.reply(new MessageEmbed(districtEmbed.embed));
+    await interaction.followUp(new MessageEmbed(stateEmbed.embed));
   }
 
-  private async displayGermanyData(command: any) {
+  private async displayGermanyData(interaction: CommandInteraction) {
     const [states, vaccinations, colorRanges, germanyData] = await Promise.all([
       this.getRkiData<RkiCovidInterface.DistrictRoot>('states'),
       this.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),
@@ -84,7 +85,7 @@ export abstract class CovidCommand implements AbuelaCommand {
       colorRanges
     );
 
-    await command.channel.send(germanyEmbed);
+    await interaction.reply(new MessageEmbed(germanyEmbed.embed));
   }
 
   private buildDistrictEmbed(

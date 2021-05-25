@@ -1,5 +1,7 @@
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { Random } from '../utils/random';
+import { Discord, Slash } from '@typeit/discord';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'hello',
@@ -8,14 +10,12 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['hi', 'salut', 'bonjour', 'buongiorno', 'priviet', 'hey']
 };
 
+@Discord()
 export abstract class HelloCommand implements AbuelaCommand {
   private readonly emojis = ['👋', '🖖', '👊', '✌️'];
 
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Aliases(INFOS.aliases)
-  // @Guard(NotHelpGuard, NotBotGuard)
-  async execute(command: any) {
-    await command.react(Random.getRandomFrom(this.emojis));
+  @Slash(INFOS.commandName)
+  async execute(interaction: CommandInteraction) {
+    await interaction.reply(Random.getRandomFrom(this.emojis));
   }
 }
