@@ -21,7 +21,7 @@
   "homepage": "https://github.com/SumWunSpeshal/abuelabot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.5.0",
-    "@typeit/discord": "^4.0.9",
+    "@typeit/discord": "^5.0.4",
     "@types/ffmpeg": "^1.0.4",
     "@types/fluent-ffmpeg": "^2.1.17",
     "@types/jsdom": "^16.2.10",
@@ -32,7 +32,7 @@
     "@types/uuid": "^8.3.0",
     "@types/ws": "^7.4.2",
     "canvas": "^2.7.0",
-    "discord.js": "^12.5.3",
+    "discord.js": "github:discordjs/discord.js",
     "dotenv": "^8.2.0",
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.3.0",

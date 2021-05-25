@@ -1,24 +1,25 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
+import { Discord, Option, Slash } from '@typeit/discord';
+import { AbuelaCommandInfos } from '../types';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'mock',
-  description: `Make fun of somebody by mockifying your own message!`,
+  description: `Mockify your own message!`,
   usage: '`!mock {sentence}`',
   aliases: []
 };
 
-export abstract class MockCommand implements AbuelaCommand {
-
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard)
-  @GetAllUserArgs()
-  async execute(command: CommandMessage, client: Client, userInput: string) {
-    const ret = userInput.split('').map((item, index) => (index % 2 ? item.toUpperCase() : item.toLowerCase())).join('');
-    await command.channel.send(ret);
+@Discord()
+export abstract class MockCommand {
+  @Slash(INFOS.commandName)
+  async execute(
+    @Option('text', { description: INFOS.description }) text: string,
+    interaction: CommandInteraction
+  ) {
+    const ret = text
+      .split('')
+      .map((item, index) => (index % 2 ? item.toUpperCase() : item.toLowerCase()))
+      .join('');
+    await interaction.reply(ret);
   }
 }

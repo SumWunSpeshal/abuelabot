@@ -1,15 +1,12 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { Client, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import config from '../config';
 import { Http } from '../utils/http';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
-import { NotHelpGuard } from '../guards/not-help.guard';
 import { ImgFlipService } from '../services/img-flip.service';
 import { IImgFlipCaptionRequestBody, IImgFlipGetResponse, IImgFlipSuccessResponse } from '../api/img-flip.interface';
-import { Aliases } from '../decorators/aliases';
 import { Rating } from 'string-similarity';
 import { colorText } from '../utils/color-text';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'meme',
@@ -18,18 +15,22 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['imgflip', 'img', 'caption', 'cap']
 };
 
-export abstract class MemeCommand implements AbuelaCommand {
+@Discord()
+export abstract class MemeCommand {
   private readonly getUrl = 'https://api.imgflip.com/get_memes';
 
   private readonly captionUrl = 'https://api.imgflip.com/caption_image';
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard)
-  @GetAllUserArgs('/')
-  async execute(command: CommandMessage, client: Client, allUserArgs: string[]) {
-    const [memeName, text0, text1] = allUserArgs;
+  @Slash(INFOS.commandName)
+  async execute(
+    @Option('meme-name', { description: 'Search for a meme!' })
+    memeName: string,
+    @Option('text-top', { description: 'First text box' })
+    text0: string,
+    @Option('text-bottom', { description: 'Second text box' })
+    text1: string,
+    interaction: CommandInteraction,
+  ) {
     const memes = await Http.fetch<IImgFlipGetResponse>(this.getUrl);
     const { bestMatch } = ImgFlipService.findClosestMemeName(memeName, memes);
     const singleMeme = memes.data.memes.find(meme => meme.name === bestMatch.target);
@@ -38,21 +39,19 @@ export abstract class MemeCommand implements AbuelaCommand {
       'json'
     );
 
-    await command.channel.send({
-      embed: {
-        title: bestMatch?.target,
-        url: response?.data?.url,
-        // description: MemeCommand.getStats(bestMatch, memeName),
-        image: {
-          url: response?.data?.url
-        },
-        footer: {
-          text: `[${bestMatch?.target}] found for search term [${memeName}] with ${
-            +(bestMatch?.rating * 100).toFixed(2) + '%'
-          } correlation`
-        }
+    await interaction.reply(new MessageEmbed({
+      title: bestMatch?.target,
+      url: response?.data?.url,
+      // description: MemeCommand.getStats(bestMatch, memeName),
+      image: {
+        url: response?.data?.url
+      },
+      footer: {
+        text: `[${bestMatch?.target}] found for search term [${memeName}] with ${
+          +(bestMatch?.rating * 100).toFixed(2) + '%'
+        } correlation`
       }
-    });
+    }));
   }
 
   private getStats(bestMatch: Rating, memeName: string): string {

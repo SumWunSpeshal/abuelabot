@@ -1,10 +1,5 @@
-import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
 import { ActivityType, Client } from 'discord.js';
-import { UserNeedsPermissionsGuard } from '../guards/user-needs-permissions.guard';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { findBestMatch } from 'string-similarity';
 import { statusTypes } from '../utils/statics';
 
@@ -16,11 +11,11 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class StatusCommand implements AbuelaCommand {
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard, UserNeedsPermissionsGuard(['ADMINISTRATOR']))
-  @GetAllUserArgs('/')
-  async execute(command: CommandMessage, client: Client, allUserArgs: string[]) {
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Guard(NotHelpGuard, NotBotGuard, UserNeedsPermissionsGuard(['ADMINISTRATOR']))
+  // @GetAllUserArgs('/')
+  async execute(command: any, client: Client, allUserArgs: string[]) {
     const [text, type] = allUserArgs;
 
     const typeMatch = type

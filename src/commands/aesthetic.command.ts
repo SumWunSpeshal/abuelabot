@@ -1,12 +1,9 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { Client, Discord, Slash, Option } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
-import { Aliases } from '../decorators/aliases';
 import { readFileSync } from 'fs';
 import Path from 'path';
 import { Random } from '../utils/random';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'aesthetic',
@@ -15,15 +12,16 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['aes', 'chic', 'chique', 'sadboy', 'sadboi', 'vapor', 'vaporwave', 'lofi']
 };
 
-export abstract class AestheticCommand implements AbuelaCommand {
+@Discord()
+export abstract class AestheticCommand {
   private alphabet = JSON.parse(readFileSync(Path.join(__dirname, '..', 'assets', 'aesthetic.json')).toString());
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard)
-  @Aliases(INFOS.aliases)
-  @GetAllUserArgs()
-  async execute(command: CommandMessage, client: Client, userInput: string) {
+  @Slash(INFOS.commandName)
+  async execute(
+    @Option('text', { description: INFOS.description })
+    userInput: string,
+    interaction: CommandInteraction,
+  ) {
     const replaced = userInput
       .split('')
       .map(letter => this.alphabet[letter] || letter)
@@ -41,11 +39,8 @@ export abstract class AestheticCommand implements AbuelaCommand {
       spaced
     ]);
 
-    const result = Random.getRandomFrom([
-      addBrackets,
-      addBrackets + `   (${Random.getRandomFrom(this.alphabet.jap)})`
-    ])
+    const result = Random.getRandomFrom([addBrackets, addBrackets + `   (${Random.getRandomFrom(this.alphabet.jap)})`]);
 
-    await command.channel.send(result);
+    await interaction.reply(result);
   }
 }

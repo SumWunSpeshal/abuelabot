@@ -1,13 +1,8 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
-import { MessageAttachment } from 'discord.js';
+import { Choices, Discord, Option, Slash } from '@typeit/discord';
+import { AbuelaCommandInfos } from '../types';
+import { CommandInteraction, MessageAttachment, MessageEmbed } from 'discord.js';
 import { CanvasService } from '../services/canvas.service';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
-import { Aliases } from '../decorators/aliases';
 import { LocalTemplateName } from '../api/clippy.interface';
-import { FixCommandNameGuard } from '../guards/fix-command-name.guard';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'clippy',
@@ -16,15 +11,24 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['hagrid', 'jotaro', 'keem', 'plankton'] as LocalTemplateName[]
 };
 
-export abstract class ClippyCommand implements AbuelaCommand {
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard, FixCommandNameGuard([INFOS.commandName, ...INFOS.aliases]))
-  @GetAllUserArgs()
-  async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const commandName = (command.commandName as string).toLowerCase();
-    const image = await CanvasService.init(commandName as LocalTemplateName, allUserArgs);
-    await command.channel.send(new MessageAttachment(image));
+@Discord()
+export abstract class ClippyCommand {
+  @Slash(INFOS.commandName)
+  async execute(
+    @Option('templates', { description: INFOS.description })
+    @Choices({
+      Clippy: 'clippy',
+      Hagrid: 'hagrid',
+      Jotaro: 'jotaro',
+      Keem: 'keem',
+      Plankton: 'plankton'
+    })
+    template: LocalTemplateName,
+    @Option('caption', { description: '... now add your caption' })
+    text: string,
+    interaction: CommandInteraction
+  ) {
+    const image = await CanvasService.init(template, text);
+    await interaction.reply(new MessageEmbed({ description: text, files: [new MessageAttachment(image)] }));
   }
 }

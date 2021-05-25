@@ -1,23 +1,6 @@
-import {
-  ArgsOf,
-  Client,
-  Command,
-  CommandInfos,
-  CommandMessage,
-  DiscordEvents,
-  Guard,
-  Infos,
-  On
-} from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { ArgsOf, Client, DiscordEvents, On } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { Aliases } from '../decorators/aliases';
-import { NotCommandGuard } from '../guards/not-command.guard';
-import { NotKnownCommandGuard } from '../guards/not-known-command.guard';
 import { CommandHelper } from '../utils/command-helper';
-import { HelpGuard } from '../guards/help.guard';
-import { NotHelpGuard } from '../guards/not-help.guard';
-import { Message } from 'discord.js';
 import { CustomEvents } from '../utils/statics';
 
 const INFOS: AbuelaCommandInfos = {
@@ -37,18 +20,18 @@ export abstract class HelpCommand implements AbuelaCommand {
     aliases: 'None'
   };
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard)
-  async execute(command: CommandMessage) {
-    const commands = Client.getCommands();
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Aliases(INFOS.aliases)
+  // @Guard(NotHelpGuard, NotBotGuard)
+  async execute(command: any) {
+    const commands = (Client as any).getCommands();
 
     await command.channel.send({
       embed: {
         title: this.headline as string,
         description: this.description,
-        fields: commands.map(({ commandName, description }) => {
+        fields: commands.map(({ commandName, description }: any) => {
           const shortenedDescription = description
             ? description.split(' ').slice(0, 10).join(' ') + (description.split(' ').length > 10 ? ' [...]' : '')
             : '';
@@ -62,38 +45,38 @@ export abstract class HelpCommand implements AbuelaCommand {
     });
   }
 
-  @On('message')
-  @Guard(NotBotGuard, NotCommandGuard, NotKnownCommandGuard, HelpGuard)
+  // @On('message')
+  // @Guard(NotBotGuard, NotCommandGuard, NotKnownCommandGuard, HelpGuard)
   async commandDetails([message]: ArgsOf<'message'>, client: Client) {
-    await this.showDetailedHelp(message);
+    // await this.showDetailedHelp(message);
   }
 
-  @On((CustomEvents.MANUAL_HELP_TRIGGER as unknown) as DiscordEvents)
+  // @On((CustomEvents.MANUAL_HELP_TRIGGER as unknown) as DiscordEvents)
   async onManualHelpTrigger([message]: ArgsOf<'message'>) {
-    await this.showDetailedHelp(message);
+    // await this.showDetailedHelp(message);
   }
 
-  async showDetailedHelp(message: Message) {
-    const { commandName, description, infos } = CommandHelper.getCommandName(message as CommandMessage) as CommandInfos;
-
-    await message.channel.send({
-      embed: {
-        title: commandName as string,
-        description: description || this.fallbacks.description,
-        fields: [
-          {
-            name: `Usage ('?' means the field is optional)`,
-            value: infos?.usage || this.fallbacks.usage
-          },
-          {
-            name: 'Aliases',
-            value:
-              infos?.aliases && infos?.aliases?.length
-                ? infos?.aliases.map((alias: string) => '• `!' + alias + '`')
-                : this.fallbacks.aliases
-          }
-        ]
-      }
-    });
-  }
+  // async showDetailedHelp(message: Message) {
+  //   const { commandName, description, infos } = CommandHelper.getCommandName(message as CommandMessage) as CommandInfos;
+  //
+  //   await message.channel.send({
+  //     embed: {
+  //       title: commandName as string,
+  //       description: description || this.fallbacks.description,
+  //       fields: [
+  //         {
+  //           name: `Usage ('?' means the field is optional)`,
+  //           value: infos?.usage || this.fallbacks.usage
+  //         },
+  //         {
+  //           name: 'Aliases',
+  //           value:
+  //             infos?.aliases && infos?.aliases?.length
+  //               ? infos?.aliases.map((alias: string) => '• `!' + alias + '`')
+  //               : this.fallbacks.aliases
+  //         }
+  //       ]
+  //     }
+  //   });
+  // }
 }

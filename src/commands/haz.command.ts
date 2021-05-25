@@ -1,9 +1,5 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { Client } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
-import { Aliases } from '../decorators/aliases';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { Http } from '../utils/http';
 import { JSDOM } from 'jsdom';
 import { HazArticleInterface } from '../api/haz-article.interface';
@@ -18,12 +14,12 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class HazCommand implements AbuelaCommand {
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard)
-  @GetAllUserArgs()
-  async execute(command: CommandMessage, client: Client, allUserArgs: string) {
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Aliases(INFOS.aliases)
+  // @Guard(NotHelpGuard, NotBotGuard)
+  // @GetAllUserArgs()
+  async execute(command: any, client: Client, allUserArgs: string) {
     const article = await this.getInfo(allUserArgs);
 
     const embedFields = this.buildFields(article, 1000);

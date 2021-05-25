@@ -1,5 +1,3 @@
-import { GuardFunction } from '@typeit/discord';
-
 /**
  * @description
  * CAUTION: This Guard is a pretty dirty workaround to enforce the correct ${commandName} on the CommandMessage
@@ -12,15 +10,15 @@ import { GuardFunction } from '@typeit/discord';
  * @param commandNames
  * @constructor
  */
-export const FixCommandNameGuard = (commandNames: string[]): GuardFunction<'commandMessage'> => {
-  return async ([message], client, next) => {
-    const userInputSplit = message?.commandContent.split(' ');
-    const match = userInputSplit.find(word => commandNames.find(name => name.toLowerCase() === word.toLowerCase()));
-
-    if (match && match.length) {
-      message.commandName = match;
-    }
-
-    await next();
-  };
-};
+// export const FixCommandNameGuard = (commandNames: string[]): GuardFunction<'commandMessage'> => {
+//   return async ([message], client, next) => {
+//     const userInputSplit = message?.commandContent.split(' ');
+//     const match = userInputSplit.find(word => commandNames.find(name => name.toLowerCase() === word.toLowerCase()));
+//
+//     if (match && match.length) {
+//       message.commandName = match;
+//     }
+//
+//     await next();
+//   };
+// };

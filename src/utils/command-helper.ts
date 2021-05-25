@@ -1,12 +1,11 @@
-import { Client, CommandInfos, CommandMessage } from '@typeit/discord';
 import { Main } from '../main';
-import { KnownTextChannels, KnownRoles } from './statics';
+import { KnownRoles, KnownTextChannels } from './statics';
 import { TextChannel } from 'discord.js';
 
 type DelimiterArr = Array<' ' | '-'>;
 
 export abstract class CommandHelper {
-  static stripCommandKeyWord({ commandContent }: CommandMessage): string {
+  static stripCommandKeyWord({ commandContent }: any): string {
     const [_, ...rest] = commandContent ? commandContent.trim().split(' ') : [];
     return rest.join(' ');
   }
@@ -30,15 +29,15 @@ export abstract class CommandHelper {
     return (firstLetter || '').toUpperCase() + (rest || []).join('');
   }
 
-  static getCommandName({ commandContent }: CommandMessage): CommandInfos | undefined {
-    const commands: CommandInfos[] = Client.getCommands();
-
-    return commands.find(({ commandName, infos }) => {
-      return [commandName, ...(infos.aliases || [])].find(item => {
-        return commandContent?.toLowerCase().includes(item);
-      });
-    });
-  }
+  // static getCommandName({ commandContent }: CommandMessage): CommandInfos | undefined {
+  //   const commands: CommandInfos[] = Client.getCommands();
+  //
+  //   return commands.find(({ commandName, infos }) => {
+  //     return [commandName, ...(infos.aliases || [])].find(item => {
+  //       return commandContent?.toLowerCase().includes(item);
+  //     });
+  //   });
+  // }
 
   static containsDescriptionFlag(userInput: string): boolean {
     return !!userInput.split(' ').find(snippet => snippet === process.env.EXTENDED_DESCRIPTION_FLAG);

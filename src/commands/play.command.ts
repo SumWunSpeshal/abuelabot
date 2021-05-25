@@ -1,14 +1,8 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { Client } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
-import { Aliases } from '../decorators/aliases';
-import { BotNeedsPermissionsGuard } from '../guards/bot-needs-permissions.guard';
 import ytdl from 'ytdl-core';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
 import { ConnectionService } from '../services/connection.service';
-import { NotInVoiceChannelGuard } from '../guards/not-in-voice-channel.guard';
 import { colorText } from '../utils/color-text';
 import { LoaderService } from '../services/loader.service';
 
@@ -20,12 +14,12 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class PlayCommand implements AbuelaCommand {
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard, BotNeedsPermissionsGuard(['CONNECT', 'SPEAK']))
-  @GetAllUserArgs()
-  async execute(command: CommandMessage, client: Client, allUserArgs: string) {
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Aliases(INFOS.aliases)
+  // @Guard(NotHelpGuard, NotBotGuard, NotInVoiceChannelGuard, BotNeedsPermissionsGuard(['CONNECT', 'SPEAK']))
+  // @GetAllUserArgs()
+  async execute(command: any, client: Client, allUserArgs: string) {
     LoaderService.start(command).then();
 
     const [ytResponse]: [ImALazyFuck, void] = await Promise.all([

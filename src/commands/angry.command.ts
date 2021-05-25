@@ -1,7 +1,4 @@
-import { Command, CommandMessage, Guard, Infos, InfosType } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'angry',
@@ -11,10 +8,10 @@ const INFOS: AbuelaCommandInfos = {
 };
 
 export abstract class AngryCommand implements AbuelaCommand {
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard)
-  async execute(command: CommandMessage) {
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Guard(NotHelpGuard, NotBotGuard)
+  async execute(command: any) {
     await command.channel.send('https://tenor.com/view/grumpy-mad-angry-cat-gif-14232626');
   }
 }

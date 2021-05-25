@@ -1,12 +1,9 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { Client, Discord, Slash, Option } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
-import { Aliases } from '../decorators/aliases';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { readFileSync } from 'fs';
 import Path from 'path';
 import { EmojiListInterface } from '../api/emoji-list.interface';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'emojify',
@@ -15,19 +12,21 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['emoji', 'copypasta', 'shitpost']
 };
 
-export abstract class EmojifyCommand implements AbuelaCommand {
+@Discord()
+export abstract class EmojifyCommand {
   private readonly emojis: EmojiListInterface = JSON.parse(
     readFileSync(Path.join(__dirname, '..', 'assets', 'emojis.json')).toString()
   );
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard)
-  @GetAllUserArgs()
-  async execute(command: CommandMessage, client: Client, allUserArgs: string) {
-    const result = this.replaceAllOccurrences(allUserArgs);
-    await command.channel.send(result);
+  @Slash(INFOS.commandName)
+  async execute(
+    @Option('text', { description: INFOS.description })
+    userInput: string,
+    interaction: CommandInteraction,
+    client: Client
+  ) {
+    const result = this.replaceAllOccurrences(userInput);
+    await interaction.reply(result);
   }
 
   private replaceAllOccurrences(userInput: string): string {

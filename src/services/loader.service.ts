@@ -1,4 +1,3 @@
-import { CommandMessage } from '@typeit/discord';
 import { setInterval } from 'timers';
 import { Message } from 'discord.js';
 import { sleep } from '../utils/sleep';
@@ -7,7 +6,7 @@ export abstract class LoaderService {
   private static interval: NodeJS.Timeout | null = null;
   private static message: Message;
 
-  static async start(command: CommandMessage) {
+  static async start(command: any) {
     this.message = await command.channel.send(`:clock1: \`Loading...\``);
     let counter = 2;
 

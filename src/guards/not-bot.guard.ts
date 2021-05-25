@@ -1,7 +1,15 @@
-import { GuardFunction } from '@typeit/discord';
+import { ArgsOf, GuardFunction } from '@typeit/discord';
+import { CommandInteraction, Message } from 'discord.js';
 
-export const NotBotGuard: GuardFunction<'message'> = async ([message], client, next) => {
-  if (client.user?.id !== message.author.id) {
-    await next();
+export const NotBotGuard: GuardFunction<ArgsOf<'message'> | CommandInteraction> = async (message, client, next) => {
+  // const id = message instanceof Message ? message.author.id : message.user.id;
+
+  if (message instanceof Message) {
+    if (client.user?.id === message.author.id) {
+      return;
+    }
   }
+
+  await next();
 };
+

@@ -1,11 +1,7 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { Client } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
 import { Http } from '../utils/http';
 import config from '../config';
-import { Aliases } from '../decorators/aliases';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
 import { RequestInit } from 'node-fetch';
 import { colorText } from '../utils/color-text';
@@ -24,12 +20,12 @@ interface W2gResponse {
 export abstract class WatchTogetherCommand implements AbuelaCommand {
   private readonly w2gUrl = 'https://w2g.tv/rooms/create.json';
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard)
-  @Aliases(INFOS.aliases)
-  @GetAllUserArgs()
-  async execute(command: CommandMessage, client: Client, allUserArgs: string) {
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Guard(NotHelpGuard, NotBotGuard)
+  // @Aliases(INFOS.aliases)
+  // @GetAllUserArgs()
+  async execute(command: any, client: Client, allUserArgs: string) {
     const ytResponse: ImALazyFuck = await YoutubeService.getSearchListResponse(allUserArgs);
     const w2gRequestBody: RequestInit = this.buildW2gRequestBody(
       YoutubeService.getFullUrl(ytResponse?.items[0]?.id?.videoId)

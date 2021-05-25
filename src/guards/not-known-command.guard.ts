@@ -1,7 +1,3 @@
-import { CommandInfos, CommandMessage, GuardFunction } from '@typeit/discord';
-import { Client } from '@typeit/discord';
-import { CommandHelper } from '../utils/command-helper';
-
 /**
  * @description
  * FIXME This Guard doesn't account for aliases :/ Discord.ts fucks up the Message param and we don't have access
@@ -12,8 +8,8 @@ import { CommandHelper } from '../utils/command-helper';
  * @param next
  * @constructor
  */
-export const NotKnownCommandGuard: GuardFunction<'message'> = async ([message], client, next) => {
-  if (CommandHelper.getCommandName(message as CommandMessage)) {
-    await next();
-  }
-};
+// export const NotKnownCommandGuard: GuardFunction<'message'> = async ([message], client, next) => {
+//   if (CommandHelper.getCommandName(message as CommandMessage)) {
+//     await next();
+//   }
+// };

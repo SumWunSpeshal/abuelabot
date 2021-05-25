@@ -1,9 +1,6 @@
-import { Client, Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { Client } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
 import { Http } from '../utils/http';
-import { GetAllUserArgs } from '../decorators/get-all-user-args';
 import { RkiCovidInterface } from '../api/rki-covid.interface';
 import { readFileSync } from 'fs';
 import Path from 'path';
@@ -11,7 +8,6 @@ import { findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
 import { EmbedField, MessageOptions } from 'discord.js';
 import { colorText } from '../utils/color-text';
-import { Aliases } from '../decorators/aliases';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'covid',
@@ -30,12 +26,12 @@ export abstract class CovidCommand implements AbuelaCommand {
 
   private readonly zeroWidthSpace = '\u200b';
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard)
-  @Aliases(INFOS.aliases)
-  @GetAllUserArgs()
-  async execute(command: CommandMessage, client: Client, allUserArgs: string) {
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Guard(NotHelpGuard, NotBotGuard)
+  // @Aliases(INFOS.aliases)
+  // @GetAllUserArgs()
+  async execute(command: any, client: Client, allUserArgs: string) {
     if (!allUserArgs) {
       await this.displayGermanyData(command);
       return;
@@ -68,7 +64,7 @@ export abstract class CovidCommand implements AbuelaCommand {
     await command.channel.send(stateEmbed);
   }
 
-  private async displayGermanyData(command: CommandMessage) {
+  private async displayGermanyData(command: any) {
     const [states, vaccinations, colorRanges, germanyData] = await Promise.all([
       this.getRkiData<RkiCovidInterface.DistrictRoot>('states'),
       this.getRkiData<RkiCovidInterface.VaccRoot>('vaccinations'),

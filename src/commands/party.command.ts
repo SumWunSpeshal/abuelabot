@@ -1,9 +1,5 @@
-import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
 import { setInterval } from 'timers';
-import { MessageReaction } from 'discord.js';
 import { sleep } from '../utils/sleep';
 import { Random } from '../utils/random';
 import { Colors, colorText } from '../utils/color-text';
@@ -23,7 +19,7 @@ export abstract class PartyCommand implements AbuelaCommand {
   // @Command(INFOS.commandName)
   // @Infos(INFOS)
   // @Guard(NotHelpGuard, NotBotGuard)
-  async execute(command: CommandMessage) {
+  async execute(command: any) {
     const textMsg = await command.channel.send(this.randomTextMessage());
     const emojiMsg = await command.channel.send(this.randomEmojiMessage());
 

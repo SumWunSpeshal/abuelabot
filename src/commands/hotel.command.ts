@@ -1,7 +1,4 @@
-import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
 import { readFileSync } from 'fs';
 import Path from 'path';
 
@@ -17,10 +14,10 @@ export abstract class HotelCommand implements AbuelaCommand {
     readFileSync(Path.join(__dirname, '..', 'assets', 'letter-emojis.json')).toString()
   );
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Guard(NotHelpGuard, NotBotGuard)
-  async execute(command: CommandMessage) {
+  // @Command(INFOS.commandName)
+  // @Infos(INFOS)
+  // @Guard(NotHelpGuard, NotBotGuard)
+  async execute(command: any) {
     const trivago = [
       this.letters.t,
       this.letters.r,

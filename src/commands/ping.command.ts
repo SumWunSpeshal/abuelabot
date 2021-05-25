@@ -1,8 +1,6 @@
-import { Command, CommandMessage, Guard, Infos } from '@typeit/discord';
-import { NotBotGuard } from '../guards/not-bot.guard';
+import { Client, Discord, Slash } from '@typeit/discord';
+import { CommandInteraction } from 'discord.js';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { NotHelpGuard } from '../guards/not-help.guard';
-import { Aliases } from '../decorators/aliases';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'ping',
@@ -11,13 +9,11 @@ const INFOS: AbuelaCommandInfos = {
   aliases: ['test', 'echo']
 };
 
+@Discord()
 export abstract class PingCommand implements AbuelaCommand {
 
-  @Command(INFOS.commandName)
-  @Infos(INFOS)
-  @Aliases(INFOS.aliases)
-  @Guard(NotHelpGuard, NotBotGuard)
-  async execute(command: CommandMessage) {
-    await command.channel.send('pong');
+  @Slash(INFOS.commandName)
+  async execute(interaction: CommandInteraction, client: Client) {
+    await interaction.reply('Pong!');
   }
 }

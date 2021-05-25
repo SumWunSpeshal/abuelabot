@@ -1,8 +1,8 @@
-import { ArgsOf, CommandMessage } from '@typeit/discord';
-import { Client } from '@typeit/discord';
+import { ArgsOf, Client } from '@typeit/discord';
+import { CommandInteraction } from 'discord.js';
 
 export interface AbuelaCommand {
-  execute(command: CommandMessage, client: Client, ...rest: any[]): Promise<void>;
+  execute(command: CommandInteraction, client: Client, ...rest: any[]): Promise<void>;
 }
 
 export interface AbuelaCommandInfos {
