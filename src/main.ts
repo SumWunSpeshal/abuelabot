@@ -10,7 +10,13 @@ const { token, devToken } = SETUP_CONFIG;
 export class Main {
   private static _client: Client = new Client({
     classes: [Path.join(__dirname, 'commands', '*.ts'), Path.join(__dirname, 'events', '*.event.ts')],
-    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+    intents: [
+      Intents.FLAGS.GUILDS,
+      Intents.FLAGS.GUILD_MESSAGES,
+      Intents.FLAGS.GUILD_INTEGRATIONS,
+      Intents.FLAGS.GUILD_VOICE_STATES,
+      Intents.FLAGS.GUILD_EMOJIS,
+    ],
     silent: false,
     slashGuilds: config.env === 'PROD' ? undefined : ['841326836545093672'],
     guards: [NotBotGuard]
@@ -28,7 +34,7 @@ export class Main {
       process.exit(0);
     });
 
-    this._client.on("interaction", (interaction) => {
+    this._client.on('interaction', interaction => {
       this._client.executeSlash(interaction);
     });
   }

@@ -12,12 +12,10 @@ const INFOS: AbuelaCommandInfos = {
 
 @Discord()
 export class JoinCommand {
-
   @Slash(INFOS.commandName)
   async execute(interaction: CommandInteraction) {
-    await Promise.all([
-      ConnectionService.join(interaction),
-      interaction.reply('`voice channel joined!`')
-    ]);
+    await interaction.defer();
+    await ConnectionService.join(interaction);
+    await interaction.editReply('`voice channel joined!`');
   }
 }

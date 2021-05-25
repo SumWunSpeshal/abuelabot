@@ -15,12 +15,13 @@ export abstract class LeaveCommand implements AbuelaCommand {
 
   @Slash(INFOS.commandName)
   async execute(interaction: CommandInteraction) {
-    await interaction.defer()
+    await interaction.defer();
+
     if (!ConnectionService.isBotInVoiceChannel(interaction)) {
-      await interaction.reply(`Can't leave if I was never there to begin with 🤷`);
+      await interaction.editReply(`\`Can't leave if I was never there to begin with 🤷\``);
     } else {
       ConnectionService.leave(interaction);
-      await interaction.reply('leaving voice channel...');
+      await interaction.editReply('`leaving voice channel...`');
     }
   }
 }
