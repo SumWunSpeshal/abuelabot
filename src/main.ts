@@ -1,16 +1,20 @@
 import { Client } from '@typeit/discord';
 import SETUP_CONFIG from './config';
-import Path from 'path';
 import config from './config';
+import Path from 'path';
 import { Intents } from 'discord.js';
 import { NotBotGuard } from './guards/not-bot.guard';
 import { cronJobs } from './cronjobs';
+import { ABUELA_ONLY_ID } from './utils/statics';
 
 const { token, devToken } = SETUP_CONFIG;
 
 export class Main {
   private static _client: Client = new Client({
-    classes: [Path.join(__dirname, 'commands', '*.ts'), Path.join(__dirname, 'events', '*.event.ts')],
+    classes: [
+      Path.join(__dirname, 'commands', '*.ts'),
+      Path.join(__dirname, 'events', '*.event.ts')
+    ],
     intents: [
       Intents.FLAGS.GUILDS,
       Intents.FLAGS.GUILD_MESSAGES,
@@ -19,7 +23,7 @@ export class Main {
       Intents.FLAGS.GUILD_EMOJIS,
     ],
     silent: false,
-    slashGuilds: config.env === 'PROD' ? undefined : ['841326836545093672'],
+    slashGuilds: config.env === 'PROD' ? undefined : [ABUELA_ONLY_ID],
     guards: [NotBotGuard]
   });
 
