@@ -4,7 +4,7 @@ import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'mock',
-  description: `Mockify your own message!`,
+  description: `mOcKiFy YoUr OwN mEsSaGe!!11!`,
 };
 
 @Discord()

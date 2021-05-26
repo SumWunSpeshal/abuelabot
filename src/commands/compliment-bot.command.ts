@@ -8,7 +8,7 @@ import { colorText } from '../utils/color-text';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'gj',
-  description: 'Tell me how much you love me! :heart:'
+  description: 'Tell me how much you love me! ❤️'
 };
 
 interface Counter {

@@ -7,7 +7,7 @@ export const NotBotGuard: GuardFunction<ArgsOf<'message'> | CommandInteraction> 
   next
 ) => {
   if (messageOrInteraction instanceof CommandInteraction) {
-    if (client.user?.id === messageOrInteraction.user.id) {
+    if (messageOrInteraction?.user?.bot) {
       return;
     }
   } else if (messageOrInteraction[0] instanceof Message) {

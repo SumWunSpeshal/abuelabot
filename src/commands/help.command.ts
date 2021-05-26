@@ -1,14 +1,16 @@
-import { ArgsOf, Client, DiscordEvents, On } from '@typeit/discord';
+import { ArgsOf, Client, Description, Discord, DiscordEvents, On, Slash } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { CommandHelper } from '../utils/command-helper';
 import { CustomEvents } from '../utils/statics';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'help',
-  description: 'Welp, you just found out...',
+  description: 'List all available Abuela commands',
 };
 
-export abstract class HelpCommand implements AbuelaCommand {
+@Discord()
+export abstract class HelpCommand {
   private readonly headline = 'Available Commands';
   private readonly description = `Explore all Abuela's commands! If you want to know more about a specific command or its usage, type \`!{command} -h\``;
 
@@ -18,29 +20,25 @@ export abstract class HelpCommand implements AbuelaCommand {
     aliases: 'None'
   };
 
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Aliases(INFOS.aliases)
-  // @Guard(NotHelpGuard, NotBotGuard)
-  async execute(command: any) {
+  @Slash(INFOS.commandName)
+  @Description(INFOS.description)
+  async execute(interaction: CommandInteraction) {
     const commands = (Client as any).getCommands();
 
-    await command.channel.send({
-      embed: {
-        title: this.headline as string,
-        description: this.description,
-        fields: commands.map(({ commandName, description }: any) => {
-          const shortenedDescription = description
-            ? description.split(' ').slice(0, 10).join(' ') + (description.split(' ').length > 10 ? ' [...]' : '')
-            : '';
+    await interaction.reply(new MessageEmbed({
+      title: this.headline as string,
+      description: this.description,
+      fields: commands.map(({ commandName, description }: any) => {
+        const shortenedDescription = description
+          ? description.split(' ').slice(0, 10).join(' ') + (description.split(' ').length > 10 ? ' [...]' : '')
+          : '';
 
-          return {
-            name: CommandHelper.stripArgs(commandName as string),
-            value: shortenedDescription || this.fallbacks.description
-          };
-        })
-      }
-    });
+        return {
+          name: CommandHelper.stripArgs(commandName as string),
+          value: shortenedDescription || this.fallbacks.description
+        };
+      })
+    }));
   }
 
   // @On('message')
