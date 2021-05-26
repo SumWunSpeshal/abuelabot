@@ -1,31 +1,44 @@
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { ActivityType, Client } from 'discord.js';
+import { ActivityType, Client, CommandInteraction } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
 import { statusTypes } from '../utils/statics';
+import { Choices, Description, Discord, Option, Slash } from '@typeit/discord';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'status',
   description: `[ADMINS ONLY] Set my status`,
-  usage: '`!status  {text} / {type?}`',
-  aliases: []
+  choices: [
+    {
+      Playing: 'PLAYING',
+      Watching: 'WATCHING',
+      Competing: 'COMPETING',
+      Listening: 'LISTENING',
+      Streaming: 'STREAMING'
+    } as Record<string, ActivityType>
+  ]
 };
 
-export abstract class StatusCommand implements AbuelaCommand {
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Guard(NotHelpGuard, NotBotGuard, UserNeedsPermissionsGuard(['ADMINISTRATOR']))
-  // @GetAllUserArgs('/')
-  async execute(command: any, client: Client, allUserArgs: string[]) {
-    const [text, type] = allUserArgs;
-
-    const typeMatch = type
-      ? (findBestMatch(type.toUpperCase(), statusTypes).bestMatch.target as ActivityType)
+@Discord()
+export abstract class StatusCommand {
+  @Slash(INFOS.commandName)
+  @Description(INFOS.description)
+  async execute(
+    @Option('status', { description: 'Set a status text', required: true })
+    userInput: string,
+    @Option('activity', { description: 'Set one of the available activities', required: true })
+    @Choices(INFOS.choices![0])
+    activity: string,
+    interaction: CommandInteraction,
+    client: Client
+  ) {
+    const typeMatch = activity
+      ? (findBestMatch(activity.toUpperCase(), statusTypes).bestMatch.target as ActivityType)
       : 'PLAYING';
 
-    await client.user?.setActivity(text, {
-      type: typeMatch,
+    await client.user?.setActivity(userInput, {
+      type: typeMatch
     });
 
-    await command.channel.send('Status successfully set...');
+    await interaction.reply('`Status successfully set...`');
   }
 }

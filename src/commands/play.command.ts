@@ -1,4 +1,4 @@
-import { Discord, Option, Slash } from '@typeit/discord';
+import { Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommandInfos } from '../types';
 import ytdl from 'ytdl-core';
 import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
@@ -8,16 +8,15 @@ import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'play',
-  description: `Type your search as if you were on YouTube!`,
-  usage: '`!play`',
-  aliases: ['music', 'p']
+  description: `Type your search as if you were on YouTube! And make Abuela play music in your voice channel!`,
 };
 
 @Discord()
 export abstract class PlayCommand {
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(
-    @Option('search-youtube', { description: INFOS.description })
+    @Option('search-youtube', { description: 'Search as if you were on Youtube', required: true })
     userInput: string,
     interaction: CommandInteraction
   ) {

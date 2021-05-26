@@ -1,4 +1,4 @@
-import { Client, Discord, Slash, Option } from '@typeit/discord';
+import { Client, Discord, Slash, Option, Description } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { readFileSync } from 'fs';
 import Path from 'path';
@@ -8,8 +8,6 @@ import { CommandInteraction } from 'discord.js';
 const INFOS: AbuelaCommandInfos = {
   commandName: 'emojify',
   description: 'Type your text and watch how Abuela inserts Emojis where a match is found',
-  usage: '`!emojify {text}`',
-  aliases: ['emoji', 'copypasta', 'shitpost']
 };
 
 @Discord()
@@ -19,8 +17,9 @@ export abstract class EmojifyCommand {
   );
 
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(
-    @Option('text', { description: INFOS.description })
+    @Option('text', { description: 'Type your text', required: true})
     userInput: string,
     interaction: CommandInteraction,
     client: Client

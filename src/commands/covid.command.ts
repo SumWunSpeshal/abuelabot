@@ -1,4 +1,4 @@
-import { Discord, Option, Slash } from '@typeit/discord';
+import { Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommandInfos } from '../types';
 import { Http } from '../utils/http';
 import { RkiCovidInterface } from '../api/rki-covid.interface';
@@ -11,10 +11,7 @@ import { colorText } from '../utils/color-text';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'covid',
-  description:
-    'Get the latest COVID related information about your district (Landkreis) as well as the COVID infos about your state (Bundesland) as well as your states vaccination infos. OR... get all the info about all of Germany by not sending any args at all',
-  usage: '`!covid` for all of Germany\n`!covid {district}` for a specific district',
-  aliases: ['corona', 'covid19', 'sarscov2', 'ncov', 'cov']
+  description: 'Get the latest COVID related information by district/state or all of Germany',
 };
 
 @Discord()
@@ -28,6 +25,7 @@ export abstract class CovidCommand {
   private readonly zeroWidthSpace = '\u200b';
 
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(
     @Option('landkreis', { description: 'Type your district and get info for district and state, or leave empty for Germany' })
     userInput: string,

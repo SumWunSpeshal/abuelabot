@@ -1,42 +1,43 @@
-import { Client } from '@typeit/discord';
+import { Client, Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { Http } from '../utils/http';
 import config from '../config';
 import { ImALazyFuck, YoutubeService } from '../services/youtube.service';
 import { RequestInit } from 'node-fetch';
 import { colorText } from '../utils/color-text';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'watchtogether',
-  description: `Quickly share a Watch2Gether link. Use the {searchTerms} argument just like you would use the YouTube search or paste a link to the Youtube video.`,
-  usage: '`!watchtogether {searchTerms}` or `!watchtogether {youtubeURL}`',
-  aliases: ['w2g', 'watch', 'together']
+  description: `Quickly share a Watch2Gether link.`
 };
 
 interface W2gResponse {
   streamkey: string;
 }
 
-export abstract class WatchTogetherCommand implements AbuelaCommand {
+@Discord()
+export abstract class WatchTogetherCommand {
   private readonly w2gUrl = 'https://w2g.tv/rooms/create.json';
 
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Guard(NotHelpGuard, NotBotGuard)
-  // @Aliases(INFOS.aliases)
-  // @GetAllUserArgs()
-  async execute(command: any, client: Client, allUserArgs: string) {
-    const ytResponse: ImALazyFuck = await YoutubeService.getSearchListResponse(allUserArgs);
+  @Slash(INFOS.commandName)
+  @Description(INFOS.description)
+  async execute(
+    @Option('search-youtube', { description: 'Search as if you were on Youtube', required: true })
+    userInput: string,
+    interaction: CommandInteraction,
+  ) {
+    const ytResponse: ImALazyFuck = await YoutubeService.getSearchListResponse(userInput);
     const w2gRequestBody: RequestInit = this.buildW2gRequestBody(
       YoutubeService.getFullUrl(ytResponse?.items[0]?.id?.videoId)
     );
     const w2gResponse: W2gResponse = await Http.fetch(this.w2gUrl, 'json', w2gRequestBody);
 
-    let message = `${!allUserArgs ? `You should tell me what you're looking for ...\n\n` : ''}`;
+    let message = `${!userInput ? `You should tell me what you're looking for ...\n\n` : ''}`;
     message += `${colorText('yellow', ytResponse?.items[0]?.snippet?.title)}\n`;
     message += `https://w2g.tv/rooms/${w2gResponse?.streamkey}`;
 
-    await command.channel.send(message);
+    await interaction.reply(message);
   }
 
   private buildW2gRequestBody(url: string): RequestInit {

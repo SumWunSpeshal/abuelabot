@@ -1,19 +1,19 @@
-import { Discord, Option, Slash } from '@typeit/discord';
+import { Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommandInfos } from '../types';
 import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'mock',
   description: `Mockify your own message!`,
-  usage: '`!mock {sentence}`',
-  aliases: []
 };
 
 @Discord()
 export abstract class MockCommand {
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(
-    @Option('text', { description: INFOS.description }) text: string,
+    @Option('text', { description: 'Type your text', required: true })
+    text: string,
     interaction: CommandInteraction
   ) {
     const ret = text

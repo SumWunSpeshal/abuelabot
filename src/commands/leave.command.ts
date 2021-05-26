@@ -1,19 +1,18 @@
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { ConnectionService } from '../services/connection.service';
-import { Discord, Slash } from '@typeit/discord';
+import { Description, Discord, Slash } from '@typeit/discord';
 import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'leave',
-  description: `The "leave" command lets AbuelaBot leave your voice channel.`,
-  usage: '`!leave`',
-  aliases: ['bye', 'stop', 'pause']
+  description: `Make Abuela leave your voice channel and stop any playing music`,
 };
 
 @Discord()
 export abstract class LeaveCommand implements AbuelaCommand {
 
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(interaction: CommandInteraction) {
     await interaction.defer();
 

@@ -1,14 +1,12 @@
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
+import { AbuelaCommandInfos } from '../types';
 import { readFileSync } from 'fs';
 import Path from 'path';
-import { Discord, Slash } from '@typeit/discord';
+import { Description, Discord, Slash } from '@typeit/discord';
 import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'hotel',
-  description: `...`,
-  usage: '`!hotel`',
-  aliases: []
+  description: `...`
 };
 
 @Discord()
@@ -18,6 +16,7 @@ export abstract class HotelCommand {
   );
 
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(interaction: CommandInteraction) {
     const trivago = [
       this.letters.t,
@@ -29,10 +28,6 @@ export abstract class HotelCommand {
       this.letters.o
     ];
 
-    // for await (const letter of trivago) {
-    //   await command.react(letter);
-    // }
-
-    await interaction.reply(trivago.join(''));
+    await interaction.reply(trivago.join(' '));
   }
 }

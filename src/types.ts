@@ -1,6 +1,7 @@
 import { ArgsOf, Client } from '@typeit/discord';
 import { CommandInteraction } from 'discord.js';
 
+// fixme rewrite this
 export interface AbuelaCommand {
   execute(command: CommandInteraction, client: Client, ...rest: any[]): Promise<void>;
 }
@@ -8,8 +9,7 @@ export interface AbuelaCommand {
 export interface AbuelaCommandInfos {
   commandName: string;
   description: string;
-  usage: string;
-  aliases: string[];
+  choices?: Record<string, string>[]
 }
 
 export interface AbuelaEvent {

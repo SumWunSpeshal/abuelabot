@@ -1,4 +1,4 @@
-import { Client, Discord, Slash } from '@typeit/discord';
+import { Client, Description, Discord, Slash } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { Random } from '../utils/random';
 import { readFileSync, writeFileSync } from 'fs';
@@ -8,9 +8,7 @@ import { colorText } from '../utils/color-text';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'gj',
-  description: 'Tell me how much you love me! :heart:',
-  usage: '`!goodbot`',
-  aliases: ['bestbot', 'goodjob', 'goodbot', 'love', 'iloveu', 'iloveyou', 'nice']
+  description: 'Tell me how much you love me! :heart:'
 };
 
 interface Counter {
@@ -32,6 +30,7 @@ export abstract class ComplimentBotCommand implements AbuelaCommand {
   ];
 
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(interaction: CommandInteraction, client: Client) {
     const fileData: Counter = JSON.parse(readFileSync(this.path).toString());
     const currentGuild = client.guilds.cache.get(interaction.guild!.id);

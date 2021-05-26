@@ -1,4 +1,4 @@
-import { Discord, Option, Slash } from '@typeit/discord';
+import { Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommandInfos } from '../types';
 import { readFileSync } from 'fs';
 import Path from 'path';
@@ -8,8 +8,6 @@ import { CommandInteraction } from 'discord.js';
 const INFOS: AbuelaCommandInfos = {
   commandName: 'aesthetic',
   description: `ＷＲＩＴＥ　ＬＩＫＥ　ＴＨＩＳ !`,
-  usage: '`!aesthetic {sentence}`',
-  aliases: ['aes', 'chic', 'chique', 'sadboy', 'sadboi', 'vapor', 'vaporwave', 'lofi']
 };
 
 @Discord()
@@ -17,10 +15,11 @@ export abstract class AestheticCommand {
   private alphabet = JSON.parse(readFileSync(Path.join(__dirname, '..', 'assets', 'aesthetic.json')).toString());
 
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(
-    @Option('text', { description: INFOS.description })
+    @Option('text', { description: 'Type your text', required: true })
     userInput: string,
-    interaction: CommandInteraction,
+    interaction: CommandInteraction
   ) {
     const replaced = userInput
       .split('')

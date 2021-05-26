@@ -7,8 +7,6 @@ import { Colors, colorText } from '../utils/color-text';
 const INFOS: AbuelaCommandInfos = {
   commandName: 'party',
   description: `Let's get fucking weird :sunglasses:`,
-  usage: '`!party`',
-  aliases: ['letsgo', 'hype', 'disco']
 };
 
 export abstract class PartyCommand implements AbuelaCommand {

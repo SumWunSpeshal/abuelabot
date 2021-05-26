@@ -6,8 +6,6 @@ import { CustomEvents } from '../utils/statics';
 const INFOS: AbuelaCommandInfos = {
   commandName: 'help',
   description: 'Welp, you just found out...',
-  usage: `...really?`,
-  aliases: ['ls', 'list', 'man', '!']
 };
 
 export abstract class HelpCommand implements AbuelaCommand {

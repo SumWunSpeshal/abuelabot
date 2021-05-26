@@ -1,4 +1,4 @@
-import { Discord, Option, Slash } from '@typeit/discord';
+import { Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommandInfos } from '../types';
 import { Http } from '../utils/http';
 import { JSDOM } from 'jsdom';
@@ -8,16 +8,15 @@ import { CommandHelper } from '../utils/command-helper';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'haz',
-  description: `Circumvent the paywall for HAZ online articles`,
-  usage: '`!haz {url}`',
-  aliases: ['paywall']
+  description: `Circumvent the paywall for HAZ online articles`
 };
 
 @Discord()
 export abstract class HazCommand {
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(
-    @Option('url', { description: INFOS.description })
+    @Option('url', { description: 'Provide a valid HAZ url', required: true })
     url: string,
     interaction: CommandInteraction
   ) {

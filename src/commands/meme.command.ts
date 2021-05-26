@@ -1,4 +1,4 @@
-import { Client, Discord, Option, Slash } from '@typeit/discord';
+import { Client, Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import config from '../config';
 import { Http } from '../utils/http';
@@ -10,9 +10,7 @@ import { CommandInteraction, MessageEmbed } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'meme',
-  description: `Search a meme from imgflip and add your own caption to it! Add up to two captions to your meme. The captions will be conveniently placed, trying to fit the meme. We check for search term similarities so your query doesn't need to be exact.`,
-  usage: '`!meme {searchTerm?} / {caption1?} / {caption2?}` or just `!meme` for a random, non-captioned meme',
-  aliases: ['imgflip', 'img', 'caption', 'cap']
+  description: `Search a meme from imgflip and add your own caption!`,
 };
 
 @Discord()
@@ -22,8 +20,9 @@ export abstract class MemeCommand {
   private readonly captionUrl = 'https://api.imgflip.com/caption_image';
 
   @Slash(INFOS.commandName)
+  @Description(INFOS.description)
   async execute(
-    @Option('meme-name', { description: 'Search for a meme!' })
+    @Option('meme-name', { description: 'Search for a meme!', required: true })
     memeName: string,
     @Option('text-top', { description: 'First text box' })
     text0: string,

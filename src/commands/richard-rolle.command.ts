@@ -1,19 +1,18 @@
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
+import { AbuelaCommandInfos } from '../types';
+import { Description, Discord, Slash } from '@typeit/discord';
+import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'richardrolle',
-  description: 'This command is very usefull.',
-  usage: 'type "richardrolle" and see magic happen :sparkles:',
-  aliases: ['rolle', 'richard', 'richard-rolle', 'rr']
+  description: 'This command is very useful.'
 };
 
-export abstract class RichardRolleCommand implements AbuelaCommand {
+@Discord()
+export abstract class RichardRolleCommand {
 
-  // @Command(INFOS.commandName)
-  // @Infos(INFOS)
-  // @Guard(NotHelpGuard, NotBotGuard)
-  // @Aliases(INFOS.aliases)
-  async execute(command: any) {
-    await command.channel.send('https://tenor.com/view/rick-ashtley-never-gonna-give-up-rick-roll-gif-4819894');
+  @Slash(INFOS.commandName)
+  @Description(INFOS.description)
+  async execute(interaction: CommandInteraction) {
+    await interaction.reply('https://tenor.com/view/rick-ashtley-never-gonna-give-up-rick-roll-gif-4819894');
   }
 }
