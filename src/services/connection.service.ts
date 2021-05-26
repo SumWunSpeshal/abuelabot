@@ -10,12 +10,6 @@ export abstract class ConnectionService {
     this._voiceConnection = await member?.voice?.channel?.join();
   }
 
-  static isBotInVoiceChannel(commandInteraction: CommandInteraction) {
-    const guild = CommandHelper.getGuildById(commandInteraction.guildID!);
-    const member = CommandHelper.getMemberById(guild!, commandInteraction.user.id);
-    return !!member?.guild?.me?.voice?.channel;
-  }
-
   static leave(commandInteraction: CommandInteraction) {
     const guild = CommandHelper.getGuildById(commandInteraction.guildID!);
     const member = CommandHelper.getMemberById(guild!, commandInteraction.user.id);

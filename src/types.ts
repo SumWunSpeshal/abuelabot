@@ -9,6 +9,7 @@ export interface AbuelaCommand {
 export interface AbuelaCommandInfos {
   commandName: string;
   description: string;
+  alias?: string;
   choices?: Record<string, string>[]
 }
 

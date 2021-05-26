@@ -1,15 +1,10 @@
 import { Main } from '../main';
 import { KnownRoles, KnownTextChannels } from './statics';
-import { Guild, GuildMember, Snowflake, TextChannel } from 'discord.js';
+import { Collection, Guild, GuildMember, Message, Snowflake, TextChannel } from 'discord.js';
 
 type DelimiterArr = Array<' ' | '-'>;
 
 export abstract class CommandHelper {
-  static stripCommandKeyWord({ commandContent }: any): string {
-    const [_, ...rest] = commandContent ? commandContent.trim().split(' ') : [];
-    return rest.join(' ');
-  }
-
   static ucFirstLetterOfWords(input: string): string {
     const delimiters: DelimiterArr = [' ', '-'];
     let ret: string = input;
@@ -29,20 +24,6 @@ export abstract class CommandHelper {
     return (firstLetter || '').toUpperCase() + (rest || []).join('');
   }
 
-  // static getCommandName({ commandContent }: CommandMessage): CommandInfos | undefined {
-  //   const commands: CommandInfos[] = Client.getCommands();
-  //
-  //   return commands.find(({ commandName, infos }) => {
-  //     return [commandName, ...(infos.aliases || [])].find(item => {
-  //       return commandContent?.toLowerCase().includes(item);
-  //     });
-  //   });
-  // }
-
-  static containsDescriptionFlag(userInput: string): boolean {
-    return !!userInput.split(' ').find(snippet => snippet === process.env.EXTENDED_DESCRIPTION_FLAG);
-  }
-
   static createArrayChunks<T>(array: T[], chunkSize: number): T[][] {
     const numberOfChunks = Math.ceil(array.length / chunkSize)
 
@@ -52,8 +33,17 @@ export abstract class CommandHelper {
       })
   }
 
-  static getTextChannelById(id: KnownTextChannels | string): TextChannel | undefined {
+  static getTextChannelById(id: KnownTextChannels | Snowflake): TextChannel | undefined {
     return Main.client.channels.cache.get(id) as TextChannel;
+  }
+
+  static getMessagesOfTextChannel(id: KnownTextChannels | Snowflake): Promise<Collection<string, Message>> | undefined {
+    return this.getTextChannelById(id)?.messages.fetch();
+  }
+
+  static async getLastInteractionOfTextChannel(id: KnownTextChannels | Snowflake) {
+    const messages = await this.getMessagesOfTextChannel(id);
+    return messages!.find(message => !!message.interaction);
   }
 
   static getGuildById(guildId: Snowflake): Guild | undefined {
@@ -62,19 +52,6 @@ export abstract class CommandHelper {
 
   static getMemberById(guild: Guild, memberId: Snowflake): GuildMember | undefined {
     return guild.members.cache.get(memberId);
-  }
-
-  /**
-   * @description
-   * Remove all template args like {:slug :number}
-   *
-   * @param input
-   */
-  static stripArgs(input: string): string {
-    return input
-      .split(' ')
-      .filter(item => !item.includes(':'))
-      .join(' ');
   }
 
   static mention<T extends KnownRoles>(id: T): string {

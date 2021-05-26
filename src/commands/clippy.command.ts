@@ -30,7 +30,7 @@ export abstract class ClippyCommand {
     interaction: CommandInteraction,
   ) {
     await interaction.defer();
-    const image = await CanvasService.init(template, text);
+    const image = await CanvasService.init(template, text ?? '');
     await interaction.editReply(new MessageAttachment(image));
   }
 }

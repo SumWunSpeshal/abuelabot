@@ -1,26 +1,33 @@
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { ConnectionService } from '../services/connection.service';
-import { Description, Discord, Slash } from '@typeit/discord';
+import { Description, Discord, Guard, Slash } from '@typeit/discord';
 import { CommandInteraction } from 'discord.js';
+import { BotNotInVoiceChannelSlashGuard } from '../guards/bot-not-in-voice-channel-slash.guard';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'leave',
   description: `Make Abuela leave your voice channel and stop any playing music`,
+  alias: 'stop'
 };
 
 @Discord()
 export abstract class LeaveCommand implements AbuelaCommand {
-
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
+  @Guard(BotNotInVoiceChannelSlashGuard)
   async execute(interaction: CommandInteraction) {
-    await interaction.defer();
+    await this.leave(interaction);
+  }
 
-    if (!ConnectionService.isBotInVoiceChannel(interaction)) {
-      await interaction.editReply(`\`Can't leave if I was never there to begin with 🤷\``);
-    } else {
-      ConnectionService.leave(interaction);
-      await interaction.editReply('`leaving voice channel...`');
-    }
+  @Slash(INFOS.alias!)
+  @Description(INFOS.description)
+  @Guard(BotNotInVoiceChannelSlashGuard)
+  async stop(interaction: CommandInteraction) {
+    await this.leave(interaction);
+  }
+
+  private async leave(interaction: CommandInteraction) {
+    ConnectionService.leave(interaction);
+    await interaction.reply('`leaving voice channel...`');
   }
 }

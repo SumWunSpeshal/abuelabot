@@ -1,4 +1,5 @@
 import { ActivityType } from 'discord.js';
+import config from '../config';
 
 export const statusTypes: ActivityType[] = [
   'CUSTOM_STATUS',
@@ -8,6 +9,11 @@ export const statusTypes: ActivityType[] = [
   'PLAYING',
   'STREAMING'
 ];
+
+const abuela = '838829572681105488';
+const abuelaDev = '845991359742607421';
+
+export const BOT_ID = config.env === 'PROD' ? abuela : abuelaDev;
 
 export enum KnownGuilds {
   GARTENFREUNDE = '243082552783405056'

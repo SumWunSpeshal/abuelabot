@@ -4,6 +4,7 @@ import Path from 'path';
 import config from './config';
 import { Intents } from 'discord.js';
 import { NotBotGuard } from './guards/not-bot.guard';
+import { cronJobs } from './cronjobs';
 
 const { token, devToken } = SETUP_CONFIG;
 
@@ -27,16 +28,23 @@ export class Main {
   }
 
   static async start(): Promise<void> {
-    const _token = config.env === 'PROD' ? token : devToken;
-
-    this._client.login(_token).catch(error => {
+    this._client.login(config.env === 'PROD' ? token : devToken).catch(error => {
       console.error(error);
       process.exit(0);
     });
 
-    this._client.on('interaction', interaction => {
-      this._client.executeSlash(interaction);
+    this.initOnInteractionEvent();
+    this.initCronJobs();
+  }
+
+  private static initOnInteractionEvent() {
+    this._client.on('interaction', async (interaction) => {
+      await this._client.executeSlash(interaction);
     });
+  }
+
+  private static initCronJobs() {
+    cronJobs.forEach(job => job.start());
   }
 }
 

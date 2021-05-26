@@ -1,8 +1,7 @@
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
+import { AbuelaCommandInfos } from '../types';
 import { ActivityType, Client, CommandInteraction } from 'discord.js';
-import { findBestMatch } from 'string-similarity';
-import { statusTypes } from '../utils/statics';
-import { Choices, Description, Discord, Option, Slash } from '@typeit/discord';
+import { Choices, Description, Discord, Guard, Option, Slash } from '@typeit/discord';
+import { UserNeedsPermissionsSlashGuard } from '../guards/user-needs-permissions-slash.guard';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'status',
@@ -20,23 +19,21 @@ const INFOS: AbuelaCommandInfos = {
 
 @Discord()
 export abstract class StatusCommand {
+
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
+  @Guard(UserNeedsPermissionsSlashGuard(['ADMINISTRATOR']))
   async execute(
     @Option('status', { description: 'Set a status text', required: true })
     userInput: string,
     @Option('activity', { description: 'Set one of the available activities', required: true })
     @Choices(INFOS.choices![0])
-    activity: string,
+    activity: ActivityType,
     interaction: CommandInteraction,
     client: Client
   ) {
-    const typeMatch = activity
-      ? (findBestMatch(activity.toUpperCase(), statusTypes).bestMatch.target as ActivityType)
-      : 'PLAYING';
-
     await client.user?.setActivity(userInput, {
-      type: typeMatch
+      type: activity
     });
 
     await interaction.reply('`Status successfully set...`');

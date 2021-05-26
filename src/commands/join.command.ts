@@ -1,17 +1,19 @@
 import { AbuelaCommandInfos } from '../types';
 import { ConnectionService } from '../services/connection.service';
-import { Description, Discord, Slash } from '@typeit/discord';
+import { Description, Discord, Guard, Slash } from '@typeit/discord';
 import { CommandInteraction } from 'discord.js';
+import { NotInVoiceChannelSlashGuard } from '../guards/not-in-voice-channel-slash.guard';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'join',
-  description: `Let Abuela join your voice channel!`,
+  description: `Let Abuela join your voice channel!`
 };
 
 @Discord()
 export class JoinCommand {
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
+  @Guard(NotInVoiceChannelSlashGuard)
   async execute(interaction: CommandInteraction) {
     await interaction.defer();
     await ConnectionService.join(interaction);
