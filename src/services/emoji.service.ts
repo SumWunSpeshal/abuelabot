@@ -1,4 +1,4 @@
-import { EmojiFallbacks, KnownEmojis } from '../utils/statics';
+import { EmojiFallbacks, KnownEmojis } from '../statics';
 import { Main } from '../main';
 import { Guild, GuildEmoji } from 'discord.js';
 

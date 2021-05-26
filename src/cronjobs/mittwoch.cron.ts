@@ -1,6 +1,6 @@
 import { schedule } from 'node-cron';
 import { CommandHelper } from '../utils/command-helper';
-import { KnownTextChannels } from '../utils/statics';
+import { KnownTextChannels } from '../statics';
 import { readdirSync } from 'fs';
 import Path from 'path';
 import { Random } from '../utils/random';

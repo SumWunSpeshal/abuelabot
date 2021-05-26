@@ -1,7 +1,7 @@
 import { ArgsOf, Client, Description, Discord, DiscordEvents, MetadataStorage, On, Slash } from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { CommandHelper } from '../utils/command-helper';
-import { CustomEvents } from '../utils/statics';
+import { CustomEvents } from '../statics';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { Main } from '../main';
 

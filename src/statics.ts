@@ -1,5 +1,5 @@
 import { ActivityType } from 'discord.js';
-import config from '../config';
+import config from './config';
 
 export const statusTypes: ActivityType[] = [
   'CUSTOM_STATUS',

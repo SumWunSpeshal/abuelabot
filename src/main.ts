@@ -5,14 +5,15 @@ import Path from 'path';
 import { Intents } from 'discord.js';
 import { NotBotGuard } from './guards/not-bot.guard';
 import { cronJobs } from './cronjobs';
-import { ABUELA_ONLY_ID } from './utils/statics';
+import { ABUELA_ONLY_ID } from './statics';
 
 const { token, devToken } = SETUP_CONFIG;
 
 export class Main {
   private static _client: Client = new Client({
     classes: [
-      Path.join(__dirname, 'commands', '*.ts'),
+      Path.join(__dirname, 'commands', 'wiki.command.ts'),
+      // Path.join(__dirname, 'commands', '*.ts'),
       Path.join(__dirname, 'events', '*.event.ts')
     ],
     intents: [
@@ -32,19 +33,33 @@ export class Main {
   }
 
   static async start(): Promise<void> {
-    this._client.login(config.env === 'PROD' ? token : devToken).catch(error => {
+    await this._client.login(config.env === 'PROD' ? token : devToken).catch(error => {
       console.error(error);
       process.exit(0);
     });
 
     this.initOnInteractionEvent();
     this.initCronJobs();
+    await this.initSlashes();
   }
 
   private static initOnInteractionEvent() {
     this._client.on('interaction', async (interaction) => {
       await this._client.executeSlash(interaction);
     });
+  }
+
+  private static async initSlashes() {
+    // console.log(`### Clearing all slashes ... ###`)
+    // await Main.client.clearSlashes();
+    //
+    // for await (const guild of Main.client.guilds.cache) {
+    //   await Main.client.clearSlashes(guild[0]);
+    // }
+
+    console.log(`### Starting slash initialisation ... ###`)
+    await Main.client.initSlashes();
+    console.log(`### ${this._client.user?.username} ready! ... ###`);
   }
 
   private static initCronJobs() {

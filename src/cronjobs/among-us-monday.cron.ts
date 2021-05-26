@@ -1,6 +1,6 @@
 import { schedule } from 'node-cron';
 import { CommandHelper } from '../utils/command-helper';
-import { KnownEmojis, KnownGuilds, KnownRoles, KnownTextChannels } from '../utils/statics';
+import { KnownEmojis, KnownGuilds, KnownRoles, KnownTextChannels } from '../statics';
 import { Main } from '../main';
 
 const rule = '00 10 * * MON';

@@ -1,5 +1,5 @@
 import { Main } from '../main';
-import { KnownRoles, KnownTextChannels } from './statics';
+import { KnownRoles, KnownTextChannels } from '../statics';
 import { Collection, Guild, GuildMember, Message, Snowflake, TextChannel } from 'discord.js';
 
 type DelimiterArr = Array<' ' | '-'>;

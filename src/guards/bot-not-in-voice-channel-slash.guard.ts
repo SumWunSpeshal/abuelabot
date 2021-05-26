@@ -1,7 +1,7 @@
 import { GuardFunction } from '@typeit/discord';
 import { CommandInteraction } from 'discord.js';
 import { CommandHelper } from '../utils/command-helper';
-import { BOT_ID } from '../utils/statics';
+import { BOT_ID } from '../statics';
 
 export const BotNotInVoiceChannelSlashGuard: GuardFunction<CommandInteraction> = async (interaction, client, next) => {
   const guild = CommandHelper.getGuildById(interaction.guildID!);
