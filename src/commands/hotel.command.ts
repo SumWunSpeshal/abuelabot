@@ -19,14 +19,6 @@ export abstract class HotelCommand implements AbuelaCommand {
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
   async execute(interaction: CommandInteraction, client: Client) {
-    const hotel = [
-      this.letters.h,
-      this.letters.o,
-      this.letters.t,
-      this.letters.e,
-      this.letters.l,
-    ];
-
     const trivago = [
       this.letters.t,
       this.letters.r,
@@ -37,7 +29,7 @@ export abstract class HotelCommand implements AbuelaCommand {
       this.letters.o
     ];
 
-    await interaction.reply(hotel.join(' ') + '⁉️');
+    await interaction.reply('Hotel?');
     const lastInteraction = await CommandHelper.getLastInteractionOfTextChannel(interaction.channelID!);
 
     for await (const letter of trivago) {

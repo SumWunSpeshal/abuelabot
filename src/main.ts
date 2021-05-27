@@ -12,8 +12,7 @@ const { token, devToken } = SETUP_CONFIG;
 export class Main {
   private static _client: Client = new Client({
     classes: [
-      Path.join(__dirname, 'commands', 'wiki.command.ts'),
-      // Path.join(__dirname, 'commands', '*.ts'),
+      Path.join(__dirname, 'commands', '*.command.ts'),
       Path.join(__dirname, 'events', '*.event.ts')
     ],
     intents: [
@@ -50,12 +49,11 @@ export class Main {
   }
 
   private static async initSlashes() {
-    // console.log(`### Clearing all slashes ... ###`)
-    // await Main.client.clearSlashes();
-    //
-    // for await (const guild of Main.client.guilds.cache) {
-    //   await Main.client.clearSlashes(guild[0]);
-    // }
+    console.log(`### Clearing all slashes ... ###`)
+
+    for await (const guild of Main.client.guilds.cache) {
+      await Main.client.clearSlashes(guild[0]);
+    }
 
     console.log(`### Starting slash initialisation ... ###`)
     await Main.client.initSlashes();
