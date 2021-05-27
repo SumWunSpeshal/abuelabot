@@ -5,7 +5,7 @@ import Path from 'path';
 import { Intents } from 'discord.js';
 import { NotBotGuard } from './guards/not-bot.guard';
 import { cronJobs } from './cronjobs';
-import { ABUELA_ONLY_ID } from './statics';
+import { ABUELA_ONLY_ID, ABUELA_PLAYGROUND_ID, GARTENFREUNDE_ID } from './statics';
 
 const { token, devToken } = SETUP_CONFIG;
 
@@ -23,7 +23,7 @@ export class Main {
       Intents.FLAGS.GUILD_EMOJIS,
     ],
     silent: false,
-    slashGuilds: config.env === 'PROD' ? undefined : [ABUELA_ONLY_ID],
+    slashGuilds: config.env === 'PROD' ? [GARTENFREUNDE_ID, ABUELA_ONLY_ID, ABUELA_PLAYGROUND_ID] : [ABUELA_ONLY_ID],
     guards: [NotBotGuard]
   });
 

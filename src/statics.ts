@@ -13,6 +13,7 @@ export const statusTypes: ActivityType[] = [
 export const ABUELA_ID = '838829572681105488';
 export const ABUELADEV_ID = '845991359742607421';
 
+export const GARTENFREUNDE_ID = '243082552783405056';
 export const ABUELA_PLAYGROUND_ID = '838784788260192296';
 export const ABUELA_ONLY_ID = '841326836545093672';
 
