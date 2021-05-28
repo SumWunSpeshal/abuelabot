@@ -23,7 +23,7 @@ export class Main {
       Intents.FLAGS.GUILD_EMOJIS,
     ],
     silent: false,
-    slashGuilds: config.env === 'PROD' ? [GARTENFREUNDE_ID, ABUELA_ONLY_ID, ABUELA_PLAYGROUND_ID] : [ABUELA_ONLY_ID],
+    slashGuilds: config.env === 'PROD' ? [GARTENFREUNDE_ID, ABUELA_PLAYGROUND_ID] : [ABUELA_ONLY_ID],
     guards: [NotBotGuard]
   });
 
