@@ -38,8 +38,8 @@ export class Main {
     });
 
     this.initCronJobs();
-    await this.clearSlashes();
-    await this.initSlashes();
+    // await this.clearSlashes();
+    // await this.initSlashes();
     this.initOnInteractionEvent();
     console.info(`### ${this._client.user?.username} ready! ###`);
   }
@@ -50,7 +50,7 @@ export class Main {
   }
 
   private static async clearSlashes() {
-    console.info(`### Clearing all slashes ... ###`)
+    console.info(`### Clearing all Slashes ... ###`)
 
     for await (const guild of Main.client.guilds.cache) {
       await Main.client.clearSlashes(guild[0]);
@@ -58,7 +58,7 @@ export class Main {
   }
 
   private static async initSlashes() {
-    console.info(`### Starting slash initialisation ... ###`)
+    console.info(`### Initialising Slashes ... ###`)
     await Main.client.initSlashes();
   }
 

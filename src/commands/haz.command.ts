@@ -5,6 +5,7 @@ import { JSDOM } from 'jsdom';
 import { HazArticleInterface } from '../api/haz-article.interface';
 import { CommandInteraction, EmbedField, MessageEmbed, MessageOptions } from 'discord.js';
 import { CommandHelper } from '../utils/command-helper';
+import { SpecialChars } from '../utils/special-chars';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'haz',
@@ -65,7 +66,7 @@ export abstract class HazCommand {
       }
     });
 
-    return ret.map(chunk => ({ name: '▬▬▬▬▬▬▬▬▬▬', value: chunk, inline: false }));
+    return ret.map(chunk => ({ name: SpecialChars.SEPARATOR, value: chunk, inline: false }));
   }
 
   private async getInfo(url: string): Promise<HazArticleInterface> {

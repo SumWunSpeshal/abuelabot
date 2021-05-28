@@ -8,7 +8,7 @@ import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'play',
-  description: `Type your search as if you were on YouTube! And make Abuela play music in your voice channel!`,
+  description: `Type your search as if you were on YouTube and make Abuela play music in your voice channel!`,
 };
 
 @Discord()

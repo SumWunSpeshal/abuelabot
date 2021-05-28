@@ -15,10 +15,11 @@ import { CustomEvents } from '../statics';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { Main } from '../main';
 import ReadOnlyDict = NodeJS.ReadOnlyDict;
+import { SpecialChars } from '../utils/special-chars';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'help',
-  description: 'Explore all available Abuela commands!',
+  description: 'Explore all available Abuela commands!'
 };
 
 @Discord()
@@ -36,15 +37,20 @@ export abstract class HelpCommand {
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
   async execute(interaction: CommandInteraction) {
-    await interaction.reply(new MessageEmbed({
-      title: this.headline,
-      description: INFOS.description,
-      fields: this.commands.map(({ name, description }) => {
-        return {
-          name: name,
-          value: description || this.fallbacks.description
-        };
+    await interaction.reply(
+      new MessageEmbed({
+        title: this.headline,
+        description: INFOS.description,
+        fields: [
+          { name: SpecialChars.SEPARATOR, value: SpecialChars.ZERO_WIDTH_SPACE, inline: false },
+          ...this.commands.map(({ name, description }) => {
+            return {
+              name: name,
+              value: description || this.fallbacks.description
+            };
+          })
+        ]
       })
-    }));
+    );
   }
 }

@@ -2,17 +2,16 @@ import { Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommandInfos } from '../types';
 import { Http } from '../utils/http';
 import { RkiCovidInterface } from '../api/rki-covid.interface';
-import { readFileSync } from 'fs';
-import Path from 'path';
 import { findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
 import { CommandInteraction, EmbedField, MessageEmbed, MessageOptions } from 'discord.js';
 import { colorText } from '../utils/color-text';
 import { FileHelper } from '../utils/file-helper';
+import { SpecialChars } from '../utils/special-chars';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'covid',
-  description: 'Get the latest COVID related information by district/state or all of Germany'
+  description: 'Get the latest COVID related information by german district/state or all of Germany'
 };
 
 @Discord()
@@ -25,8 +24,6 @@ export abstract class CovidCommand {
     'assets',
     'german-districts.json'
   );
-
-  private readonly zeroWidthSpace = '\u200b';
 
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
@@ -140,8 +137,8 @@ export abstract class CovidCommand {
         value: colorText('blue', `[${(location?.casesPerWeek / 7).toFixed().toLocaleString()}]`),
         inline: true
       },
-      { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false },
-      { name: '**Unterschied zu gestern**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
+      { name: SpecialChars.ZERO_WIDTH_SPACE, value: SpecialChars.ZERO_WIDTH_SPACE, inline: false },
+      { name: '**Unterschied zu gestern**', value: SpecialChars.SEPARATOR, inline: false },
       {
         name: ':four_leaf_clover: Δ Genesen',
         value: colorText('green', `[${(location?.delta?.recovered).toLocaleString()}]`),
@@ -157,8 +154,8 @@ export abstract class CovidCommand {
         value: colorText('red', `[${(location?.delta?.deaths).toLocaleString()}]`),
         inline: true
       },
-      { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false },
-      { name: '**Insgesamt (in %)**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
+      { name: SpecialChars.ZERO_WIDTH_SPACE, value: SpecialChars.ZERO_WIDTH_SPACE, inline: false },
+      { name: '**Insgesamt (in %)**', value: SpecialChars.SEPARATOR, inline: false },
       {
         name: ':four_leaf_clover: Genesen',
         value: colorText(
@@ -183,7 +180,7 @@ export abstract class CovidCommand {
         ),
         inline: true
       },
-      { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false }
+      { name: SpecialChars.ZERO_WIDTH_SPACE, value: SpecialChars.ZERO_WIDTH_SPACE, inline: false }
     ];
   }
 
@@ -192,7 +189,7 @@ export abstract class CovidCommand {
     location: { population: number }
   ): EmbedField[] {
     return [
-      { name: '**Impfungen**', value: '▬▬▬▬▬▬▬▬▬▬', inline: false },
+      { name: '**Impfungen**', value: SpecialChars.SEPARATOR, inline: false },
       {
         name: ':syringe: seit gestern',
         value: colorText('green', `[${(vaccData?.delta).toLocaleString()}]`),
@@ -217,7 +214,7 @@ export abstract class CovidCommand {
         ),
         inline: true
       },
-      { name: this.zeroWidthSpace, value: this.zeroWidthSpace, inline: false }
+      { name: SpecialChars.ZERO_WIDTH_SPACE, value: SpecialChars.ZERO_WIDTH_SPACE, inline: false }
     ];
   }
 
