@@ -4,14 +4,19 @@ import { BestMatch, findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
 import { IImgFlipGetResponse } from '../api/img-flip.interface';
 import { Random } from '../utils/random';
+import { FileHelper } from '../utils/file-helper';
 
 interface Aliases {
   [key: string]: string;
 }
 
 export abstract class ImgFlipService {
-  private static localMemes: IImgFlipGetResponse = JSON.parse(
-    readFileSync(Path.join(__dirname, '..', 'assets', 'static-memes.json')).toString()
+
+  private static readonly localMemes: IImgFlipGetResponse = FileHelper.parseToJSON(
+    __dirname,
+    '..',
+    'assets',
+    'static-memes.json'
   );
 
   /**
@@ -33,10 +38,7 @@ export abstract class ImgFlipService {
    * @param input
    * @param memes
    */
-  static findClosestMemeName(
-    input: string,
-    { data: { memes } }: IImgFlipGetResponse = this.localMemes
-  ): BestMatch {
+  static findClosestMemeName(input: string, { data: { memes } }: IImgFlipGetResponse = this.localMemes): BestMatch {
     const capitalized = CommandHelper.ucFirstLetterOfWords(input);
     const memeNames = memes.map(meme => meme.name);
     const match: BestMatch = findBestMatch(capitalized, [...Object.keys(ImgFlipService.aliases), ...memeNames]);

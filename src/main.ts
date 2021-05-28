@@ -5,7 +5,7 @@ import Path from 'path';
 import { Intents } from 'discord.js';
 import { NotBotGuard } from './guards/not-bot.guard';
 import { cronJobs } from './cronjobs';
-import { ABUELA_ONLY_ID, ABUELA_PLAYGROUND_ID, GARTENFREUNDE_ID } from './statics';
+import { KnownGuilds } from './statics';
 
 const { token, devToken } = SETUP_CONFIG;
 
@@ -23,7 +23,7 @@ export class Main {
       Intents.FLAGS.GUILD_EMOJIS,
     ],
     silent: false,
-    slashGuilds: config.env === 'PROD' ? undefined : [ABUELA_ONLY_ID],
+    slashGuilds: config.env === 'PROD' ? undefined : [KnownGuilds.ABUELA_ONLY_ID],
     guards: [NotBotGuard]
   });
 
@@ -37,31 +37,37 @@ export class Main {
       process.exit(0);
     });
 
-    this.initOnInteractionEvent();
     this.initCronJobs();
+    await this.clearSlashes();
     await this.initSlashes();
+    this.initOnInteractionEvent();
+    console.info(`### ${this._client.user?.username} ready! ###`);
   }
 
-  private static initOnInteractionEvent() {
-    this._client.on('interaction', async (interaction) => {
-      await this._client.executeSlash(interaction);
-    });
+  private static initCronJobs() {
+    console.info(`### Initialising Cron Jobs ... ###`)
+    cronJobs.forEach(job => job.start());
   }
 
-  private static async initSlashes() {
-    console.log(`### Clearing all slashes ... ###`)
+  private static async clearSlashes() {
+    console.info(`### Clearing all slashes ... ###`)
 
     for await (const guild of Main.client.guilds.cache) {
       await Main.client.clearSlashes(guild[0]);
     }
-
-    console.log(`### Starting slash initialisation ... ###`)
-    await Main.client.initSlashes();
-    console.log(`### ${this._client.user?.username} ready! ... ###`);
   }
 
-  private static initCronJobs() {
-    cronJobs.forEach(job => job.start());
+  private static async initSlashes() {
+    console.info(`### Starting slash initialisation ... ###`)
+    await Main.client.initSlashes();
+  }
+
+  private static initOnInteractionEvent() {
+    console.info(`### Attaching Interaction Events ... ###`)
+
+    this._client.on('interaction', async (interaction) => {
+      await this._client.executeSlash(interaction);
+    });
   }
 }
 

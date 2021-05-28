@@ -1,6 +1,6 @@
 import { Main } from '../main';
 import { KnownRoles, KnownTextChannels } from '../statics';
-import { Collection, Guild, GuildMember, Message, Snowflake, TextChannel } from 'discord.js';
+import { Collection, Guild, GuildEmoji, GuildMember, Message, Snowflake, TextChannel } from 'discord.js';
 
 type DelimiterArr = Array<' ' | '-'>;
 
@@ -52,6 +52,10 @@ export abstract class CommandHelper {
 
   static getMemberById(guild: Guild, memberId: Snowflake): GuildMember | undefined {
     return guild.members.cache.get(memberId);
+  }
+
+  static getEmojiById(guild: Guild, emojiId: Snowflake): GuildEmoji | undefined {
+    return guild.emojis.cache.get(emojiId);
   }
 
   static mention<T extends KnownRoles>(id: T): string {

@@ -35,7 +35,6 @@ export abstract class MemeCommand {
     const singleMeme = memes.data.memes.find(meme => meme.name === bestMatch.target);
     const response = await Http.fetch<IImgFlipSuccessResponse>(
       this.createRequestBody(singleMeme!.id, text0, text1),
-      'json'
     );
 
     await interaction.reply(new MessageEmbed({

@@ -1,19 +1,18 @@
 import { Description, Discord, Option, Slash } from '@typeit/discord';
 import { AbuelaCommandInfos } from '../types';
-import { readFileSync } from 'fs';
-import Path from 'path';
 import { Random } from '../utils/random';
 import { CommandInteraction } from 'discord.js';
+import { FileHelper } from '../utils/file-helper';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'aesthetic',
-  description: `ＷＲＩＴＥ　ＬＩＫＥ　ＴＨＩＳ !`,
+  description: `ＷＲＩＴＥ　ＬＩＫＥ　ＲＹＡＮ　ＣＥＬＳＩＵＳ　ノ員気椅`
 };
 
 @Discord()
 export abstract class AestheticCommand {
-  private alphabet = JSON.parse(readFileSync(Path.join(__dirname, '..', 'assets', 'aesthetic.json')).toString());
-
+  private alphabet = FileHelper.parseToJSON(__dirname, '..', 'assets', 'aesthetic.json');
+  
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
   async execute(
@@ -21,6 +20,7 @@ export abstract class AestheticCommand {
     userInput: string,
     interaction: CommandInteraction
   ) {
+
     const replaced = userInput
       .split('')
       .map(letter => this.alphabet[letter] || letter)

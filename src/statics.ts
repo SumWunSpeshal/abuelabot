@@ -10,17 +10,18 @@ export const statusTypes: ActivityType[] = [
   'STREAMING'
 ];
 
-export const ABUELA_ID = '838829572681105488';
-export const ABUELADEV_ID = '845991359742607421';
 
-export const GARTENFREUNDE_ID = '243082552783405056';
-export const ABUELA_PLAYGROUND_ID = '838784788260192296';
-export const ABUELA_ONLY_ID = '841326836545093672';
+export enum KnownBots {
+  ABUELA_ID = '838829572681105488',
+  ABUELADEV_ID = '845991359742607421'
+}
 
-export const BOT_ID = config.env === 'PROD' ? ABUELA_ID : ABUELADEV_ID;
+export const BOT_ID = config.env === 'PROD' ? KnownBots.ABUELA_ID : KnownBots.ABUELADEV_ID;
 
 export enum KnownGuilds {
-  GARTENFREUNDE = '243082552783405056'
+  GARTENFREUNDE = '243082552783405056',
+  ABUELA_PLAYGROUND_ID = '838784788260192296',
+  ABUELA_ONLY_ID = '841326836545093672'
 }
 
 export enum KnownTextChannels {

@@ -8,18 +8,22 @@ import { findBestMatch } from 'string-similarity';
 import { CommandHelper } from '../utils/command-helper';
 import { CommandInteraction, EmbedField, MessageEmbed, MessageOptions } from 'discord.js';
 import { colorText } from '../utils/color-text';
+import { FileHelper } from '../utils/file-helper';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'covid',
-  description: 'Get the latest COVID related information by district/state or all of Germany',
+  description: 'Get the latest COVID related information by district/state or all of Germany'
 };
 
 @Discord()
 export abstract class CovidCommand {
   private readonly baseUrl = 'https://api.corona-zahlen.org/';
 
-  private readonly agsMap: RkiCovidInterface.AgsMap = JSON.parse(
-    readFileSync(Path.join(__dirname, '..', 'assets', 'german-districts.json')).toString()
+  private readonly agsMap: RkiCovidInterface.AgsMap = FileHelper.parseToJSON(
+    __dirname,
+    '..',
+    'assets',
+    'german-districts.json'
   );
 
   private readonly zeroWidthSpace = '\u200b';
@@ -27,9 +31,11 @@ export abstract class CovidCommand {
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
   async execute(
-    @Option('landkreis', { description: 'Type your district and get info for district and state, or leave empty for Germany' })
+    @Option('landkreis', {
+      description: 'Type your district and get info for district and state, or leave empty for Germany'
+    })
     userInput: string,
-    interaction: CommandInteraction,
+    interaction: CommandInteraction
   ) {
     if (!userInput) {
       await this.displayGermanyData(interaction);

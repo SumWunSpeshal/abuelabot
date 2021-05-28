@@ -5,6 +5,8 @@ import { readFileSync, writeFileSync } from 'fs';
 import Path from 'path';
 import { CommandInteraction, Guild } from 'discord.js';
 import { colorText } from '../utils/color-text';
+import { FileHelper } from '../utils/file-helper';
+import { CommandHelper } from '../utils/command-helper';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'gj',
@@ -16,8 +18,10 @@ interface Counter {
 }
 
 @Discord()
-export abstract class ComplimentBotCommand implements AbuelaCommand {
-  private path = Path.join(__dirname, '..', 'cache', 'counter.json');
+export abstract class GjCommand implements AbuelaCommand {
+  private readonly path = Path.join(__dirname, '..', 'cache', 'counter.json');
+
+  private readonly fileData: Counter = FileHelper.parseToJSON(this.path);
 
   private readonly botResponses = [
     'Thank you, I love you too!',
@@ -32,13 +36,10 @@ export abstract class ComplimentBotCommand implements AbuelaCommand {
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
   async execute(interaction: CommandInteraction, client: Client) {
-    const fileData: Counter = JSON.parse(readFileSync(this.path).toString());
-    const currentGuild = client.guilds.cache.get(interaction.guild!.id);
-
-    const counter = this.saveCounterValue(fileData, currentGuild!);
+    const currentGuild = CommandHelper.getGuildById(interaction.guild!.id);
+    const counter = this.saveCounterValue(this.fileData, currentGuild!);
     await interaction.reply(
-      Random.getRandomFrom(this.botResponses) +
-      colorText('green', `I've been killing it [${counter}] times now`)
+      Random.getRandomFrom(this.botResponses) + colorText('green', `I've been killing it [${counter}] times now`)
     );
   }
 

@@ -29,7 +29,6 @@ export abstract class PlayCommand {
       ?.play(ytdl(ytdlInfo?.videoDetails?.video_url))
       .once('speaking', async () => {
         await interaction.editReply(colorText('turquoise', `playing "${ytResponse?.items[0]?.snippet?.title}"`));
-        console.log('playing');
       })
       .on('finish', () => {
         ConnectionService.leave(interaction);

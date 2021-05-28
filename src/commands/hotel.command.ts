@@ -4,6 +4,7 @@ import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { CommandHelper } from '../utils/command-helper';
 import { readFileSync } from 'fs';
 import Path from 'path';
+import { FileHelper } from '../utils/file-helper';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'hotel',
@@ -12,9 +13,7 @@ const INFOS: AbuelaCommandInfos = {
 
 @Discord()
 export abstract class HotelCommand implements AbuelaCommand {
-  private readonly letters = JSON.parse(
-    readFileSync(Path.join(__dirname, '..', 'assets', 'letter-emojis.json')).toString()
-  );
+  private readonly letters = FileHelper.parseToJSON(__dirname, '..', 'assets', 'letter-emojis.json');
 
   @Slash(INFOS.commandName)
   @Description(INFOS.description)

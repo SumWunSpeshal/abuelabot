@@ -1,5 +1,5 @@
-import { Client, Description, Discord, Option, Slash } from '@typeit/discord';
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
+import { Description, Discord, Option, Slash } from '@typeit/discord';
+import { AbuelaCommandInfos } from '../types';
 import { Http } from '../utils/http';
 import config from '../config';
 import { ImALazyFuck, YoutubeService } from '../services/youtube.service';

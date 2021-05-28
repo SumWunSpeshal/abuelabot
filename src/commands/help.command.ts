@@ -1,9 +1,20 @@
-import { ArgsOf, Client, Description, Discord, DiscordEvents, MetadataStorage, On, Slash } from '@typeit/discord';
+import {
+  ArgsOf,
+  Client,
+  Description,
+  Discord,
+  DiscordEvents,
+  DSlash,
+  MetadataStorage,
+  On,
+  Slash
+} from '@typeit/discord';
 import { AbuelaCommand, AbuelaCommandInfos } from '../types';
 import { CommandHelper } from '../utils/command-helper';
 import { CustomEvents } from '../statics';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { Main } from '../main';
+import ReadOnlyDict = NodeJS.ReadOnlyDict;
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'help',
@@ -12,7 +23,9 @@ const INFOS: AbuelaCommandInfos = {
 
 @Discord()
 export abstract class HelpCommand {
-  private readonly headline = 'Available Commands';
+  private readonly commands = MetadataStorage.instance.slashes;
+
+  private readonly headline: string = 'Available Commands';
 
   private readonly fallbacks = {
     description: 'No description available...',
@@ -23,13 +36,10 @@ export abstract class HelpCommand {
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
   async execute(interaction: CommandInteraction) {
-    const commands = MetadataStorage.instance.slashes;
-
     await interaction.reply(new MessageEmbed({
-      title: this.headline as string,
+      title: this.headline,
       description: INFOS.description,
-      fields: commands.map(({ name, description }) => {
-
+      fields: this.commands.map(({ name, description }) => {
         return {
           name: name,
           value: description || this.fallbacks.description
