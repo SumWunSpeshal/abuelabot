@@ -14,7 +14,7 @@ export const amongUsMondayCron = schedule(rule, async () => {
 
   const timihead = Main.client.guilds.cache.get(KnownGuilds.GARTENFREUNDE)?.emojis.cache.get(KnownEmojis.TIMIHEAD);
   const msg = await amongUsChannel.send(
-    `${CommandHelper.mention(KnownRoles.AMONG_US_GANG)} Wer ist heute am Start? ${timihead}`
+    `${CommandHelper.mentionRole(KnownRoles.AMONG_US_GANG)} Wer ist heute am Start? ${timihead}`
   );
 
   await msg.react(KnownEmojis.JOYFUL_STAR);

@@ -72,8 +72,12 @@ export abstract class CommandHelper {
     return guild.emojis.cache.get(emojiId);
   }
 
-  static mention<T extends KnownRoles>(id: T): string {
+  static mentionRole<T extends KnownRoles>(id: T | Snowflake): string {
     return `<@&${id}>`;
+  }
+
+  static mentionMember(id: Snowflake): string {
+    return `<@${id}>`;
   }
 
   static formatDate(date: Date): string {
