@@ -25,12 +25,26 @@ export abstract class CommandHelper {
   }
 
   static createArrayChunks<T>(array: T[], chunkSize: number): T[][] {
-    const numberOfChunks = Math.ceil(array.length / chunkSize)
+    const numberOfChunks = Math.ceil(array.length / chunkSize);
 
-    return [...Array(numberOfChunks)]
-      .map((_, index) => {
-        return array.slice(index * chunkSize, (index + 1) * chunkSize)
-      })
+    return [...Array(numberOfChunks)].map((_, index) => {
+      return array.slice(index * chunkSize, (index + 1) * chunkSize);
+    });
+  }
+
+  static splitLargeString(largeString: string, maxLength: number): string[] {
+    const sentences = largeString.split('. ');
+    let ret = [''];
+
+    sentences.forEach(sentence => {
+      if (ret[ret.length - 1].length + sentence.length <= maxLength) {
+        ret[ret.length - 1] += sentence + '. ';
+      } else {
+        ret.push(sentence + '. ');
+      }
+    });
+
+    return ret;
   }
 
   static getTextChannelById(id: KnownTextChannels | Snowflake): TextChannel | undefined {
@@ -60,5 +74,14 @@ export abstract class CommandHelper {
 
   static mention<T extends KnownRoles>(id: T): string {
     return `<@&${id}>`;
+  }
+
+  static formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString('de-DE', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
 }

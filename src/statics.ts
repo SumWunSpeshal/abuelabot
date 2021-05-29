@@ -10,6 +10,9 @@ export const statusTypes: ActivityType[] = [
   'STREAMING'
 ];
 
+export enum Colors {
+  BLURPLE = '#7289DA'
+}
 
 export enum KnownBots {
   ABUELA_ID = '838829572681105488',

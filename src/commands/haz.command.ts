@@ -6,6 +6,7 @@ import { HazArticleInterface } from '../api/haz-article.interface';
 import { CommandInteraction, EmbedField, MessageEmbed, MessageOptions } from 'discord.js';
 import { CommandHelper } from '../utils/command-helper';
 import { SpecialChars } from '../utils/special-chars';
+import { Colors } from '../statics';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'haz',
@@ -23,7 +24,8 @@ export abstract class HazCommand {
   ) {
     const article = await this.getInfo(url);
 
-    const embedFields = this.buildFields(article, 1000);
+    const paragraphs = CommandHelper.splitLargeString(article.articleBody, 1000);
+    const embedFields = paragraphs.map(chunk => ({ name: SpecialChars.SEPARATOR, value: chunk, inline: false }));
     const messageSplits = CommandHelper.createArrayChunks(embedFields, 3);
 
     for await (let arrayChunk of messageSplits) {
@@ -41,7 +43,7 @@ export abstract class HazCommand {
       embed: {
         title: article.headline,
         description: description,
-        color: article.isAccessibleForFree === 'False' ? '#f8c92b' : '#000000',
+        color: article.isAccessibleForFree === 'False' ? '#f8c92b' : Colors.BLURPLE,
         url: article.mainEntityOfPage['@id'],
         fields: body,
         thumbnail: {
@@ -52,21 +54,6 @@ export abstract class HazCommand {
         }
       }
     };
-  }
-
-  private buildFields(article: HazArticleInterface, maxLength: number): EmbedField[] {
-    const sentences = article.articleBody.split('.');
-    let ret = [''];
-
-    sentences.forEach(sentence => {
-      if (ret[ret.length - 1].length + sentence.length <= maxLength) {
-        ret[ret.length - 1] = ret[ret.length - 1] + sentence + '.';
-      } else {
-        ret.push(sentence + '.');
-      }
-    });
-
-    return ret.map(chunk => ({ name: SpecialChars.SEPARATOR, value: chunk, inline: false }));
   }
 
   private async getInfo(url: string): Promise<HazArticleInterface> {

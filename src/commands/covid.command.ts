@@ -8,6 +8,7 @@ import { CommandInteraction, EmbedField, MessageEmbed, MessageOptions } from 'di
 import { colorText } from '../utils/color-text';
 import { FileHelper } from '../utils/file-helper';
 import { SpecialChars } from '../utils/special-chars';
+import { Colors } from '../statics';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'covid',
@@ -96,11 +97,11 @@ export abstract class CovidCommand {
   ): MessageOptions {
     return {
       embed: {
-        color: this.getIncidentColor(colorRange, district?.weekIncidence)?.color || '#000',
+        color: this.getIncidentColor(colorRange, district?.weekIncidence)?.color || Colors.BLURPLE,
         title: `Aktuelle COVID Daten für \`${district.name}\``,
         fields: [...this.buildCovidInfos(district)],
         footer: {
-          text: `Quelle: ${meta.source} | Letztes Update: ${this.formatDate(meta.lastUpdate)}`
+          text: `Quelle: ${meta.source} | Letztes Update: ${CommandHelper.formatDate(meta.lastUpdate)}`
         }
       }
     };
@@ -115,11 +116,11 @@ export abstract class CovidCommand {
   ): MessageOptions {
     return {
       embed: {
-        color: this.getIncidentColor(colorRange, state?.weekIncidence)?.color || '#000',
+        color: this.getIncidentColor(colorRange, state?.weekIncidence)?.color || Colors.BLURPLE,
         title: title,
         fields: [...this.buildCovidInfos(state), ...this.buildVaccInfos(vaccData, state)],
         footer: {
-          text: `Quelle: ${meta.source} | Letztes Update: ${this.formatDate(meta.lastUpdate)}`
+          text: `Quelle: ${meta.source} | Letztes Update: ${CommandHelper.formatDate(meta.lastUpdate)}`
         }
       }
     };
@@ -231,15 +232,6 @@ export abstract class CovidCommand {
         return type === 'string' || type === 'number';
       })
       .map(key => ({ name: key, value: obj[key as keyof T], inline: false })) as any;
-  }
-
-  private formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('de-DE', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
   }
 
   private async getRkiData<T>(endPoint: RkiCovidInterface.ApiEndPoint, arg?: string | undefined): Promise<T> {

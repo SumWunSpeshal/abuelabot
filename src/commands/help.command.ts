@@ -1,20 +1,7 @@
-import {
-  ArgsOf,
-  Client,
-  Description,
-  Discord,
-  DiscordEvents,
-  DSlash,
-  MetadataStorage,
-  On,
-  Slash
-} from '@typeit/discord';
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import { CommandHelper } from '../utils/command-helper';
-import { CustomEvents } from '../statics';
+import { Description, Discord, MetadataStorage, Slash } from '@typeit/discord';
+import { AbuelaCommandInfos } from '../types';
+import { Colors } from '../statics';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import { Main } from '../main';
-import ReadOnlyDict = NodeJS.ReadOnlyDict;
 import { SpecialChars } from '../utils/special-chars';
 
 const INFOS: AbuelaCommandInfos = {
@@ -41,6 +28,7 @@ export abstract class HelpCommand {
       new MessageEmbed({
         title: this.headline,
         description: INFOS.description,
+        color: Colors.BLURPLE,
         fields: [
           { name: SpecialChars.SEPARATOR, value: SpecialChars.ZERO_WIDTH_SPACE, inline: false },
           ...this.commands.map(({ name, description }) => {
