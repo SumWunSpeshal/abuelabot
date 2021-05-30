@@ -47,16 +47,16 @@ export abstract class CommandHelper {
     return ret;
   }
 
-  static getTextChannelById(id: KnownTextChannels | Snowflake): TextChannel | undefined {
-    return Main.client.channels.cache.get(id) as TextChannel;
+  static getTextChannelById(textChannelId: KnownTextChannels | Snowflake): TextChannel | undefined {
+    return Main.client.channels.cache.get(textChannelId) as TextChannel;
   }
 
-  static getMessagesOfTextChannel(id: KnownTextChannels | Snowflake): Promise<Collection<string, Message>> | undefined {
-    return this.getTextChannelById(id)?.messages.fetch();
+  static getMessagesOfTextChannel(textChannelId: KnownTextChannels | Snowflake): Promise<Collection<string, Message>> | undefined {
+    return this.getTextChannelById(textChannelId)?.messages.fetch();
   }
 
-  static async getLastInteractionOfTextChannel(id: KnownTextChannels | Snowflake) {
-    const messages = await this.getMessagesOfTextChannel(id);
+  static async getLastInteractionOfTextChannel(textChannelId: KnownTextChannels | Snowflake) {
+    const messages = await this.getMessagesOfTextChannel(textChannelId);
     return messages!.find(message => !!message.interaction);
   }
 

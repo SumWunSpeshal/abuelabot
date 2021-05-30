@@ -6,7 +6,7 @@ import { NotInVoiceChannelSlashGuard } from '../guards/not-in-voice-channel-slas
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'join',
-  description: `Let Abuela join your voice channel!`
+  description: `Make me join the voice channel you are in!`
 };
 
 @Discord()

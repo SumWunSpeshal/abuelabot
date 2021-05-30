@@ -6,7 +6,7 @@ import { BotNotInVoiceChannelSlashGuard } from '../guards/bot-not-in-voice-chann
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'leave',
-  description: `Make Abuela leave your voice channel and stop any playing music`,
+  description: `Make me leave your voice channel and stop any playing music`,
   alias: 'stop'
 };
 

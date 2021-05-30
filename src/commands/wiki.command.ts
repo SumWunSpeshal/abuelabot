@@ -12,7 +12,7 @@ type WikiLanguage = 'de' | 'en';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'wiki',
-  description: `Search as if you were on Wikipedia and let Abuela respond with the first search result!`,
+  description: `Search as if you were on Wikipedia and make me respond with the first search result!`,
   choices: [
     {
       German: 'de',

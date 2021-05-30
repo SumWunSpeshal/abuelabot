@@ -6,7 +6,7 @@ import { SpecialChars } from '../utils/special-chars';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'help',
-  description: 'Explore all available Abuela commands!'
+  description: 'Explore all my available commands!'
 };
 
 @Discord()

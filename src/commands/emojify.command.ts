@@ -1,5 +1,5 @@
-import { Client, Discord, Slash, Option, Description } from '@typeit/discord';
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
+import { Client, Description, Discord, Option, Slash } from '@typeit/discord';
+import { AbuelaCommandInfos } from '../types';
 import { readFileSync } from 'fs';
 import Path from 'path';
 import { EmojiListInterface } from '../api/emoji-list.interface';
@@ -7,7 +7,7 @@ import { CommandInteraction } from 'discord.js';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'emojify',
-  description: 'Type your text and watch how Abuela inserts Emojis where a match is found',
+  description: 'Type your text and watch how I insert Emojis in between where I can find matches'
 };
 
 @Discord()
