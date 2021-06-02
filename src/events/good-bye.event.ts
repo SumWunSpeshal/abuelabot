@@ -3,20 +3,20 @@ import { AbuelaEvent } from '../types';
 import { TextChannel } from 'discord.js';
 import { CommandHelper } from '../utils/command-helper';
 
-const WELCOME_MESSAGE = `Welcome %USER_NAME% to %GUILD_NAME%. We hope you'll have a great stay. \n\nIf you want to learn more about me, just type \`/\` in any of this server's text channels and see all the cool moves I know.`;
+const GOOD_BYE_MESSAGE = `Goodbye %USER_NAME%. %GUILD_NAME% will miss you!`;
 
 @Discord()
-export abstract class WelcomeEvent implements AbuelaEvent {
-  @On('guildMemberAdd')
-  async on([member]: ArgsOf<'guildMemberAdd'>, client: Client): Promise<void> {
+export abstract class GoodByeEvent implements AbuelaEvent {
+  @On('guildMemberRemove')
+  async on([member]: ArgsOf<'guildMemberRemove'>, client: Client): Promise<void> {
     const defaultTextChannel = member.guild.channels.cache.find(channel => {
       return channel.name === 'general' && channel instanceof TextChannel;
     }) as TextChannel | undefined;
 
     if (defaultTextChannel) {
       await defaultTextChannel.send(
-        WELCOME_MESSAGE
-          .replace('%USER_NAME%', CommandHelper.mentionMember(member.user.id))
+        GOOD_BYE_MESSAGE
+          .replace('%USER_NAME%', member.user?.id ? CommandHelper.mentionMember(member.user?.id) : `*${member.user?.username}*`)
           .replace('%GUILD_NAME%', `\`${member.guild.name}\``)
       );
     }

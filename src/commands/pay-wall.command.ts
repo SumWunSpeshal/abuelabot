@@ -9,16 +9,16 @@ import { SpecialChars } from '../utils/special-chars';
 import { Colors } from '../statics';
 
 const INFOS: AbuelaCommandInfos = {
-  commandName: 'haz',
-  description: `Circumvent the paywall for HAZ online articles`
+  commandName: 'paywall',
+  description: `Circumvent the paywall for an online article of one of these magazines: HAZ or MAZ`
 };
 
 @Discord()
-export abstract class HazCommand {
+export abstract class PayWallCommand {
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
   async execute(
-    @Option('url', { description: 'Provide a valid HAZ url', required: true })
+    @Option('url', { description: 'Provide a valid magazine url', required: true })
     url: string,
     interaction: CommandInteraction
   ) {
