@@ -43,7 +43,7 @@ export class Main {
     });
 
     this.initCronJobs();
-    // await this.clearSlashes();
+    await this.clearSlashes();
     await this.initSlashes();
     this.initOnInteractionEvent();
     console.info(`### ${this._client.user?.username} ready! ###`);
