@@ -22,7 +22,7 @@ export class Main {
       Intents.FLAGS.GUILD_VOICE_STATES,
       Intents.FLAGS.GUILD_EMOJIS,
       Intents.FLAGS.GUILD_PRESENCES,
-      Intents.FLAGS.GUILD_WEBHOOKS,
+      // Intents.FLAGS.GUILD_WEBHOOKS,
       Intents.FLAGS.GUILD_MEMBERS,
       Intents.FLAGS.GUILD_INVITES,
       Intents.FLAGS.GUILD_BANS,
