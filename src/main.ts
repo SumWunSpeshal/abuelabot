@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { Client } from '@typeit/discord';
 import SETUP_CONFIG from './config';
 import config from './config';
@@ -17,18 +18,23 @@ export class Main {
     ],
     intents: [
       Intents.FLAGS.GUILDS,
-      Intents.FLAGS.GUILD_MESSAGES,
-      Intents.FLAGS.GUILD_INTEGRATIONS,
-      Intents.FLAGS.GUILD_VOICE_STATES,
-      Intents.FLAGS.GUILD_EMOJIS,
-      Intents.FLAGS.GUILD_PRESENCES,
-      Intents.FLAGS.GUILD_WEBHOOKS,
       Intents.FLAGS.GUILD_MEMBERS,
-      Intents.FLAGS.GUILD_INVITES,
       Intents.FLAGS.GUILD_BANS,
+      Intents.FLAGS.GUILD_EMOJIS,
+      Intents.FLAGS.GUILD_INTEGRATIONS,
+      Intents.FLAGS.GUILD_WEBHOOKS,
+      Intents.FLAGS.GUILD_INVITES,
+      Intents.FLAGS.GUILD_VOICE_STATES,
+      Intents.FLAGS.GUILD_PRESENCES,
+      Intents.FLAGS.GUILD_MESSAGES,
+      Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+      Intents.FLAGS.GUILD_MESSAGE_TYPING,
+      Intents.FLAGS.DIRECT_MESSAGES,
+      Intents.FLAGS.DIRECT_MESSAGE_TYPING,
+      Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
     ],
     silent: false,
-    slashGuilds: config.env === 'PROD' ? undefined : [KnownGuilds.ABUELA_ONLY_ID],
+    slashGuilds: config.env === 'PROD' ? [KnownGuilds.GARTENFREUNDE] : [KnownGuilds.ABUELA_ONLY_ID],
     guards: [NotBotGuard]
   });
 
