@@ -32,12 +32,12 @@ export abstract class CommandHelper {
     });
   }
 
-  static splitLargeString(largeString: string, maxLength: number): string[] {
+  static splitLargeString(largeString: string, maxCharLength: number): string[] {
     const sentences = largeString.split('. ');
     let ret = [''];
 
     sentences.forEach(sentence => {
-      if (ret[ret.length - 1].length + sentence.length <= maxLength) {
+      if (ret[ret.length - 1].length + sentence.length <= maxCharLength) {
         ret[ret.length - 1] += sentence + '. ';
       } else {
         ret.push(sentence + '. ');
