@@ -84,4 +84,4 @@ export const BOT_ID = ENV_IS_LIVE ? KnownBots.ABUELA_ID : KnownBots.ABUELADEV_ID
 
 export const BOT_TOKEN = ENV_IS_LIVE ? token : devToken;
 
-export const SLASH_GUILDS = ENV_IS_LIVE ? undefined : [KnownGuilds.ABUELA_ONLY_ID];
+export const SLASH_GUILDS = ENV_IS_LIVE ? [KnownGuilds.GARTENFREUNDE] : [KnownGuilds.ABUELA_ONLY_ID];

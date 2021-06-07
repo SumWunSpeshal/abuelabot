@@ -9,7 +9,7 @@ import { BOT_TOKEN, SLASH_GUILDS } from './statics';
 export class Main {
   private static _client: Client = new Client({
     classes: [
-      Path.join(__dirname, 'commands', 'mock.command.ts'),
+      Path.join(__dirname, 'commands', '*.command.ts'),
       Path.join(__dirname, 'events', '*.event.ts')
     ],
     intents: [
