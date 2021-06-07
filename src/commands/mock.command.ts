@@ -16,7 +16,6 @@ export abstract class MockCommand {
     text: string,
     interaction: CommandInteraction
   ) {
-    console.log(text);
 
     const ret = text
       .split('')

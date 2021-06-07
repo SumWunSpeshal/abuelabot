@@ -1,14 +1,10 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import { Client } from '@typeit/discord';
-import SETUP_CONFIG from './config';
-import config from './config';
 import Path from 'path';
 import { Intents } from 'discord.js';
 import { NotBotGuard } from './guards/not-bot.guard';
 import { cronJobs } from './cronjobs';
-import { KnownGuilds } from './statics';
-
-const { token, devToken } = SETUP_CONFIG;
+import { BOT_TOKEN, ENV_IS_LIVE, SLASH_GUILDS } from './statics';
 
 export class Main {
   private static _client: Client = new Client({
@@ -34,7 +30,7 @@ export class Main {
       Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
     ],
     silent: false,
-    slashGuilds: config.env === 'PROD' ? [KnownGuilds.GARTENFREUNDE] : [KnownGuilds.ABUELA_ONLY_ID],
+    slashGuilds: SLASH_GUILDS,
     guards: [NotBotGuard]
   });
 
@@ -43,7 +39,7 @@ export class Main {
   }
 
   static async start(): Promise<void> {
-    await this._client.login(config.env === 'PROD' ? token : devToken).catch(error => {
+    await this._client.login(BOT_TOKEN).catch(error => {
       console.error(error);
       process.exit(0);
     });
@@ -56,7 +52,7 @@ export class Main {
   }
 
   private static initCronJobs() {
-    console.info(`### Initialising Cron Jobs ... ###`)
+    console.info(`### Initialising Cron Jobs ... ###`);
     cronJobs.forEach(job => job.start());
   }
 
@@ -74,7 +70,7 @@ export class Main {
   }
 
   private static initOnInteractionEvent() {
-    console.info(`### Attaching Interaction Events ... ###`)
+    console.info(`### Attaching Interaction Events ... ###`);
 
     this._client.on('interaction', async (interaction) => {
       await this._client.executeSlash(interaction);

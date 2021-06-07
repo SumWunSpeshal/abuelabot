@@ -1,5 +1,8 @@
 import { ActivityType } from 'discord.js';
 import config from './config';
+import SETUP_CONFIG from './config';
+
+const { token, devToken } = SETUP_CONFIG;
 
 export const statusTypes: ActivityType[] = [
   'CUSTOM_STATUS',
@@ -18,8 +21,6 @@ export enum KnownBots {
   ABUELA_ID = '838829572681105488',
   ABUELADEV_ID = '845991359742607421'
 }
-
-export const BOT_ID = config.env === 'PROD' ? KnownBots.ABUELA_ID : KnownBots.ABUELADEV_ID;
 
 export enum KnownGuilds {
   GARTENFREUNDE = '243082552783405056',
@@ -76,3 +77,11 @@ export enum EmojiFallbacks {
   '846091300709466134' = '💁', // sahacute
   '846091333746556958' = '😬', // sahapsycho
 }
+
+export const ENV_IS_LIVE = config.env === 'PROD';
+
+export const BOT_ID = ENV_IS_LIVE ? KnownBots.ABUELA_ID : KnownBots.ABUELADEV_ID;
+
+export const BOT_TOKEN = ENV_IS_LIVE ? token : devToken;
+
+export const SLASH_GUILDS = ENV_IS_LIVE ? undefined : [KnownGuilds.ABUELA_ONLY_ID];
