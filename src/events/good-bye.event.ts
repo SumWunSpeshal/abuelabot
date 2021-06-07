@@ -1,4 +1,4 @@
-import { ArgsOf, Client, Discord, On } from '@typeit/discord';
+import { ArgsOf, Discord, On } from '@typeit/discord';
 import { AbuelaEvent } from '../types';
 import { TextChannel } from 'discord.js';
 import { CommandHelper } from '../utils/command-helper';
@@ -8,7 +8,7 @@ const GOOD_BYE_MESSAGE = `Goodbye %USER_NAME%. %GUILD_NAME% will miss you!`;
 @Discord()
 export abstract class GoodByeEvent implements AbuelaEvent {
   @On('guildMemberRemove')
-  async on([member]: ArgsOf<'guildMemberRemove'>, client: Client): Promise<void> {
+  async on([member]: ArgsOf<'guildMemberRemove'>): Promise<void> {
     const defaultTextChannel = member.guild.channels.cache.find(channel => {
       return channel.name === 'general' && channel instanceof TextChannel;
     }) as TextChannel | undefined;

@@ -10,7 +10,7 @@ import { Colors } from '../statics';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'paywall',
-  description: `Circumvent the paywall for an online article of one of these magazines: HAZ or MAZ`
+  description: `Circumvent the paywall for one of the following online magazines: HAZ or MAZ`
 };
 
 @Discord()
@@ -22,18 +22,18 @@ export abstract class PayWallCommand {
     url: string,
     interaction: CommandInteraction
   ) {
-    const article = await this.getInfo(url);
+    const richSnippetExtract = await this.getInfo(url);
 
-    const paragraphs = CommandHelper.splitLargeString(article.articleBody, 1000);
+    const paragraphs = CommandHelper.splitLargeString(richSnippetExtract.articleBody, 1000);
     const embedFields = paragraphs.map(chunk => ({ name: SpecialChars.SEPARATOR, value: chunk, inline: false }));
     const messageSplits = CommandHelper.createArrayChunks(embedFields, 3);
 
     for await (let arrayChunk of messageSplits) {
       if (messageSplits.indexOf(arrayChunk) === 0) {
-        await interaction.reply(new MessageEmbed(this.buildEmbed(article, article.description, arrayChunk).embed));
+        await interaction.reply(new MessageEmbed(this.buildEmbed(richSnippetExtract, richSnippetExtract.description, arrayChunk).embed));
       } else {
         const description = `*FORTSETZUNG* (Teil ${messageSplits.indexOf(arrayChunk) + 1})`;
-        await interaction.followUp(new MessageEmbed(this.buildEmbed(article, description, arrayChunk).embed));
+        await interaction.followUp(new MessageEmbed(this.buildEmbed(richSnippetExtract, description, arrayChunk).embed));
       }
     }
   }
