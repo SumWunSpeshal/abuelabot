@@ -16,6 +16,8 @@ export abstract class MockCommand {
     text: string,
     interaction: CommandInteraction
   ) {
+    console.log(text);
+
     const ret = text
       .split('')
       .map((item, index) => (index % 2 ? item.toUpperCase() : item.toLowerCase()))
