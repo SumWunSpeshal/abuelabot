@@ -4,14 +4,11 @@ import Path from 'path';
 import { Intents } from 'discord.js';
 import { NotBotGuard } from './guards/not-bot.guard';
 import { cronJobs } from './cronjobs';
-import { BOT_TOKEN, ENV_IS_LIVE, SLASH_GUILDS } from './statics';
+import { BOT_TOKEN, SLASH_GUILDS } from './statics';
 
 export class Main {
   private static _client: Client = new Client({
-    classes: [
-      Path.join(__dirname, 'commands', 'mock.command.ts'),
-      Path.join(__dirname, 'events', '*.event.ts')
-    ],
+    classes: [Path.join(__dirname, 'commands', 'mock.command.ts'), Path.join(__dirname, 'events', '*.event.ts')],
     intents: [
       Intents.FLAGS.GUILDS,
       Intents.FLAGS.GUILD_MEMBERS,
@@ -57,7 +54,7 @@ export class Main {
   }
 
   private static async clearSlashes() {
-    console.info(`### Clearing all Slashes ... ###`)
+    console.info(`### Clearing all Slashes ... ###`);
 
     for await (const guild of Main.client.guilds.cache) {
       await Main.client.clearSlashes(guild[0]);
@@ -65,14 +62,14 @@ export class Main {
   }
 
   private static async initSlashes() {
-    console.info(`### Initialising Slashes ... ###`)
+    console.info(`### Initialising Slashes ... ###`);
     await Main.client.initSlashes();
   }
 
   private static initOnInteractionEvent() {
     console.info(`### Attaching Interaction Events ... ###`);
 
-    this._client.on('interaction', async (interaction) => {
+    this._client.on('interaction', async interaction => {
       await this._client.executeSlash(interaction);
     });
   }
