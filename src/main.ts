@@ -48,6 +48,7 @@ export class Main {
     await this.clearSlashes();
     await this.initSlashes();
 
+
     this.initOnInteractionEvent();
     console.info(`### ${this._client.user?.username} ready! ###`);
   }
