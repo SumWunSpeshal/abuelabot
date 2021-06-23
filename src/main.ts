@@ -55,6 +55,7 @@ export class Main {
     cronJobs.forEach(job => job.start());
   }
 
+  
   private static async clearSlashes() {
     console.info(`### Clearing all Slashes ... ###`);
 
