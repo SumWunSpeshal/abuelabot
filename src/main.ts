@@ -4,14 +4,12 @@ import Path from 'path';
 import { Intents } from 'discord.js';
 import { NotBotGuard } from './guards/not-bot.guard';
 import { cronJobs } from './cronjobs';
-import { BOT_TOKEN, SLASH_GUILDS } from './statics';
+import { BOT_TOKEN, KnownGuilds } from './statics';
+import config from './config';
 
 export class Main {
   private static _client: Client = new Client({
-    classes: [
-      Path.join(__dirname, 'commands', '*.command.ts'),
-      Path.join(__dirname, 'events', '*.event.ts')
-    ],
+    classes: [Path.join(__dirname, 'commands', '*.command.ts'), Path.join(__dirname, 'events', '*.event.ts')],
     intents: [
       Intents.FLAGS.GUILDS,
       Intents.FLAGS.GUILD_MEMBERS,
@@ -30,7 +28,7 @@ export class Main {
       Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
     ],
     silent: false,
-    slashGuilds: SLASH_GUILDS,
+    slashGuilds: config.env === 'PROD' ? [KnownGuilds.GARTENFREUNDE] : [KnownGuilds.ABUELA_ONLY_ID],
     guards: [NotBotGuard]
   });
 
@@ -47,7 +45,6 @@ export class Main {
     this.initCronJobs();
     await this.clearSlashes();
     await this.initSlashes();
-
 
     this.initOnInteractionEvent();
     console.info(`### ${this._client.user?.username} ready! ###`);

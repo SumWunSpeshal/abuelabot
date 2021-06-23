@@ -78,10 +78,6 @@ export enum EmojiFallbacks {
   '846091333746556958' = '😬', // sahapsycho
 }
 
-export const ENV_IS_LIVE = config.env === 'PROD';
+export const BOT_ID = config.env === 'PROD' ? KnownBots.ABUELA_ID : KnownBots.ABUELADEV_ID;
 
-export const BOT_ID = ENV_IS_LIVE ? KnownBots.ABUELA_ID : KnownBots.ABUELADEV_ID;
-
-export const BOT_TOKEN = ENV_IS_LIVE ? token : devToken;
-
-export const SLASH_GUILDS = ENV_IS_LIVE ? [KnownGuilds.GARTENFREUNDE] : [KnownGuilds.ABUELA_ONLY_ID];
+export const BOT_TOKEN = config.env === 'PROD' ? token : devToken;

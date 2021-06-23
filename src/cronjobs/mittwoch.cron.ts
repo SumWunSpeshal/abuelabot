@@ -14,9 +14,6 @@ export const mittwochCron = schedule(rule, async () => {
     return;
   }
 
-
-
-
   const numOfFiles = readdirSync(Path.join(__dirname, '..', 'assets', 'img', 'mittwoch')).length - 1;
   const randomNum = Random.getRandomNumBetween(1, numOfFiles);
   const img = Path.join(__dirname, '..', 'assets', 'img', 'mittwoch', `${randomNum}.jpg`);
