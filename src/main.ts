@@ -28,7 +28,7 @@ export class Main {
       Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
     ],
     silent: false,
-    slashGuilds: config.env === 'PROD' ? [KnownGuilds.GARTENFREUNDE] : [KnownGuilds.ABUELA_ONLY_ID],
+    slashGuilds: config.env === 'PROD' ? undefined : [KnownGuilds.ABUELA_ONLY_ID],
     guards: [NotBotGuard]
   });
 
