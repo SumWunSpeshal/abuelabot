@@ -17,5 +17,5 @@ export const mittwochCron = schedule(rule, async () => {
   const numOfFiles = readdirSync(Path.join(__dirname, '..', 'assets', 'img', 'mittwoch')).length - 1;
   const randomNum = Random.getRandomNumBetween(1, numOfFiles);
   const img = Path.join(__dirname, '..', 'assets', 'img', 'mittwoch', `${randomNum}.jpg`);
-  await memesChannel.send('Es ist Mittwoch, meine Buben :frog:', { files: [img] });
+  await memesChannel.send('Es ist Mittwoch, meine Buben und Bubinnen :frog:', { files: [img] });
 });
