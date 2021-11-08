@@ -3,9 +3,9 @@ import { CommandHelper } from '../utils/command-helper';
 import { BOT_ID, KnownEmojis, KnownGuilds, KnownRoles, KnownTextChannels } from '../statics';
 import { Main } from '../main';
 
-const rule = '00 10 * * MON';
+const rule = '00 10 * * THU';
 
-export const amongUsMondayCron = schedule(rule, async () => {
+export const amongUsThursdayCron = schedule(rule, async () => {
   const amongUsChannel = CommandHelper.getTextChannelById(KnownTextChannels.AMONG_US);
 
   if (!amongUsChannel) {

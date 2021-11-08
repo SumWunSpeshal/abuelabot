@@ -1,4 +1,4 @@
 import { mittwochCron } from './mittwoch.cron';
-import { amongUsMondayCron } from './among-us-monday.cron';
+import { amongUsThursdayCron } from './among-us-thursday.cron';
 
-export const cronJobs = [mittwochCron, amongUsMondayCron];
+export const cronJobs = [mittwochCron, amongUsThursdayCron];
