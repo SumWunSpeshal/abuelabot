@@ -7,9 +7,18 @@ export abstract class Http {
     try {
       const response = await fetch(url, body);
       return response[returnType]();
-    } catch (e) {
+    } catch(e) {
       console.log(e);
       return e;
+    }
+  }
+
+  static async isTargetAlive(url: string): Promise<boolean> {
+    try {
+      const response = await fetch(url);
+      return response.ok;
+    } catch(e) {
+      return false;
     }
   }
 }

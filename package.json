@@ -32,6 +32,7 @@
     "@types/uuid": "^8.3.0",
     "@types/ws": "^7.4.2",
     "canvas": "^2.7.0",
+    "cloudinary": "^1.28.1",
     "discord.js": "https://github.com/discordjs/discord.js.git#b90b0c3cfa2278caa38d1ff41eef2ccf4428b99e",
     "dotenv": "^8.2.0",
     "ffmpeg": "^0.0.4",

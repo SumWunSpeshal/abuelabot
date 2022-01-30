@@ -14,7 +14,8 @@ export const statusTypes: ActivityType[] = [
 ];
 
 export enum Colors {
-  BLURPLE = '#7289DA'
+  BLURPLE = '#7289DA',
+  GREEN = '#57F287'
 }
 
 export enum KnownBots {

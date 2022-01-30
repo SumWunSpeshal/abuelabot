@@ -9,7 +9,10 @@ import config from './config';
 
 export class Main {
   private static _client: Client = new Client({
-    classes: [Path.join(__dirname, 'commands', '*.command.ts'), Path.join(__dirname, 'events', '*.event.ts')],
+    classes:
+      config.env === 'PROD'
+        ? [Path.join(__dirname, 'commands', '*.command.ts'), Path.join(__dirname, 'events', '*.event.ts')]
+        : [Path.join(__dirname, 'commands', 'meme-upload.command.ts')],
     intents: [
       Intents.FLAGS.GUILDS,
       Intents.FLAGS.GUILD_MEMBERS,
@@ -55,7 +58,6 @@ export class Main {
     cronJobs.forEach(job => job.start());
   }
 
-  
   private static async clearSlashes() {
     console.info(`### Clearing all Slashes ... ###`);
 
