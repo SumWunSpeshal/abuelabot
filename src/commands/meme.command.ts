@@ -37,7 +37,7 @@ export abstract class MemeCommand {
   async execute(
     @Option('meme-name', { description: 'Search for a meme!', required: true })
     memeName: string,
-    @Option('text-top', { description: 'First text box, vertically aligned at the top', required: true })
+    @Option('text-top', { description: 'First text box, vertically aligned at the top' })
     text0: string,
     @Option('text-bottom', { description: 'Second text box, vertically aligned at the bottom' })
     text1: string,
