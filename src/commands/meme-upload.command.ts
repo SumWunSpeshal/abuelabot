@@ -31,6 +31,8 @@ export abstract class MemeUploadCommand {
       await interaction.reply(colorText('red', '[Invalid URL!]'), { ephemeral: true });
     }
 
+    await interaction.defer();
+
     const response: UploadApiResponse = await CloudinaryService.upload(imageURL, {
       upload_preset: 'templates',
       public_id,
@@ -41,12 +43,12 @@ export abstract class MemeUploadCommand {
     });
 
     if (response?.existing) {
-      await interaction.reply(colorText('red', '[The name you have chosen already exists! Choose a different name!]'), {
-        ephemeral: true
-      });
+      await interaction.editReply(
+        colorText('red', '[The name you have chosen already exists! Choose a different name!]')
+      );
     }
 
-    await interaction.reply(
+    await interaction.editReply(
       new MessageEmbed({
         color: Colors.GREEN,
         title: 'Successfully uploaded your new meme template!',
