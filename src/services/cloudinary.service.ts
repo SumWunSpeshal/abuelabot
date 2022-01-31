@@ -1,5 +1,6 @@
 import { v2 } from 'cloudinary';
 import SETUP_CONFIG from '../config';
+import { CloudinarySearchResponseInterface } from '../api/cloudinary.interface';
 
 v2.config({
   cloud_name: SETUP_CONFIG.cloudinary_name,
@@ -14,4 +15,11 @@ export abstract class CloudinaryService {
   }
 
   static upload = v2.uploader.upload;
+
+  static async listTemplates(): Promise<string[]> {
+    const list: CloudinarySearchResponseInterface = await this.instance.search
+      .expression('folder:templates/*')
+      .execute();
+    return list?.resources?.map(({ filename }) => filename);
+  }
 }

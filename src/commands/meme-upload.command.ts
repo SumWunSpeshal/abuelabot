@@ -1,4 +1,4 @@
-import { Client, Description, Discord, Option, Slash } from '@typeit/discord';
+import { Description, Discord, Option, Slash } from '@typeit/discord';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { AbuelaCommandInfos } from '../types';
 import { CloudinaryService } from '../services/cloudinary.service';
@@ -35,7 +35,8 @@ export abstract class MemeUploadCommand {
       upload_preset: 'templates',
       public_id,
       transformation: {
-        quality: 60
+        quality: 60,
+        width: 640
       }
     });
 

@@ -1,77 +1,70 @@
-import { Client, Description, Discord, Option, Slash } from '@typeit/discord';
-import { AbuelaCommand, AbuelaCommandInfos } from '../types';
-import config from '../config';
+import { Description, Discord, Option, Slash } from '@typeit/discord';
+import { AbuelaCommandInfos } from '../types';
+import { CommandInteraction } from 'discord.js';
 import { Http } from '../utils/http';
-import { ImgFlipService } from '../services/img-flip.service';
-import { IImgFlipCaptionRequestBody, IImgFlipGetResponse, IImgFlipSuccessResponse } from '../api/img-flip.interface';
-import { Rating } from 'string-similarity';
 import { colorText } from '../utils/color-text';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CloudinaryService } from '../services/cloudinary.service';
+import { findBestMatch } from 'string-similarity';
 
 const INFOS: AbuelaCommandInfos = {
   commandName: 'meme',
-  description: `Search a meme from imgflip and add your own caption!`,
+  description: `Search a meme template and add your own caption!`
 };
+
+const TEMPLATES_URL = 'https://res.cloudinary.com/abuelabot/image/upload/v1643566917/templates/';
 
 @Discord()
 export abstract class MemeCommand {
-  private readonly getUrl = 'https://api.imgflip.com/get_memes';
+  private static specialCharMap = {
+    _: '__',
+    ' ': '_',
+    '-': '--',
+    '?': '~q',
+    '&': '~a',
+    '%': '~p',
+    '#': '~h',
+    '/': '~s',
+    '\\': '~b',
+    '<': '~l',
+    '>': '~g',
+    '"': "''"
+  };
 
-  private readonly captionUrl = 'https://api.imgflip.com/caption_image';
+  private static emptyField = '§';
 
   @Slash(INFOS.commandName)
   @Description(INFOS.description)
   async execute(
     @Option('meme-name', { description: 'Search for a meme!', required: true })
     memeName: string,
-    @Option('text-top', { description: 'First text box' })
+    @Option('text-top', { description: 'First text box, vertically aligned at the top', required: true })
     text0: string,
-    @Option('text-bottom', { description: 'Second text box' })
+    @Option('text-bottom', { description: 'Second text box, vertically aligned at the bottom' })
     text1: string,
-    interaction: CommandInteraction,
+    interaction: CommandInteraction
   ) {
-    const memes = await Http.fetch<IImgFlipGetResponse>(this.getUrl);
-    const { bestMatch } = ImgFlipService.findClosestMemeName(memeName, memes);
-    const singleMeme = memes.data.memes.find(meme => meme.name === bestMatch.target);
-    const response = await Http.fetch<IImgFlipSuccessResponse>(
-      this.createRequestBody(singleMeme!.id, text0, text1),
-    );
+    const list = await CloudinaryService.listTemplates();
+    const templateName = list.includes(memeName) ? memeName : findBestMatch(memeName, list).bestMatch.target;
+    const url = TEMPLATES_URL + templateName;
 
-    await interaction.reply(new MessageEmbed({
-      title: bestMatch?.target,
-      url: response?.data?.url,
-      // description: MemeCommand.getStats(bestMatch, memeName),
-      image: {
-        url: response?.data?.url
-      },
-      footer: {
-        text: `[${bestMatch?.target}] found for search term [${memeName}] with ${
-          +(bestMatch?.rating * 100).toFixed(2) + '%'
-        } correlation`
-      }
-    }));
+    if (!(await Http.isTargetAlive(url))) {
+      await interaction.reply(colorText('red', '[Meme was not found!]'), { ephemeral: true });
+    }
+
+    await interaction.reply(MemeCommand.getCaptionedMeme(url, text0, text1));
   }
 
-  private getStats(bestMatch: Rating, memeName: string): string {
-    return colorText(
-      'blue',
-      `[${bestMatch?.target}] found for search term [${memeName}] with [${
-        +(bestMatch?.rating * 100).toFixed(2) + '%'
-      }] correlation`
-    );
+  private static getCaptionedMeme(url: string, topText = ' ', bottomText = ' '): string {
+    const formattedTopText = topText === this.emptyField ? '_' : this.encode(topText);
+    const formattedBottomText = this.encode(bottomText);
+    return `https://api.memegen.link/images/custom/${formattedTopText}/${formattedBottomText}.jpg?background=${url}`;
   }
 
-  private createRequestBody(id: string, text0: string = ' ', text1: string = ' '): string {
-    const body: IImgFlipCaptionRequestBody = {
-      password: config.imgFlipPw,
-      template_id: id,
-      text0: text0,
-      text1: text1,
-      username: config.imgFlipUser,
-      font: 'impact',
-      max_font_size: '50px'
-    };
+  private static encode(text: string): string {
+    for (const [key, value] of Object.entries(this.specialCharMap)) {
+      text = text.split(key).join(value);
+    }
 
-    return this.captionUrl + '?' + new URLSearchParams((body as unknown) as URLSearchParams);
+    return text;
   }
 }

@@ -12,7 +12,11 @@ export class Main {
     classes:
       config.env === 'PROD'
         ? [Path.join(__dirname, 'commands', '*.command.ts'), Path.join(__dirname, 'events', '*.event.ts')]
-        : [Path.join(__dirname, 'commands', 'meme-upload.command.ts')],
+        : [
+            Path.join(__dirname, 'commands', 'meme-upload.command.ts'),
+            Path.join(__dirname, 'commands', 'meme-list.command.ts'),
+            Path.join(__dirname, 'commands', 'meme.command.ts')
+          ],
     intents: [
       Intents.FLAGS.GUILDS,
       Intents.FLAGS.GUILD_MEMBERS,

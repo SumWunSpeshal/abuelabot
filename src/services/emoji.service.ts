@@ -5,6 +5,6 @@ import { CommandHelper } from '../utils/command-helper';
 export abstract class EmojiService {
   static safeGet(emojiId: KnownEmojis, currentGuild: Guild): GuildEmoji | string {
     const emojiFound = currentGuild && CommandHelper.getEmojiById(currentGuild, emojiId);
-    return emojiFound ?? EmojiFallbacks[emojiId];
+    return emojiFound ?? (EmojiFallbacks[emojiId as keyof typeof EmojiFallbacks]);
   }
 }
