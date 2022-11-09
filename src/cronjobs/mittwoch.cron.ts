@@ -5,7 +5,7 @@ import { readdirSync } from 'fs';
 import Path from 'path';
 import { Random } from '../utils/random';
 
-const rule = '0 08 * * WED';
+const rule = '0 09 * * WED';
 
 export const mittwochCron = schedule(rule, async () => {
   const memesChannel = CommandHelper.getTextChannelById(KnownTextChannels.MEMES);
